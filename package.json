@@ -1,0 +1,40 @@
+{
+  "name": "coinbase-exchange",
+  "version": "0.1.0",
+  "author": "Coinbase",
+  "bugs": "https://github.com/coinbase/coinbase-exchange-node/issues",
+  "contributors": [
+    { "email": "peterldowns@gmail.com",
+      "name": "Peter Downs",
+      "url": "http://peterdowns.com" }
+  ],
+  "dependencies": {
+    "lodash.assign": "3.0.0",
+    "lodash.foreach": "3.0.0",
+    "lodash.partial": "3.0.0",
+    "request": "2.51.0",
+    "ws": "0.7.0"
+  },
+  "description": "Client for the Coinbase Exchange API",
+  "devDependencies": {},
+  "directories": {
+    "lib": "./lib"
+  },
+  "homepage": "https://github.com/coinbase/coinbase-exchange-node",
+  "keywords": [
+    "API",
+    "bitcoin",
+    "coinbase",
+    "exchange",
+    "real-time",
+    "trading",
+    "websockets"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coinbase/coinbase-exchange-node.git"
+  },
+  "scripts": {}
+}
