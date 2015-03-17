@@ -6,7 +6,10 @@
   "contributors": [
     { "email": "peterldowns@gmail.com",
       "name": "Peter Downs",
-      "url": "http://peterdowns.com" }
+      "url": "http://peterdowns.com" },
+    { "email": "maksimus16@gmail.com",
+      "name": "Maksim Stepanenko",
+      "url": "http://maksim.ms" }
   ],
   "dependencies": {
     "lodash.assign": "3.0.0",
@@ -18,7 +21,9 @@
     "bintrees": "1.0.0"
   },
   "description": "Client for the Coinbase Exchange API",
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "1.20.1"
+  },
   "directories": {
     "lib": "./lib"
   },
@@ -38,5 +43,7 @@
     "type": "git",
     "url": "git://github.com/coinbase/coinbase-exchange-node.git"
   },
-  "scripts": {}
+  "scripts": {
+    "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+  }
 }
