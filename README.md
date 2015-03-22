@@ -67,29 +67,33 @@ publicClient.getProducts(callback);
 * [`getProductOrderBook`](https://docs.exchange.coinbase.com/#get-product-order-book)
 ```javascript
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook('BTC-USD', callback);
+publicClient.getProductOrderBook(callback);
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook('BTC-USD', 3, callback);
+publicClient.getProductOrderBook({'level': 3}, callback);
 ```
 
 * [`getProductTicker`](https://docs.exchange.coinbase.com/#get-product-ticker)
 ```javascript
-publicClient.getProductTicker('BTC-USD', callback);
+publicClient.getProductTicker(callback);
 ```
 
 * [`getProductTrades`](https://docs.exchange.coinbase.com/#get-trades)
 ```javascript
-publicClient.getProductTrades('BTC-USD', callback);
+publicClient.getProductTrades(callback);
+// To make paginated requests, include page parameters
+publicClient.getProductTrades({'after': 1000}, callback);
 ```
 
 * [`getProductHistoricRates`](https://docs.exchange.coinbase.com/#get-historic-rates)
 ```javascript
-publicClient.getProductHistoricRates('BTC-USD', callback);
+publicClient.getProductHistoricRates(callback);
+// To include extra parameters:
+publicClient.getProductHistoricRates({'granularity': 3000}, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.exchange.coinbase.com/#get-24hr-stats)
 ```javascript
-publicClient.getProduct24HrStats('BTC-USD', callback);
+publicClient.getProduct24HrStats(callback);
 ```
 
 * [`getCurrencies`](https://docs.exchange.coinbase.com/#get-currencies)
@@ -144,12 +148,16 @@ authedClient.getAccount(accountID, callback);
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
+// For pagination, you can include extra page arguments
+authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
 ```
 
 * [`getAccountHolds`](https://docs.exchange.coinbase.com/#get-holds)
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
+// For pagination, you can include extra page arguments
+authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
 ```
 
 * [`buy`, `sell`](https://docs.exchange.coinbase.com/#place-a-new-order)
@@ -180,6 +188,8 @@ authedClient.cancelOrder(orderID, callback);
 * [`getOrders`](https://docs.exchange.coinbase.com/#list-open-orders)
 ```javascript
 authedClient.getOrders(callback);
+// For pagination, you can include extra page arguments
+authedClient.getOrders({'after': 3000}, callback);
 ```
 
 * [`getOrder`](https://docs.exchange.coinbase.com/#get-an-order)
@@ -191,6 +201,8 @@ authedClient.getOrder(orderID, callback);
 * [`getFills`](https://docs.exchange.coinbase.com/#list-fills)
 ```javascript
 authedClient.getFills(callback);
+// For pagination, you can include extra page arguments
+authedClient.getFills({'before': 3000}, callback);
 ```
 
 * [`deposit`, `withdraw`](https://docs.exchange.coinbase.com/#list-fills)
