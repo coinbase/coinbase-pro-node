@@ -1,22 +1,29 @@
 {
   "name": "coinbase-exchange",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Coinbase",
   "bugs": "https://github.com/coinbase/coinbase-exchange-node/issues",
   "contributors": [
     { "email": "peterldowns@gmail.com",
       "name": "Peter Downs",
-      "url": "http://peterdowns.com" }
+      "url": "http://peterdowns.com" },
+    { "email": "maksimus16@gmail.com",
+      "name": "Maksim Stepanenko",
+      "url": "http://maksim.ms" }
   ],
   "dependencies": {
     "lodash.assign": "3.0.0",
     "lodash.foreach": "3.0.0",
     "lodash.partial": "3.0.0",
     "request": "2.51.0",
-    "ws": "0.7.0"
+    "ws": "0.7.0",
+    "num": "0.2.1",
+    "bintrees": "1.0.0"
   },
   "description": "Client for the Coinbase Exchange API",
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "1.20.1"
+  },
   "directories": {
     "lib": "./lib"
   },
@@ -36,5 +43,7 @@
     "type": "git",
     "url": "git://github.com/coinbase/coinbase-exchange-node.git"
   },
-  "scripts": {}
+  "scripts": {
+    "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+  }
 }

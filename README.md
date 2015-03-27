@@ -67,29 +67,33 @@ publicClient.getProducts(callback);
 * [`getProductOrderBook`](https://docs.exchange.coinbase.com/#get-product-order-book)
 ```javascript
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook('BTC-USD', callback);
+publicClient.getProductOrderBook(callback);
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook('BTC-USD', 3, callback);
+publicClient.getProductOrderBook({'level': 3}, callback);
 ```
 
 * [`getProductTicker`](https://docs.exchange.coinbase.com/#get-product-ticker)
 ```javascript
-publicClient.getProductTicker('BTC-USD', callback);
+publicClient.getProductTicker(callback);
 ```
 
 * [`getProductTrades`](https://docs.exchange.coinbase.com/#get-trades)
 ```javascript
-publicClient.getProductTrades('BTC-USD', callback);
+publicClient.getProductTrades(callback);
+// To make paginated requests, include page parameters
+publicClient.getProductTrades({'after': 1000}, callback);
 ```
 
 * [`getProductHistoricRates`](https://docs.exchange.coinbase.com/#get-historic-rates)
 ```javascript
-publicClient.getProductHistoricRates('BTC-USD', callback);
+publicClient.getProductHistoricRates(callback);
+// To include extra parameters:
+publicClient.getProductHistoricRates({'granularity': 3000}, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.exchange.coinbase.com/#get-24hr-stats)
 ```javascript
-publicClient.getProduct24HrStats('BTC-USD', callback);
+publicClient.getProduct24HrStats(callback);
 ```
 
 * [`getCurrencies`](https://docs.exchange.coinbase.com/#get-currencies)
@@ -144,12 +148,16 @@ authedClient.getAccount(accountID, callback);
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
+// For pagination, you can include extra page arguments
+authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
 ```
 
 * [`getAccountHolds`](https://docs.exchange.coinbase.com/#get-holds)
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
+// For pagination, you can include extra page arguments
+authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
 ```
 
 * [`buy`, `sell`](https://docs.exchange.coinbase.com/#place-a-new-order)
@@ -180,6 +188,8 @@ authedClient.cancelOrder(orderID, callback);
 * [`getOrders`](https://docs.exchange.coinbase.com/#list-open-orders)
 ```javascript
 authedClient.getOrders(callback);
+// For pagination, you can include extra page arguments
+authedClient.getOrders({'after': 3000}, callback);
 ```
 
 * [`getOrder`](https://docs.exchange.coinbase.com/#get-an-order)
@@ -191,6 +201,8 @@ authedClient.getOrder(orderID, callback);
 * [`getFills`](https://docs.exchange.coinbase.com/#list-fills)
 ```javascript
 authedClient.getFills(callback);
+// For pagination, you can include extra page arguments
+authedClient.getFills({'before': 3000}, callback);
 ```
 
 * [`deposit`, `withdraw`](https://docs.exchange.coinbase.com/#list-fills)
@@ -222,79 +234,39 @@ var withdrawParamsBTC = {
 authedClient.withdraw(withdrawParamsBTC, callback);
 ```
 
-### The Order Book
-The `OrderBook` is a local mirror of the Coinbase Exchange's order book, synced
-via WebSockets.
-
-##### Setup
+### Websocket client
+The `WebsocketClient` allows you to connect and listen to the 
+[exchange websocket messages](https://docs.exchange.coinbase.com/#messages). 
 ```javascript
 var CoinbaseExchange = require('coinbase-exchange');
-var orderBook = new CoinbaseExchange.OrderBook();
+var websocket = new CoinbaseExchange.WebsocketClient();
+websocket.on('message', function(data) { console.log(data); });
 ```
+The following events can be emitted from the `WebsocketClient`:
+* `open`
+* `message`
+* `close`
 
-##### Listening to Events
-The order book is a type of
-[`EventEmitter`](http://nodejs.org/api/events.html#events_events). For the
-following events, the data emitted is always in the same form as the messages
-received over WebSocket – you can [learn more about those message types
-here](https://docs.exchange.coinbase.com/#messages).
+### Orderbook 
+`Orderbook` is a data structure that can be used to store a local copy of the orderbook.
+```javascript
+var CoinbaseExchange = require('coinbase-exchange');
+var orderbook = new CoinbaseExchange.Orderbook();
+```
+The orderbook has the following methods:
+* `state(book)`
+* `get(orderId)`
+* `add(order)`
+* `remove(orderId)`
+* `match(match)`
+* `change(change)`
 
-* [`"received"`](https://docs.exchange.coinbase.com/#received)
-* [`"open"`](https://docs.exchange.coinbase.com/#open)
-* [`"done"`](https://docs.exchange.coinbase.com/#done)
-* [`"match"`](https://docs.exchange.coinbase.com/#match)
-* [`"error"`](https://docs.exchange.coinbase.com/#match)
-
-These events are emitted immediately after the OrderBook has been updated to
-include the message's contents. So by the time your code is notified, the book
-will already reflect the changes described by the message.
-
-*Example: listening to order matches:*
+### Orderbook Sync
+`OrderbookSync` creates a local mirror of the orderbook on Coinbase Exchange using
+`Orderbook` and `WebsocketClient` as described [here](https://docs.exchange.coinbase.com/#real-time-order-book).
 
 ```javascript
-orderBook.on('match', function(message) {
-  console.log("Order",
-              message.maker_order_id,
-              "matched with order",
-              message.taker_order_id);
-  console.log(message.size, "BTC  @", message.price, "USD");
-});
+var CoinbaseExchange = require('coinbase-exchange');
+var orderbookSync = new CoinbaseExchange.OrderbookSync();
+console.log(orderbookSync.book.state());
 ```
-
-There are other events to which you can listen:
-
-* `"ignored"`: Emitted as part of the order book syncing process, once for
-  every out-of-date message that is ignored. The data is the original message
-  sent over the websocket, one of the types listed above.
-* `"unknown"`: Emitted when a message is received with a type that the
-  OrderBook doesn't know how to handle. The data is the original message sent
-  over the websocket.
-* `"statechange"`: Emitted any time the order book instance changes state. A
-  hash with two keys, `"old"` mapping to the previous state, `"new"` mapping to
-  the new, current state of the order book.
-
-*Example: listening for all errors*
-```javascript
-orderBook.on('statechange', function(state) {
-  if (state.new === orderBook.STATES.error) {
-    console.log("Was", state.old, "now in state", state.new);
-    // clean up things here
-  }
-});
-```
-
-#### States of the order book
-An instance of the order book can be in the following states:
-
-* `"closed"`: the WebSocket connection has been closed and no new messages are
-  being processed.
-* `"open"`: the WebSocket connection is open, but no new messages are being
-  processed.
-* `"syncing"`: the WebSocket connection is open, new messages are being queued,
-  and the order book snapshot is being loaded.
-* `"processing"`: the WebSocket connection is open, the order book is in sync,
-  and new messages are being processed as they're received.
-* `"error"`: an error has occurred and an exception has been thrown. The
-  WebSocket connection is closed and no new messages are being received or
-  processed.
-
