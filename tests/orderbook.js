@@ -169,7 +169,7 @@ test('order change', function() {
 
   var change = {
     order_id: 'super-duper-id-2',
-    old_size: 10,
+    old_size: '10.0',
     new_size: 3,
     price: 201,
     side: 'buy',
