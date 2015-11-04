@@ -1,6 +1,6 @@
 {
   "name": "coinbase-exchange",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Coinbase",
   "bugs": "https://github.com/coinbase/coinbase-exchange-node/issues",
   "contributors": [
