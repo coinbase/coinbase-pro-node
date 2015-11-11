@@ -185,6 +185,11 @@ var orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.cancelOrder(orderID, callback);
 ```
 
+* [`cancelOrders`](https://docs.exchange.coinbase.com/#cancel-all)
+```javascript
+authedClient.cancelOrders(callback);
+```
+
 * [`getOrders`](https://docs.exchange.coinbase.com/#list-open-orders)
 ```javascript
 authedClient.getOrders(callback);
