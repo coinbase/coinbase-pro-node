@@ -4,21 +4,27 @@
   "author": "Coinbase",
   "bugs": "https://github.com/coinbase/coinbase-exchange-node/issues",
   "contributors": [
-    { "email": "peterldowns@gmail.com",
+    {
+      "email": "peterldowns@gmail.com",
       "name": "Peter Downs",
-      "url": "http://peterdowns.com" },
-    { "email": "maksimus16@gmail.com",
+      "url": "http://peterdowns.com"
+    },
+    {
+      "email": "maksimus16@gmail.com",
       "name": "Maksim Stepanenko",
-      "url": "http://maksim.ms" }
+      "url": "http://maksim.ms"
+    }
   ],
   "dependencies": {
+    "async": "1.5.0",
+    "bintrees": "1.0.0",
     "lodash.assign": "3.0.0",
     "lodash.foreach": "3.0.0",
     "lodash.partial": "3.0.0",
-    "request": "2.51.0",
-    "ws": "0.7.0",
+    "nock": "3.6.0",
     "num": "0.2.1",
-    "bintrees": "1.0.0"
+    "request": "2.51.0",
+    "ws": "0.7.0"
   },
   "description": "Client for the Coinbase Exchange API",
   "devDependencies": {
