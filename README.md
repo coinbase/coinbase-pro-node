@@ -190,6 +190,19 @@ authedClient.cancelOrder(orderID, callback);
 authedClient.cancelOrders(callback);
 ```
 
+* [`cancelAllOrders`](https://docs.exchange.coinbase.com/#cancel-all)
+```javascript
+// `cancelOrders` may require you to make the request multiple times until
+// all the orders are deleted.
+
+// `cancelAllOrders` will handle making these requests for you asyncronously.
+// Also you can add a product_id param to only delete orders of that product
+
+// The response will be the response of the last call and the data will 
+// have the order ID's of all your deleted orders
+authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
+```
+
 * [`getOrders`](https://docs.exchange.coinbase.com/#list-open-orders)
 ```javascript
 authedClient.getOrders(callback);
