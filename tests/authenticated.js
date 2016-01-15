@@ -9,6 +9,21 @@ var passphrase = 'passphrase';
 
 var authClient = new CoinbaseExchange.AuthenticatedClient(key, secret, passphrase);
 
+test('get product orderbook', function(done) {
+
+  nock('https://api.exchange.coinbase.com')
+    .get('/products/BTC-USD/book?level=3')
+    .reply(200,  {
+      asks : [],
+      bids: []
+    });
+
+  authClient.getProductOrderBook({level : 3}, 'BTC-USD', function(err, resp, data) {
+    assert(data);
+    done();
+  });
+}) 
+
 test('cancel all orders', function(done) {
   // nock three requests to delete /orders
 
@@ -47,6 +62,9 @@ test('cancel all orders', function(done) {
   authClient.cancelAllOrders(function(err, resp, totalDeletedOrders) {
     assert.ifError(err);
     assert.deepEqual(totalDeletedOrders, totalExpectedDeleted);
+
+    nock.cleanAll();
+
     done();
   });
 });
@@ -58,6 +76,9 @@ test('cancel all should be able to handle errors', function(done) {
 
   authClient.cancelAllOrders(function(err, resp, totalExpectedDeleted) {
     assert(err);
+
+    nock.cleanAll();
+
     done();
   });
 });
