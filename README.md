@@ -1,6 +1,6 @@
-# Coinbase Exchange
-The official Node.js library for the [Coinbase Exchange
-API](https://docs.exchange.coinbase.com/).
+# Coinbase Exchange 
+The official Node.js library for the [GDAX
+API](https://docs.gdax.com/) (formerly Coinbase Exchange).
 
 *Note: this library may be subtly broken or buggy. The code is released under
 the MIT License – please take the following message to heart:*
@@ -33,7 +33,7 @@ npm install coinbase/coinbase-exchange-node
 ## Quick Start
 
 ### The Public API Client
-The Coinbase Exchange API has both public and private endpoints. If you're only
+The GDAX API has both public and private endpoints. If you're only
 interested in the public endpoints, you should use a `PublicClient`.
 
 ```javascript
@@ -55,16 +55,16 @@ This callback will be passed directly to [the underlying `request` library's
 created by the `request` library. `data` will be the result of JSON-decoding
 the server's response, or `null` if the response was not parseable. You can
 learn about the API responses of each endpoint [by reading our
-documentation](https://docs.exchange.coinbase.com/#market-data).
+documentation](https://docs.gdax.com/#market-data).
 
 #### Public API Methods
 
-* [`getProducts`](https://docs.exchange.coinbase.com/#get-products)
+* [`getProducts`](https://docs.gdax.com/#get-products)
 ```javascript
 publicClient.getProducts(callback);
 ```
 
-* [`getProductOrderBook`](https://docs.exchange.coinbase.com/#get-product-order-book)
+* [`getProductOrderBook`](https://docs.gdax.com/#get-product-order-book)
 ```javascript
 // Get the order book at the default level of detail.
 publicClient.getProductOrderBook(callback);
@@ -72,45 +72,45 @@ publicClient.getProductOrderBook(callback);
 publicClient.getProductOrderBook({'level': 3}, callback);
 ```
 
-* [`getProductTicker`](https://docs.exchange.coinbase.com/#get-product-ticker)
+* [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)
 ```javascript
 publicClient.getProductTicker(callback);
 ```
 
-* [`getProductTrades`](https://docs.exchange.coinbase.com/#get-trades)
+* [`getProductTrades`](https://docs.gdax.com/#get-trades)
 ```javascript
 publicClient.getProductTrades(callback);
 // To make paginated requests, include page parameters
 publicClient.getProductTrades({'after': 1000}, callback);
 ```
 
-* [`getProductHistoricRates`](https://docs.exchange.coinbase.com/#get-historic-rates)
+* [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
 ```javascript
 publicClient.getProductHistoricRates(callback);
 // To include extra parameters:
 publicClient.getProductHistoricRates({'granularity': 3000}, callback);
 ```
 
-* [`getProduct24HrStats`](https://docs.exchange.coinbase.com/#get-24hr-stats)
+* [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
 ```javascript
 publicClient.getProduct24HrStats(callback);
 ```
 
-* [`getCurrencies`](https://docs.exchange.coinbase.com/#get-currencies)
+* [`getCurrencies`](https://docs.gdax.com/#get-currencies)
 ```javascript
 publicClient.getCurrencies(callback);
 ```
 
-* [`getTime`](https://docs.exchange.coinbase.com/#time)
+* [`getTime`](https://docs.gdax.com/#time)
 ```javascript
 publicClient.getTime(callback);
 ```
 
 ### The Authenticated API Client
 The [private exchange API
-endpoints](https://docs.exchange.coinbase.com/#private) require you to
+endpoints](https://docs.gdax.com/#private) require you to
 authenticate with an API key. You can create a new API key [in your exchange
-account's settings](https://exchange.coinbase.com/settings).
+account's settings](https://gdax.com/settings).
 
 ```javascript
 var CoinbaseExchange = require('coinbase-exchange');
@@ -133,18 +133,18 @@ only need to create a single client.
 
 #### Private API Methods
 
-* [`getAccounts`](https://docs.exchange.coinbase.com/#list-accounts)
+* [`getAccounts`](https://docs.gdax.com/#list-accounts)
 ```javascript
 authedClient.getAccounts(callback);
 ```
 
-* [`getAccount`](https://docs.exchange.coinbase.com/#get-an-account)
+* [`getAccount`](https://docs.gdax.com/#get-an-account)
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccount(accountID, callback);
 ```
 
-* [`getAccountHistory`](https://docs.exchange.coinbase.com/#get-account-history)
+* [`getAccountHistory`](https://docs.gdax.com/#get-account-history)
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
@@ -152,7 +152,7 @@ authedClient.getAccountHistory(accountID, callback);
 authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
 ```
 
-* [`getAccountHolds`](https://docs.exchange.coinbase.com/#get-holds)
+* [`getAccountHolds`](https://docs.gdax.com/#get-holds)
 ```javascript
 var accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
@@ -160,7 +160,7 @@ authedClient.getAccountHolds(accountID, callback);
 authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
 ```
 
-* [`buy`, `sell`](https://docs.exchange.coinbase.com/#place-a-new-order)
+* [`buy`, `sell`](https://docs.gdax.com/#place-a-new-order)
 ```javascript
 // Buy 1 BTC @ 100 USD
 var buyParams = {
@@ -179,18 +179,18 @@ var sellParams = {
 authedClient.sell(sellParams, callback);
 ```
 
-* [`cancelOrder`](https://docs.exchange.coinbase.com/#cancel-an-order)
+* [`cancelOrder`](https://docs.gdax.com/#cancel-an-order)
 ```javascript
 var orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.cancelOrder(orderID, callback);
 ```
 
-* [`cancelOrders`](https://docs.exchange.coinbase.com/#cancel-all)
+* [`cancelOrders`](https://docs.gdax.com/#cancel-all)
 ```javascript
 authedClient.cancelOrders(callback);
 ```
 
-* [`cancelAllOrders`](https://docs.exchange.coinbase.com/#cancel-all)
+* [`cancelAllOrders`](https://docs.gdax.com/#cancel-all)
 ```javascript
 // `cancelOrders` may require you to make the request multiple times until
 // all the orders are deleted.
@@ -203,27 +203,27 @@ authedClient.cancelOrders(callback);
 authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 ```
 
-* [`getOrders`](https://docs.exchange.coinbase.com/#list-open-orders)
+* [`getOrders`](https://docs.gdax.com/#list-open-orders)
 ```javascript
 authedClient.getOrders(callback);
 // For pagination, you can include extra page arguments
 authedClient.getOrders({'after': 3000}, callback);
 ```
 
-* [`getOrder`](https://docs.exchange.coinbase.com/#get-an-order)
+* [`getOrder`](https://docs.gdax.com/#get-an-order)
 ```javascript
 var orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.getOrder(orderID, callback);
 ```
 
-* [`getFills`](https://docs.exchange.coinbase.com/#list-fills)
+* [`getFills`](https://docs.gdax.com/#list-fills)
 ```javascript
 authedClient.getFills(callback);
 // For pagination, you can include extra page arguments
 authedClient.getFills({'before': 3000}, callback);
 ```
 
-* [`deposit`, `withdraw`](https://docs.exchange.coinbase.com/#list-fills)
+* [`deposit`, `withdraw`](https://docs.gdax.com/#list-fills)
 ```javascript
 // Deposit to your Exchange USD account from your Coinbase USD account.
 var depositParamsUSD = {
@@ -254,7 +254,7 @@ authedClient.withdraw(withdrawParamsBTC, callback);
 
 ### Websocket client
 The `WebsocketClient` allows you to connect and listen to the 
-[exchange websocket messages](https://docs.exchange.coinbase.com/#messages). 
+[exchange websocket messages](https://docs.gdax.com/#messages). 
 ```javascript
 var CoinbaseExchange = require('coinbase-exchange');
 var websocket = new CoinbaseExchange.WebsocketClient();
@@ -280,8 +280,8 @@ The orderbook has the following methods:
 * `change(change)`
 
 ### Orderbook Sync
-`OrderbookSync` creates a local mirror of the orderbook on Coinbase Exchange using
-`Orderbook` and `WebsocketClient` as described [here](https://docs.exchange.coinbase.com/#real-time-order-book).
+`OrderbookSync` creates a local mirror of the orderbook on GDAX using
+`Orderbook` and `WebsocketClient` as described [here](https://docs.gdax.com/#real-time-order-book).
 
 ```javascript
 var CoinbaseExchange = require('coinbase-exchange');
