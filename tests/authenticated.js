@@ -7,7 +7,7 @@ var key = 'key';
 var secret = 'secret';
 var passphrase = 'passphrase';
 
-var EXCHANGE_API_URL = 'https://api.exchange.coinbase.com';
+var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 var authClient = new CoinbaseExchange.AuthenticatedClient(key, secret, passphrase);
 
@@ -16,7 +16,7 @@ test('._getSignature', function() {
   var relativeURI = '/orders';
   var opts = {
     method : 'PUT',
-    uri : 'https://api.exchange.coinbase.com/orders'
+    uri : 'https://api.gdax.com/orders'
   }
   
   var sig = authClient._getSignature(method, relativeURI, opts)

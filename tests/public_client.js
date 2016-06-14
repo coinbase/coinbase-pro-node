@@ -4,7 +4,7 @@ var nock = require('nock');
 var CoinbaseExchange = require('../index.js');
 var publicClient = new CoinbaseExchange.PublicClient();
 
-var EXCHANGE_API_URL = 'https://api.exchange.coinbase.com';
+var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 test('get product trades', function(done) {
   var expectedRepsonse = [{
