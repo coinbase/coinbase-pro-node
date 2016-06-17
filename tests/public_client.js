@@ -55,3 +55,42 @@ test('public client should return values', function(done) {
     done();
   });
 });
+
+test('public client should stream trades', function(done) {
+  this.timeout(6000);
+
+  var last = 8408014;
+  var cnt = 0
+
+  publicClient.getProductTradeStream(last, 8409426)
+    .on('data', function(data) {
+      var current = data.trade_id;
+      assert.equal(typeof current, 'number');
+      assert.equal(current, last + 1, current + ' is next in series, last: ' + last);
+      last = current;
+    })
+    .on('end', function() {
+      assert.equal(last, 8409425, 'ended on ' + last);
+      done();
+    });
+});
+
+test('public client should stream trades with function', function(done) {
+  this.timeout(6000);
+
+  var last = 8408014;
+
+  publicClient.getProductTradeStream(last, function(trade) {
+      return Date.parse(trade.time) >= 1463068800000
+  })
+  .on('data', function(data) {
+    var current = data.trade_id;
+    assert.equal(typeof current, 'number');
+    assert.equal(current, last + 1, current + ' is next in series, last: ' + last);
+    last = current;
+  })
+  .on('end', function() {
+    assert.equal(last, 8409426, last);
+    done();
+  });
+});

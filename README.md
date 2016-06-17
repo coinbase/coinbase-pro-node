@@ -84,6 +84,18 @@ publicClient.getProductTrades(callback);
 publicClient.getProductTrades({'after': 1000}, callback);
 ```
 
+* [`getProductTradeStream`](https://docs.gdax.com/#get-trades)
+Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and `<= tradesTo`.
+Handles pagination and rate limits.
+
+```javascript
+var trades = publicClient.getProductTradeStream(8408000, 8409000);
+// tradesTo can also be a function
+var trades publicClient.getProductTradeStream(8408000, function(trade) {
+    return Date.parse(trade.time) >= 1463068e6
+})
+```
+
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
 ```javascript
 publicClient.getProductHistoricRates(callback);
