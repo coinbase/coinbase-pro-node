@@ -7,7 +7,7 @@ var publicClient = new CoinbaseExchange.PublicClient();
 var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 test('get product trades', function(done) {
-  var expectedRepsonse = [{
+  var expectedResponse = [{
     "time": "2014-11-07T22:19:28.578544Z",
     "trade_id": 74,
     "price": "10.00000000",
@@ -23,11 +23,11 @@ test('get product trades', function(done) {
 
   nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/trades')
-      .reply(200, expectedRepsonse);
+      .reply(200, expectedResponse);
 
   publicClient.getProductTrades(function(err, resp, data) {
     assert.ifError(err);
-    assert.deepEqual(data, expectedRepsonse);
+    assert.deepEqual(data, expectedResponse);
 
     nock.cleanAll();
     done();
