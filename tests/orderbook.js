@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-var CoinbaseExchange = require('../index.js');
+var Gdax = require('../index.js');
 
 var checkState = function(state, exp) {
   assert.deepEqual(JSON.parse(JSON.stringify(state)), exp);
@@ -21,7 +21,7 @@ test('add new orders', function() {
     asks: []
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.add(state.bids[0]);
   orderbook.add(state.bids[1]);
 
@@ -56,7 +56,7 @@ test('remove order', function() {
     asks: []
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   checkState(orderbook.state(), state);
 
@@ -81,7 +81,7 @@ test('get order', function() {
     side: 'buy'
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   var order = orderbook.get('super-duper-id-2');
 
@@ -118,7 +118,7 @@ test('partial order match', function() {
     asks: []
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.match(match);
 
@@ -151,7 +151,7 @@ test('full order match', function() {
     asks: []
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.match(match);
 
@@ -189,7 +189,7 @@ test('order change', function() {
     asks: []
   };
 
-  var orderbook = new CoinbaseExchange.Orderbook();
+  var orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.change(change);
 

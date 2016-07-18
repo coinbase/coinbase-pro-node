@@ -1,8 +1,8 @@
 {
-  "name": "coinbase-exchange",
+  "name": "gdax",
   "version": "0.2.1",
   "author": "Coinbase",
-  "bugs": "https://github.com/coinbase/coinbase-exchange-node/issues",
+  "bugs": "https://github.com/coinbase/gdax-node/issues",
   "contributors": [
     {
       "email": "peterldowns@gmail.com",
@@ -13,6 +13,11 @@
       "email": "maksimus16@gmail.com",
       "name": "Maksim Stepanenko",
       "url": "http://maksim.ms"
+    },
+    {
+      "email": "miha@rebernik.info",
+      "name": "Miha Rebernik",
+      "url": "http://miha.rebernik.info"
     }
   ],
   "dependencies": {
@@ -26,14 +31,14 @@
     "request": "2.51.0",
     "ws": "0.7.0"
   },
-  "description": "Client for the Coinbase Exchange API",
+  "description": "Client for the GDAX API",
   "devDependencies": {
     "mocha": "1.20.1"
   },
   "directories": {
     "lib": "./lib"
   },
-  "homepage": "https://github.com/coinbase/coinbase-exchange-node",
+  "homepage": "https://github.com/coinbase/gdax-node",
   "keywords": [
     "API",
     "bitcoin",
@@ -41,13 +46,15 @@
     "exchange",
     "real-time",
     "trading",
-    "websockets"
+    "websockets",
+    "gdax",
+    "ethereum"
   ],
   "license": "MIT",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/coinbase/coinbase-exchange-node.git"
+    "url": "git://github.com/coinbase/gdax-node.git"
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js"

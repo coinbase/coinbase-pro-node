@@ -1,8 +1,8 @@
 var assert = require('assert');
 var nock = require('nock');
 
-var CoinbaseExchange = require('../index.js');
-var publicClient = new CoinbaseExchange.PublicClient();
+var Gdax = require('../index.js');
+var publicClient = new Gdax.PublicClient();
 
 var EXCHANGE_API_URL = 'https://api.gdax.com';
 

@@ -1,4 +1,4 @@
-# Coinbase Exchange 
+# GDAX
 The official Node.js library for the [GDAX
 API](https://docs.gdax.com/) (formerly Coinbase Exchange).
 
@@ -25,9 +25,9 @@ the MIT License – please take the following message to heart:*
 ## Installation
 ```bash
 # From NPM
-npm install coinbase-exchange
+npm install gdax
 # From Github
-npm install coinbase/coinbase-exchange-node
+npm install coinbase/gdax-node
 ```
 
 ## Quick Start
@@ -37,8 +37,8 @@ The GDAX API has both public and private endpoints. If you're only
 interested in the public endpoints, you should use a `PublicClient`.
 
 ```javascript
-var CoinbaseExchange = require('coinbase-exchange');
-var publicClient = new CoinbaseExchange.PublicClient();
+var Gdax = require('gdax');
+var publicClient = new Gdax.PublicClient();
 ```
 
 All API methods are callback based. Your callback should accept three arguments:
@@ -125,8 +125,8 @@ authenticate with an API key. You can create a new API key [in your exchange
 account's settings](https://gdax.com/settings).
 
 ```javascript
-var CoinbaseExchange = require('coinbase-exchange');
-var authedClient = new CoinbaseExchange.AuthenticatedClient(
+var Gdax = require('gdax');
+var authedClient = new Gdax.AuthenticatedClient(
   key, b64secret, passphrase);
 ```
 
@@ -210,7 +210,7 @@ authedClient.cancelOrders(callback);
 // `cancelAllOrders` will handle making these requests for you asyncronously.
 // Also you can add a product_id param to only delete orders of that product
 
-// The response will be the response of the last call and the data will 
+// The response will be the response of the last call and the data will
 // have the order ID's of all your deleted orders
 authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 ```
@@ -265,11 +265,11 @@ authedClient.withdraw(withdrawParamsBTC, callback);
 ```
 
 ### Websocket client
-The `WebsocketClient` allows you to connect and listen to the 
-[exchange websocket messages](https://docs.gdax.com/#messages). 
+The `WebsocketClient` allows you to connect and listen to the
+[exchange websocket messages](https://docs.gdax.com/#messages).
 ```javascript
-var CoinbaseExchange = require('coinbase-exchange');
-var websocket = new CoinbaseExchange.WebsocketClient();
+var Gdax = require('gdax');
+var websocket = new Gdax.WebsocketClient();
 websocket.on('message', function(data) { console.log(data); });
 ```
 The following events can be emitted from the `WebsocketClient`:
@@ -277,11 +277,11 @@ The following events can be emitted from the `WebsocketClient`:
 * `message`
 * `close`
 
-### Orderbook 
+### Orderbook
 `Orderbook` is a data structure that can be used to store a local copy of the orderbook.
 ```javascript
-var CoinbaseExchange = require('coinbase-exchange');
-var orderbook = new CoinbaseExchange.Orderbook();
+var Gdax = require('gdax');
+var orderbook = new Gdax.Orderbook();
 ```
 The orderbook has the following methods:
 * `state(book)`
@@ -296,7 +296,7 @@ The orderbook has the following methods:
 `Orderbook` and `WebsocketClient` as described [here](https://docs.gdax.com/#real-time-order-book).
 
 ```javascript
-var CoinbaseExchange = require('coinbase-exchange');
-var orderbookSync = new CoinbaseExchange.OrderbookSync();
+var Gdax = require('gdax');
+var orderbookSync = new Gdax.OrderbookSync();
 console.log(orderbookSync.book.state());
 ```

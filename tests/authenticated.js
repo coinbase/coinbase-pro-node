@@ -1,7 +1,7 @@
 var assert = require('assert');
 var nock = require('nock');
 
-var CoinbaseExchange = require('../index.js');
+var Gdax = require('../index.js');
 
 var key = 'key';
 var secret = 'secret';
@@ -9,7 +9,7 @@ var passphrase = 'passphrase';
 
 var EXCHANGE_API_URL = 'https://api.gdax.com';
 
-var authClient = new CoinbaseExchange.AuthenticatedClient(key, secret, passphrase);
+var authClient = new Gdax.AuthenticatedClient(key, secret, passphrase);
 
 test('._getSignature', function() {
   var method = 'PUT';
