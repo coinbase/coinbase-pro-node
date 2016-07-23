@@ -29,7 +29,7 @@
     "nock": "3.6.0",
     "num": "0.2.1",
     "request": "2.51.0",
-    "ws": "0.7.0"
+    "ws": "^1.0.1"
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
