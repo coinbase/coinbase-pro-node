@@ -300,3 +300,13 @@ var Gdax = require('gdax');
 var orderbookSync = new Gdax.OrderbookSync();
 console.log(orderbookSync.book.state());
 ```
+
+## Testing
+
+```bash
+npm run test
+
+# test for known vulnerabilities in packages
+npm install -g nsp
+nsp check --output summary
+```
