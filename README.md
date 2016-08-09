@@ -276,6 +276,7 @@ The following events can be emitted from the `WebsocketClient`:
 * `open`
 * `message`
 * `close`
+* `error`
 
 ### Orderbook
 `Orderbook` is a data structure that can be used to store a local copy of the orderbook.
