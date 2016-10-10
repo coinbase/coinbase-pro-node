@@ -18,6 +18,11 @@
       "email": "miha@rebernik.info",
       "name": "Miha Rebernik",
       "url": "http://miha.rebernik.info"
+    },
+    {
+      "email": "github@phearzero.com",
+      "name": "Michael Feher",
+      "url": "https://net.phearzero.com"
     }
   ],
   "dependencies": {
@@ -31,6 +36,7 @@
     "nock": "3.6.0",
     "num": "0.2.1",
     "request": "2.74.0",
+    "util-browser": "0.0.2",
     "ws": "1.1.1"
   },
   "description": "Client for the GDAX API",
