@@ -2,7 +2,7 @@
   "name": "gdax",
   "version": "0.2.1",
   "author": "Coinbase",
-  "bugs": "https://github.com/coinbase/gdax-node/issues",
+  "bugs": "https://github.com/TradeLily/gdax-js/issues",
   "contributors": [
     {
       "email": "peterldowns@gmail.com",
@@ -46,7 +46,7 @@
   "directories": {
     "lib": "./lib"
   },
-  "homepage": "https://github.com/coinbase/gdax-node",
+  "homepage": "https://github.com/TradeLily/gdax-js",
   "keywords": [
     "API",
     "bitcoin",
@@ -62,7 +62,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/coinbase/gdax-node.git"
+    "url": "git://github.com/TradeLily/gdax-js.git"
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js"
