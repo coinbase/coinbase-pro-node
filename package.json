@@ -2,7 +2,8 @@
   "name": "gdax",
   "version": "0.2.1",
   "author": "Coinbase",
-  "bugs": "https://github.com/coinbase/gdax-node/issues",
+  "bugs": "https://github.com/TradeLily/gdax-js/issues",
+  "description": "Client for the GDAX API",
   "contributors": [
     {
       "email": "peterldowns@gmail.com",
@@ -18,27 +19,37 @@
       "email": "miha@rebernik.info",
       "name": "Miha Rebernik",
       "url": "http://miha.rebernik.info"
+    },
+    {
+      "email": "github@phearzero.com",
+      "name": "Michael Feher",
+      "url": "https://net.phearzero.com"
     }
   ],
   "dependencies": {
-    "async": "1.5.0",
-    "bintrees": "1.0.0",
-    "lodash.assign": "3.0.0",
-    "lodash.foreach": "3.0.0",
-    "lodash.partial": "3.0.0",
-    "nock": "3.6.0",
-    "num": "0.2.1",
-    "request": "2.74.0",
-    "ws": "1.1.1"
+    "async": "2.1.2",
+    "bintrees": "1.0.1",
+    "browser-request": "^0.3.3",
+    "crypto-browserify": "^3.11.0",
+    "detect-node": "^2.0.3",
+    "eventemitter2": "^2.1.3",
+    "lodash.foreach": "4.5.0",
+    "num": "0.3.0",
+    "request": "2.75.0",
+    "websocket": "^1.0.23"
   },
-  "description": "Client for the GDAX API",
   "devDependencies": {
-    "mocha": "1.20.1"
+    "esdoc": "^0.4.8",
+    "eslint": "^3.8.1",
+    "eslint-config-google": "^0.7.0",
+    "mocha": "3.1.2",
+    "nock": "8.1.0",
+    "nsp": "^2.6.2"
   },
   "directories": {
     "lib": "./lib"
   },
-  "homepage": "https://github.com/coinbase/gdax-node",
+  "homepage": "https://github.com/TradeLily/gdax-js",
   "keywords": [
     "API",
     "bitcoin",
@@ -54,9 +65,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/coinbase/gdax-node.git"
+    "url": "git://github.com/TradeLily/gdax-js.git"
   },
   "scripts": {
-    "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+    "test": "nsp check && npm run lint && npm run unit",
+    "unit": "mocha --ui qunit --bail --reporter list tests/*.js",
+    "lint": "eslint -c .eslintrc.json ./ **/*.js",
+    "docs": "esdoc -c esdoc.json"
   }
 }
