@@ -1,0 +1,13 @@
+{
+  "source": "./lib",
+  "destination": "./docs",
+  "package": "./package.json",
+  "test": {
+    "type": "mocha",
+    "source": "./tests",
+    "includes": ["\\.(js|es6)$"]
+  },
+  "plugins": [{
+    "name": "./esdoc-es2015.js"
+  }]
+}

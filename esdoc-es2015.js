@@ -7,3 +7,9 @@
  > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  > SOFTWARE.
  */
+
+exports.onHandleCode = function(ev) {
+  ev.data.code = ev.data.code
+    .replace(/module\.exports = /g, 'export default ')
+    .replace(/exports = /g, 'export default ');
+};
