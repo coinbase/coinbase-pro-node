@@ -264,6 +264,12 @@ var withdrawParamsBTC = {
 authedClient.withdraw(withdrawParamsBTC, callback);
 ```
 
+* [`getTrailingVolume`](https://docs.gdax.com/#user-account)
+```javascript
+// Get your 30 day trailing volumes
+authedClient.getTrailingVolume(callback);
+```
+
 ### Websocket client
 The `WebsocketClient` allows you to connect and listen to the
 [exchange websocket messages](https://docs.gdax.com/#messages).
