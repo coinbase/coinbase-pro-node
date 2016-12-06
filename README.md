@@ -1,4 +1,4 @@
-# GDAX
+# GDAX [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node)
 The official Node.js library for the [GDAX
 API](https://docs.gdax.com/) (formerly Coinbase Exchange).
 
