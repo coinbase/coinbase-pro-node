@@ -2,6 +2,9 @@
     "env": {
         "node": true
     },
+    "globals": {
+        "test": false
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaVersion": 6,
@@ -16,6 +19,10 @@
         "linebreak-style": [
             "error",
             "unix"
+        ],
+        "no-unused-vars": [
+          "warn",
+          { "vars": "all", "args": "after-used"}
         ],
         "quotes": [
             "error",
