@@ -9,10 +9,10 @@ var checkState = function(state, exp) {
 test('add new orders', function() {
   var state = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 10 },
+      { id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 10 },
       { id: 'super-duper-id',
         side: 'buy',
         price: 200,
@@ -40,14 +40,14 @@ test('remove order', function() {
 
   var state = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 10 },
-     { id: 'super-duper-id-3',
-       side: 'buy',
-       price: 201,
-       size: 10 },
+      { id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 10 },
+      { id: 'super-duper-id-3',
+        side: 'buy',
+        price: 201,
+        size: 10 },
       { id: 'super-duper-id',
         side: 'buy',
         price: 200,
@@ -106,10 +106,10 @@ test('partial order match', function() {
 
   var expectedState = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 5 },
+      { id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 5 },
       { id: 'super-duper-id',
         side: 'buy',
         price: 200,
@@ -177,10 +177,10 @@ test('order change', function() {
 
   var expectedState = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 3 },
+      { id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 3 },
       { id: 'super-duper-id',
         side: 'buy',
         price: 200,
@@ -195,4 +195,3 @@ test('order change', function() {
 
   checkState(orderbook.state(), expectedState);
 });
-
