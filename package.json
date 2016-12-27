@@ -33,6 +33,7 @@
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
+    "eslint": "^3.12.2",
     "mocha": "1.20.1"
   },
   "directories": {
@@ -57,6 +58,7 @@
     "url": "git://github.com/coinbase/gdax-node.git"
   },
   "scripts": {
-    "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+    "test": "mocha --ui qunit --bail --reporter list tests/*.js",
+    "lint": "./node_modules/.bin/eslint -c .eslintrc.json ."
   }
 }
