@@ -275,13 +275,14 @@ The `WebsocketClient` allows you to connect and listen to the
 [exchange websocket messages](https://docs.gdax.com/#messages).
 ```javascript
 var Gdax = require('gdax');
-var websocket = new Gdax.WebsocketClient();
+var websocket = new Gdax.WebsocketClient(['BTC-USD', 'ETH-USD']);
 websocket.on('message', function(data) { console.log(data); });
 ```
 The following events can be emitted from the `WebsocketClient`:
 * `open`
 * `message`
 * `close`
+* `error`
 
 ### Orderbook
 `Orderbook` is a data structure that can be used to store a local copy of the orderbook.
