@@ -122,12 +122,17 @@ publicClient.getTime(callback);
 The [private exchange API
 endpoints](https://docs.gdax.com/#private) require you to
 authenticate with an API key. You can create a new API key [in your exchange
-account's settings](https://gdax.com/settings).
+account's settings](https://gdax.com/settings). You can also specify the 
+API uri.
 
 ```javascript
 var Gdax = require('gdax');
+var apiURI = 'https://api.gdax.com';
+var sandboxURI = 'https://api-public.sandbox.gdax.com';
+
+// Defaults to https://api.gdax.com if apiURI omitted
 var authedClient = new Gdax.AuthenticatedClient(
-  key, b64secret, passphrase);
+  key, b64secret, passphrase, apiURI);
 ```
 
 Like the `PublicClient`, all API methods are callback based. The callback
