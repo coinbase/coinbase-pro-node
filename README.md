@@ -74,7 +74,10 @@ publicClient.getProductOrderBook({'level': 3}, callback);
 
 * [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)
 ```javascript
+// Get the default product ticker
 publicClient.getProductTicker(callback);
+// Get a specific product ticker by ID
+publicClient.getProductTicker('BTC-USD', callback);
 ```
 
 * [`getProductTrades`](https://docs.gdax.com/#get-trades)
