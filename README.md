@@ -1,4 +1,4 @@
-# GDAX
+# GDAX [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
 The official Node.js library for the [GDAX
 API](https://docs.gdax.com/) (formerly Coinbase Exchange).
 
@@ -122,10 +122,15 @@ publicClient.getTime(callback);
 The [private exchange API
 endpoints](https://docs.gdax.com/#private) require you to
 authenticate with an API key. You can create a new API key [in your exchange
-account's settings](https://gdax.com/settings).
+account's settings](https://gdax.com/settings). You can also specify the 
+API uri.
 
 ```javascript
 var Gdax = require('gdax');
+var apiURI = 'https://api.gdax.com';
+var sandboxURI = 'https://api-public.sandbox.gdax.com';
+
+// Defaults to https://api.gdax.com if apiURI omitted
 var authedClient = new Gdax.AuthenticatedClient(
   key, b64secret, passphrase, apiURL, productID);
 ```
@@ -275,13 +280,14 @@ The `WebsocketClient` allows you to connect and listen to the
 [exchange websocket messages](https://docs.gdax.com/#messages).
 ```javascript
 var Gdax = require('gdax');
-var websocket = new Gdax.WebsocketClient();
+var websocket = new Gdax.WebsocketClient(['BTC-USD', 'ETH-USD']);
 websocket.on('message', function(data) { console.log(data); });
 ```
 The following events can be emitted from the `WebsocketClient`:
 * `open`
 * `message`
 * `close`
+* `error`
 
 ### Orderbook
 `Orderbook` is a data structure that can be used to store a local copy of the orderbook.
