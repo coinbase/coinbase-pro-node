@@ -127,7 +127,7 @@ account's settings](https://gdax.com/settings).
 ```javascript
 var Gdax = require('gdax');
 var authedClient = new Gdax.AuthenticatedClient(
-  key, b64secret, passphrase);
+  key, b64secret, passphrase, productID);
 ```
 
 Like the `PublicClient`, all API methods are callback based. The callback
