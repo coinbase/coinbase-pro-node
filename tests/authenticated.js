@@ -330,6 +330,26 @@ test('get fundings', function(done) {
   });
 });
 
+test('repay', function(done) {
+  var params = {
+    "amount" : 10000,
+    "currency": 'USD'
+  };
+
+  expectedParams = params;
+
+  nock(EXCHANGE_API_URL)
+      .post('/funding/repay', expectedParams)
+      .reply(200, {});
+
+  authClient.repay(params, function(err, resp, data) {
+    assert.ifError(err);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
 test('deposit', function(done) {
   var transfer = {
     "amount" : 10480,
