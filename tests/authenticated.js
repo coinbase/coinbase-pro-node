@@ -305,6 +305,51 @@ test('get fills', function(done) {
   });
 });
 
+test('get fundings', function(done) {
+  var expectedResponse = [{
+      "id": "280c0a56-f2fa-4d3b-a199-92df76fff5cd",
+      "order_id": "280c0a56-f2fa-4d3b-a199-92df76fff5cd",
+      "profile_id": "d881e5a6-58eb-47cd-b8e2-8d9f2e3ec6f6",
+      "amount": "545.2400000000000000",
+      "status": "outstanding",
+      "created_at": "2017-03-18T00:34:34.270484Z",
+      "currency": "USD",
+      "repaid_amount": "532.7580047716682500"
+    }];
+
+  nock(EXCHANGE_API_URL)
+      .get('/funding')
+      .reply(200, expectedResponse);
+
+  authClient.getFundings(function(err, resp, data) {
+    assert.ifError(err);
+    assert.deepEqual(data, expectedResponse);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
+test('repay', function(done) {
+  var params = {
+    "amount" : 10000,
+    "currency": 'USD'
+  };
+
+  expectedParams = params;
+
+  nock(EXCHANGE_API_URL)
+      .post('/funding/repay', expectedParams)
+      .reply(200, {});
+
+  authClient.repay(params, function(err, resp, data) {
+    assert.ifError(err);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
 test('deposit', function(done) {
   var transfer = {
     "amount" : 10480,
