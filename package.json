@@ -21,19 +21,16 @@
     }
   ],
   "dependencies": {
-    "async": "1.5.0",
-    "bintrees": "1.0.0",
-    "lodash.assign": "3.0.0",
-    "lodash.foreach": "3.0.0",
-    "lodash.partial": "3.0.0",
-    "nock": "3.6.0",
-    "num": "0.2.1",
-    "request": "2.74.0",
-    "ws": "1.1.1"
+    "async": "2.3.0",
+    "bintrees": "1.0.1",
+    "num": "0.3.0",
+    "request": "2.81.0",
+    "ws": "2.2.3"
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
-    "mocha": "1.20.1"
+    "mocha": "3.2.0",
+    "nock": "9.0.11"
   },
   "directories": {
     "lib": "./lib"
