@@ -240,6 +240,20 @@ authedClient.getFills(callback);
 authedClient.getFills({'before': 3000}, callback);
 ```
 
+* [`getFundings`](https://docs.gdax.com/#list-fundings)
+```javascript
+authedClient.getFundings({}, callback);
+```
+
+* [`repay`](https://docs.gdax.com/#repay)
+```javascript
+var params = {
+  'amount': '2000.00',
+  'currency': 'USD'
+};
+authedClient.repay(params, callback);
+```
+
 * [`deposit`, `withdraw`](https://docs.gdax.com/#list-fills)
 ```javascript
 // Deposit to your Exchange USD account from your Coinbase USD account.
