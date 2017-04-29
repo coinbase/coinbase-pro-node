@@ -17,25 +17,25 @@ test('._getSignature', function() {
   var opts = {
     method : 'PUT',
     uri : 'https://api.gdax.com/orders'
-  }
-  
-  var sig = authClient._getSignature(method, relativeURI, opts)
+  };
+
+  var sig = authClient._getSignature(method, relativeURI, opts);
 
   assert.equal(sig['CB-ACCESS-KEY'], key);
   assert.equal(sig['CB-ACCESS-PASSPHRASE'], passphrase);
 
-  assert(sig['CB-ACCESS-TIMESTAMP'])
-  assert(sig['CB-ACCESS-SIGN'])
+  assert(sig['CB-ACCESS-TIMESTAMP']);
+  assert(sig['CB-ACCESS-SIGN']);
 });
 
 test('get account', function(done) {
   var expectedResponse = {
-    "id": "a1b2c3d4",
-    "balance": "1.100",
-    "holds": "0.100",
-    "available": "1.00",
-    "currency": "USD" 
-  }
+    'id': 'a1b2c3d4',
+    'balance': '1.100',
+    'holds': '0.100',
+    'available': '1.00',
+    'currency': 'USD'
+  };
 
   nock(EXCHANGE_API_URL)
       .get('/accounts/test-id')
@@ -47,17 +47,17 @@ test('get account', function(done) {
 
     nock.cleanAll();
     done();
-  })
+  });
 });
 
 test('get accounts', function(done) {
   var expectedResponse = [{
-    "id": "a1b2c3d4",
-    "balance": "1.100",
-    "holds": "0.100",
-    "available": "1.00",
-    "currency": "USD" 
-  }]
+    'id': 'a1b2c3d4',
+    'balance': '1.100',
+    'holds': '0.100',
+    'available': '1.00',
+    'currency': 'USD'
+  }];
 
   nock(EXCHANGE_API_URL)
       .get('/accounts')
@@ -74,15 +74,15 @@ test('get accounts', function(done) {
 
 test('get account history', function(done) {
   var expectedResponse = [ {
-    "id": "100",
-    "created_at": "2014-11-07T08:19:27.028459Z",
-    "amount": "0.001",
-    "balance": "239.669",
-    "type": "fee",
-    "details": {
-        "order_id": "d50ec984-77a8-460a-b958-66f114b0de9b",
-        "trade_id": "74",
-        "product_id": "BTC-USD"
+    'id': '100',
+    'created_at': '2014-11-07T08:19:27.028459Z',
+    'amount': '0.001',
+    'balance': '239.669',
+    'type': 'fee',
+    'details': {
+      'order_id': 'd50ec984-77a8-460a-b958-66f114b0de9b',
+      'trade_id': '74',
+      'product_id': 'BTC-USD'
     }
   }];
 
@@ -101,13 +101,13 @@ test('get account history', function(done) {
 
 test('get account holds', function(done) {
   var expectedResponse = [{
-    "id": "82dcd140-c3c7-4507-8de4-2c529cd1a28f",
-    "account_id": "e0b3f39a-183d-453e-b754-0c13e5bab0b3",
-    "created_at": "2014-11-06T10:34:47.123456Z",
-    "updated_at": "2014-11-06T10:40:47.123456Z",
-    "amount": "4.23",
-    "type": "order",
-    "ref": "0a205de4-dd35-4370-a285-fe8fc375a273"
+    'id': '82dcd140-c3c7-4507-8de4-2c529cd1a28f',
+    'account_id': 'e0b3f39a-183d-453e-b754-0c13e5bab0b3',
+    'created_at': '2014-11-06T10:34:47.123456Z',
+    'updated_at': '2014-11-06T10:40:47.123456Z',
+    'amount': '4.23',
+    'type': 'order',
+    'ref': '0a205de4-dd35-4370-a285-fe8fc375a273'
   }];
 
   nock(EXCHANGE_API_URL)
@@ -130,16 +130,16 @@ test('buy order', function(done) {
     price : '100'
   };
 
-  expectedOrder = order;
-  expectedOrder.side = 'buy'
+  var expectedOrder = order;
+  expectedOrder.side = 'buy';
 
   var expectedResponse = {
-    "id": "0428b97b-bec1-429e-a94c-59992926778d"
-  }
+    'id': '0428b97b-bec1-429e-a94c-59992926778d'
+  };
 
   nock(EXCHANGE_API_URL)
       .post('/orders', expectedOrder)
-      .reply(200, expectedResponse)
+      .reply(200, expectedResponse);
 
   authClient.buy(order, function(err, resp, data) {
     assert.ifError(err);
@@ -157,16 +157,16 @@ test('sell order', function(done) {
     price : '100'
   };
 
-  expectedOrder = order;
-  expectedOrder.side = 'sell'
+  var expectedOrder = order;
+  expectedOrder.side = 'sell';
 
   var expectedResponse = {
-    "id": "0428b97b-bec1-429e-a94c-59992926778d"
-  }
+    'id': '0428b97b-bec1-429e-a94c-59992926778d'
+  };
 
   nock(EXCHANGE_API_URL)
       .post('/orders', expectedOrder)
-      .reply(200, expectedResponse)
+      .reply(200, expectedResponse);
 
   authClient.sell(order, function(err, resp, data) {
     assert.ifError(err);
@@ -190,7 +190,7 @@ test('get product orderbook', function(done) {
     assert(data);
     done();
   });
-}) 
+});
 
 test('cancel all orders', function(done) {
   // nock three requests to delete /orders
@@ -245,21 +245,21 @@ test('should require orderID for cancelOrder', function(done) {
 
 test('get orders', function(done) {
   var expectedResponse = [{
-    "id": "d50ec984-77a8-460a-b958-66f114b0de9b",
-    "size": "3.0",
-    "price": "100.23",
-    "product_id": "BTC-USD",
-    "status": "open",
-    "filled_size": "1.23",
-    "fill_fees": "0.001",
-    "settled": false,
-    "side": "buy",
-    "created_at": "2014-11-14T06:39:55.189376Z"
+    'id': 'd50ec984-77a8-460a-b958-66f114b0de9b',
+    'size': '3.0',
+    'price': '100.23',
+    'product_id': 'BTC-USD',
+    'status': 'open',
+    'filled_size': '1.23',
+    'fill_fees': '0.001',
+    'settled': false,
+    'side': 'buy',
+    'created_at': '2014-11-14T06:39:55.189376Z'
   }];
 
   nock(EXCHANGE_API_URL)
       .get('/orders')
-      .reply(200, expectedResponse)
+      .reply(200, expectedResponse);
 
   authClient.getOrders(function(err, resp, data) {
     assert.ifError(err);
@@ -279,16 +279,16 @@ test('should require orderID for getOrder', function(done) {
 
 test('get fills', function(done) {
   var expectedResponse = [{
-    "trade_id": 74,
-    "product_id": "BTC-USD",
-    "price": "10.00",
-    "size": "0.01",
-    "order_id": "d50ec984-77a8-460a-b958-66f114b0de9b",
-    "created_at": "2014-11-07T22:19:28.578544Z",
-    "liquidity": "T",
-    "fee": "0.00025",
-    "settled": true,
-    "side": "buy"
+    'trade_id': 74,
+    'product_id': 'BTC-USD',
+    'price': '10.00',
+    'size': '0.01',
+    'order_id': 'd50ec984-77a8-460a-b958-66f114b0de9b',
+    'created_at': '2014-11-07T22:19:28.578544Z',
+    'liquidity': 'T',
+    'fee': '0.00025',
+    'settled': true,
+    'side': 'buy'
   }];
 
   nock(EXCHANGE_API_URL)
@@ -403,11 +403,11 @@ test('close position', function(done) {
 
 test('deposit', function(done) {
   var transfer = {
-    "amount" : 10480,
-    "coinbase_account_id": 'test-id' 
-  }
+    'amount' : 10480,
+    'coinbase_account_id': 'test-id'
+  };
 
-  expectedTransfer = transfer;
+  var expectedTransfer = transfer;
   expectedTransfer.type = 'deposit';
 
   nock(EXCHANGE_API_URL)
@@ -424,11 +424,11 @@ test('deposit', function(done) {
 
 test('withdraw', function(done) {
   var transfer = {
-    "amount" : 10480,
-    "coinbase_account_id": 'test-id' 
-  }
+    'amount' : 10480,
+    'coinbase_account_id': 'test-id'
+  };
 
-  expectedTransfer = transfer;
+  var expectedTransfer = transfer;
   expectedTransfer.type = 'withdraw';
 
   nock(EXCHANGE_API_URL)

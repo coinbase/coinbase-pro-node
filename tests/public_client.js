@@ -8,17 +8,17 @@ var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 test('get product trades', function(done) {
   var expectedResponse = [{
-    "time": "2014-11-07T22:19:28.578544Z",
-    "trade_id": 74,
-    "price": "10.00000000",
-    "size": "0.01000000",
-    "side": "buy"
+    'time': '2014-11-07T22:19:28.578544Z',
+    'trade_id': 74,
+    'price': '10.00000000',
+    'size': '0.01000000',
+    'side': 'buy'
   }, {
-    "time": "2014-11-07T01:08:43.642366Z",
-    "trade_id": 73,
-    "price": "100.00000000",
-    "size": "0.01000000",
-    "side": "sell"
+    'time': '2014-11-07T01:08:43.642366Z',
+    'trade_id': 73,
+    'price': '100.00000000',
+    'size': '0.01000000',
+    'side': 'sell'
   }];
 
   nock(EXCHANGE_API_URL)
@@ -35,7 +35,7 @@ test('get product trades', function(done) {
 });
 
 test('public client should return values', function(done) {
-  
+
   nock(EXCHANGE_API_URL)
   .get('/products/BTC-USD/ticker')
   .reply(200, {
@@ -50,8 +50,8 @@ test('public client should return values', function(done) {
     assert.equal(data.trade_id, 'test-id');
     assert(data.price, '9.00');
     assert(data.size, '5');
-  
-    nock.cleanAll();    
+
+    nock.cleanAll();
     done();
   });
 });
@@ -60,7 +60,6 @@ test('public client should stream trades', function(done) {
   this.timeout(6000);
 
   var last = 8408014;
-  var cnt = 0
 
   publicClient.getProductTradeStream(last, 8409426)
     .on('data', function(data) {
@@ -81,7 +80,7 @@ test('public client should stream trades with function', function(done) {
   var last = 8408014;
 
   publicClient.getProductTradeStream(last, function(trade) {
-      return Date.parse(trade.time) >= 1463068800000
+    return Date.parse(trade.time) >= 1463068800000;
   })
   .on('data', function(data) {
     var current = data.trade_id;
