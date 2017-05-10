@@ -305,6 +305,102 @@ test('get fills', function(done) {
   });
 });
 
+test('get fundings', function(done) {
+  var expectedResponse = [{
+      "id": "280c0a56-f2fa-4d3b-a199-92df76fff5cd",
+      "order_id": "280c0a56-f2fa-4d3b-a199-92df76fff5cd",
+      "profile_id": "d881e5a6-58eb-47cd-b8e2-8d9f2e3ec6f6",
+      "amount": "545.2400000000000000",
+      "status": "outstanding",
+      "created_at": "2017-03-18T00:34:34.270484Z",
+      "currency": "USD",
+      "repaid_amount": "532.7580047716682500"
+    }];
+
+  nock(EXCHANGE_API_URL)
+      .get('/funding')
+      .reply(200, expectedResponse);
+
+  authClient.getFundings(function(err, resp, data) {
+    assert.ifError(err);
+    assert.deepEqual(data, expectedResponse);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
+test('repay', function(done) {
+  var params = {
+    "amount" : 10000,
+    "currency": 'USD'
+  };
+
+  nock(EXCHANGE_API_URL)
+      .post('/funding/repay', params)
+      .reply(200, {});
+
+  authClient.repay(params, function(err, resp, data) {
+    assert.ifError(err);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
+test('margin transfer', function(done) {
+  var params = {
+    "margin_profile_id": "45fa9e3b-00ba-4631-b907-8a98cbdf21be",
+    "type": "deposit",
+    "currency": "USD",
+    "amount": 2
+  };
+  var expectedResponse = {
+    "created_at": "2017-01-25T19:06:23.415126Z",
+    "id": "80bc6b74-8b1f-4c60-a089-c61f9810d4ab",
+    "user_id": "521c20b3d4ab09621f000011",
+    "profile_id": "cda95996-ac59-45a3-a42e-30daeb061867",
+    "margin_profile_id": "45fa9e3b-00ba-4631-b907-8a98cbdf21be",
+    "type": "deposit",
+    "amount": "2",
+    "currency": "USD",
+    "account_id": "23035fc7-0707-4b59-b0d2-95d0c035f8f5",
+    "margin_account_id": "e1d9862c-a259-4e83-96cd-376352a9d24d",
+    "margin_product_id": "BTC-USD",
+    "status": "completed",
+    "nonce": 25
+  };
+
+  nock(EXCHANGE_API_URL)
+      .post('/profiles/margin-transfer', params)
+      .reply(200, expectedResponse);
+
+  authClient.marginTransfer(params, function(err, resp, data) {
+    assert.ifError(err);
+    assert.deepEqual(data, expectedResponse);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
+test('close position', function(done) {
+  var params = {
+    "repay_only" : false
+  };
+
+  nock(EXCHANGE_API_URL)
+      .post('/position/close', params)
+      .reply(200, {});
+
+  authClient.closePosition(params, function(err, resp, data) {
+    assert.ifError(err);
+
+    nock.cleanAll();
+    done();
+  });
+});
+
 test('deposit', function(done) {
   var transfer = {
     "amount" : 10480,

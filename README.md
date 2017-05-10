@@ -240,6 +240,39 @@ authedClient.getFills(callback);
 authedClient.getFills({'before': 3000}, callback);
 ```
 
+* [`getFundings`](https://docs.gdax.com/#list-fundings)
+```javascript
+authedClient.getFundings({}, callback);
+```
+
+* [`repay`](https://docs.gdax.com/#repay)
+```javascript
+var params = {
+  'amount': '2000.00',
+  'currency': 'USD'
+};
+authedClient.repay(params, callback);
+```
+
+* [`marginTransfer`](https://docs.gdax.com/#margin-transfer)
+```javascript
+var params =
+  'margin_profile_id': '45fa9e3b-00ba-4631-b907-8a98cbdf21be',
+  'type': 'deposit',
+  'currency': 'USD',
+  'amount': 2
+};
+authedClient.marginTransfer(params, callback);
+```
+
+* [`closePosition`](https://docs.gdax.com/#close)
+```javascript
+var params = {
+  'repay_only': false
+};
+authedClient.closePosition(params, callback);
+```
+
 * [`deposit`, `withdraw`](https://docs.gdax.com/#list-fills)
 ```javascript
 // Deposit to your Exchange USD account from your Coinbase USD account.
