@@ -6,6 +6,8 @@ var publicClient = new Gdax.PublicClient();
 
 var EXCHANGE_API_URL = 'https://api.gdax.com';
 
+suite('PublicClient');
+
 test('get product trades', function(done) {
   var expectedResponse = [{
     "time": "2014-11-07T22:19:28.578544Z",
@@ -35,7 +37,7 @@ test('get product trades', function(done) {
 });
 
 test('public client should return values', function(done) {
-  
+
   nock(EXCHANGE_API_URL)
   .get('/products/BTC-USD/ticker')
   .reply(200, {
@@ -50,8 +52,8 @@ test('public client should return values', function(done) {
     assert.equal(data.trade_id, 'test-id');
     assert(data.price, '9.00');
     assert(data.size, '5');
-  
-    nock.cleanAll();    
+
+    nock.cleanAll();
     done();
   });
 });

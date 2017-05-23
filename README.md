@@ -122,7 +122,7 @@ publicClient.getTime(callback);
 The [private exchange API
 endpoints](https://docs.gdax.com/#private) require you to
 authenticate with an API key. You can create a new API key [in your exchange
-account's settings](https://gdax.com/settings). You can also specify the 
+account's settings](https://gdax.com/settings). You can also specify the
 API uri.
 
 ```javascript
@@ -342,8 +342,8 @@ The orderbook has the following methods:
 
 ```javascript
 var Gdax = require('gdax');
-var orderbookSync = new Gdax.OrderbookSync();
-console.log(orderbookSync.book.state());
+var orderbookSync = new Gdax.OrderbookSync(['BTC-USD', 'ETH-USD']);
+console.log(orderbookSync.books['ETH-USD'].state());
 ```
 
 ## Testing
