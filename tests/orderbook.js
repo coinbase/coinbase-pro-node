@@ -6,6 +6,8 @@ var checkState = function(state, exp) {
   assert.deepEqual(JSON.parse(JSON.stringify(state)), exp);
 };
 
+suite('Orderbook');
+
 test('add new orders', function() {
   var state = {
     bids: [

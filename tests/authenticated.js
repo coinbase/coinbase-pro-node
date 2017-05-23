@@ -11,6 +11,8 @@ var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 var authClient = new Gdax.AuthenticatedClient(key, secret, passphrase);
 
+suite('AuthenticatedClient');
+
 test('._getSignature', function() {
   var method = 'PUT';
   var relativeURI = '/orders';
@@ -18,7 +20,7 @@ test('._getSignature', function() {
     method : 'PUT',
     uri : 'https://api.gdax.com/orders'
   }
-  
+
   var sig = authClient._getSignature(method, relativeURI, opts)
 
   assert.equal(sig['CB-ACCESS-KEY'], key);
@@ -34,7 +36,7 @@ test('get account', function(done) {
     "balance": "1.100",
     "holds": "0.100",
     "available": "1.00",
-    "currency": "USD" 
+    "currency": "USD"
   }
 
   nock(EXCHANGE_API_URL)
@@ -56,7 +58,7 @@ test('get accounts', function(done) {
     "balance": "1.100",
     "holds": "0.100",
     "available": "1.00",
-    "currency": "USD" 
+    "currency": "USD"
   }]
 
   nock(EXCHANGE_API_URL)
@@ -190,7 +192,7 @@ test('get product orderbook', function(done) {
     assert(data);
     done();
   });
-}) 
+})
 
 test('cancel all orders', function(done) {
   // nock three requests to delete /orders
@@ -404,7 +406,7 @@ test('close position', function(done) {
 test('deposit', function(done) {
   var transfer = {
     "amount" : 10480,
-    "coinbase_account_id": 'test-id' 
+    "coinbase_account_id": 'test-id'
   }
 
   expectedTransfer = transfer;
@@ -425,7 +427,7 @@ test('deposit', function(done) {
 test('withdraw', function(done) {
   var transfer = {
     "amount" : 10480,
-    "coinbase_account_id": 'test-id' 
+    "coinbase_account_id": 'test-id'
   }
 
   expectedTransfer = transfer;
