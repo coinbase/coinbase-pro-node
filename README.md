@@ -316,6 +316,12 @@ var Gdax = require('gdax');
 var websocket = new Gdax.WebsocketClient(['BTC-USD', 'ETH-USD']);
 websocket.on('message', function(data) { console.log(data); });
 ```
+
+Optionally set the heartbeat mode.
+```javascript
+var websocket = new Gdax.WebsocketClient(['BTC-USD','ETH-USD'], true);
+```
+
 The following events can be emitted from the `WebsocketClient`:
 * `open`
 * `message`
