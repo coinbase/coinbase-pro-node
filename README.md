@@ -38,8 +38,11 @@ interested in the public endpoints, you should use a `PublicClient`.
 
 ```javascript
 var Gdax = require('gdax');
-var publicClient = new Gdax.PublicClient();
+var publicClient = new Gdax.PublicClient(optionalProductID*, optionalEndpointURL*);
 ```
+
+- `optionalProductID` defaults to 'BTC-USD' if not specified.
+- `optionalEndpointURL` defaults to https://api.gdax.com if not specified.
 
 All API methods are callback based. Your callback should accept three arguments:
 
