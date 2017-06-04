@@ -1,31 +1,34 @@
-var assert = require('assert');
-var nock = require('nock');
+const assert = require('assert');
+const nock = require('nock');
 
-var Gdax = require('../index.js');
-var publicClient = new Gdax.PublicClient();
+const Gdax = require('../index.js');
+const publicClient = new Gdax.PublicClient();
 
-var EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('PublicClient');
 
 test('get product trades', function(done) {
-  var expectedResponse = [{
-    "time": "2014-11-07T22:19:28.578544Z",
-    "trade_id": 74,
-    "price": "10.00000000",
-    "size": "0.01000000",
-    "side": "buy"
-  }, {
-    "time": "2014-11-07T01:08:43.642366Z",
-    "trade_id": 73,
-    "price": "100.00000000",
-    "size": "0.01000000",
-    "side": "sell"
-  }];
+  const expectedResponse = [
+    {
+      time: '2014-11-07T22:19:28.578544Z',
+      trade_id: 74,
+      price: '10.00000000',
+      size: '0.01000000',
+      side: 'buy',
+    },
+    {
+      time: '2014-11-07T01:08:43.642366Z',
+      trade_id: 73,
+      price: '100.00000000',
+      size: '0.01000000',
+      side: 'sell',
+    },
+  ];
 
   nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/trades')
-      .reply(200, expectedResponse);
+    .get('/products/BTC-USD/trades')
+    .reply(200, expectedResponse);
 
   publicClient.getProductTrades(function(err, resp, data) {
     assert.ifError(err);
@@ -37,13 +40,10 @@ test('get product trades', function(done) {
 });
 
 test('public client should return values', function(done) {
-
-  nock(EXCHANGE_API_URL)
-  .get('/products/BTC-USD/ticker')
-  .reply(200, {
+  nock(EXCHANGE_API_URL).get('/products/BTC-USD/ticker').reply(200, {
     trade_id: 'test-id',
     price: '9.00',
-    size: '5'
+    size: '5',
   });
 
   publicClient.getProductTicker(function(err, resp, data) {
@@ -61,17 +61,21 @@ test('public client should return values', function(done) {
 test('public client should stream trades', function(done) {
   this.timeout(6000);
 
-  var last = 8408014;
-  var cnt = 0
+  let last = 8408014;
 
-  publicClient.getProductTradeStream(last, 8409426)
-    .on('data', function(data) {
-      var current = data.trade_id;
+  publicClient
+    .getProductTradeStream(last, 8409426)
+    .on('data', data => {
+      const current = data.trade_id;
       assert.equal(typeof current, 'number');
-      assert.equal(current, last + 1, current + ' is next in series, last: ' + last);
+      assert.equal(
+        current,
+        last + 1,
+        current + ' is next in series, last: ' + last
+      );
       last = current;
     })
-    .on('end', function() {
+    .on('end', () => {
       assert.equal(last, 8409425, 'ended on ' + last);
       done();
     });
@@ -80,19 +84,25 @@ test('public client should stream trades', function(done) {
 test('public client should stream trades with function', function(done) {
   this.timeout(6000);
 
-  var last = 8408014;
+  let last = 8408014;
 
-  publicClient.getProductTradeStream(last, function(trade) {
-      return Date.parse(trade.time) >= 1463068800000
-  })
-  .on('data', function(data) {
-    var current = data.trade_id;
-    assert.equal(typeof current, 'number');
-    assert.equal(current, last + 1, current + ' is next in series, last: ' + last);
-    last = current;
-  })
-  .on('end', function() {
-    assert.equal(last, 8409426, last);
-    done();
-  });
+  publicClient
+    .getProductTradeStream(
+      last,
+      trade => Date.parse(trade.time) >= 1463068800000
+    )
+    .on('data', data => {
+      const current = data.trade_id;
+      assert.equal(typeof current, 'number');
+      assert.equal(
+        current,
+        last + 1,
+        current + ' is next in series, last: ' + last
+      );
+      last = current;
+    })
+    .on('end', () => {
+      assert.equal(last, 8409426, last);
+      done();
+    });
 });

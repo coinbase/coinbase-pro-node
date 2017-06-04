@@ -1,29 +1,33 @@
-var assert = require('assert');
+const assert = require('assert');
 
-var Gdax = require('../index.js');
+const Gdax = require('../index.js');
 
-var checkState = function(state, exp) {
+const checkState = function(state, exp) {
   assert.deepEqual(JSON.parse(JSON.stringify(state)), exp);
 };
 
 suite('Orderbook');
 
 test('add new orders', function() {
-  var state = {
+  const state = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 10 },
-      { id: 'super-duper-id',
+      {
+        id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 10,
+      },
+      {
+        id: 'super-duper-id',
         side: 'buy',
         price: 200,
-        size: 10 }
+        size: 10,
+      },
     ],
-    asks: []
+    asks: [],
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.add(state.bids[0]);
   orderbook.add(state.bids[1]);
 
@@ -31,34 +35,40 @@ test('add new orders', function() {
 });
 
 test('remove order', function() {
-  var apiState = {
+  const apiState = {
     bids: [
-     [201, 10, 'super-duper-id-2'],
-     [201, 10, 'super-duper-id-3'],
-     [200, 10, 'super-duper-id']
+      [201, 10, 'super-duper-id-2'],
+      [201, 10, 'super-duper-id-3'],
+      [200, 10, 'super-duper-id'],
     ],
-    asks: []
+    asks: [],
   };
 
-  var state = {
+  const state = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 10 },
-     { id: 'super-duper-id-3',
-       side: 'buy',
-       price: 201,
-       size: 10 },
-      { id: 'super-duper-id',
+      {
+        id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 10,
+      },
+      {
+        id: 'super-duper-id-3',
+        side: 'buy',
+        price: 201,
+        size: 10,
+      },
+      {
+        id: 'super-duper-id',
         side: 'buy',
         price: 200,
-        size: 10 }
+        size: 10,
+      },
     ],
-    asks: []
+    asks: [],
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   checkState(orderbook.state(), state);
 
@@ -68,59 +78,57 @@ test('remove order', function() {
 });
 
 test('get order', function() {
-  var apiState = {
-    bids: [
-      [201, 10, 'super-duper-id-2'],
-      [200, 10, 'super-duper-id']
-    ],
-    asks: []
+  const apiState = {
+    bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
+    asks: [],
   };
 
-  var expected = {
+  const expected = {
     id: 'super-duper-id-2',
     price: 201,
     size: 10,
-    side: 'buy'
+    side: 'buy',
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
-  var order = orderbook.get('super-duper-id-2');
+  const order = orderbook.get('super-duper-id-2');
 
   assert.deepEqual(JSON.parse(JSON.stringify(order)), expected);
 });
 
 test('partial order match', function() {
-  var apiState = {
-    bids: [
-      [201, 10, 'super-duper-id-2'],
-      [200, 10, 'super-duper-id']
-    ],
-    asks: []
+  const apiState = {
+    bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
+    asks: [],
   };
 
-  var match = {
+  const match = {
     maker_order_id: 'super-duper-id-2',
     size: 5,
     price: 201,
     side: 'buy',
   };
 
-  var expectedState = {
+  const expectedState = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 5 },
-      { id: 'super-duper-id',
+      {
+        id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 5,
+      },
+      {
+        id: 'super-duper-id',
         side: 'buy',
         price: 200,
-        size: 10 }
+        size: 10,
+      },
     ],
-    asks: []
+    asks: [],
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.match(match);
 
@@ -128,32 +136,31 @@ test('partial order match', function() {
 });
 
 test('full order match', function() {
-  var apiState = {
-    bids: [
-      [201, 10, 'super-duper-id-2'],
-      [200, 10, 'super-duper-id']
-    ],
-    asks: []
+  const apiState = {
+    bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
+    asks: [],
   };
 
-  var match = {
+  const match = {
     maker_order_id: 'super-duper-id-2',
     size: 10,
     price: 201,
     side: 'buy',
   };
 
-  var expectedState = {
+  const expectedState = {
     bids: [
-      { id: 'super-duper-id',
+      {
+        id: 'super-duper-id',
         side: 'buy',
         price: 200,
-        size: 10 }
+        size: 10,
+      },
     ],
-    asks: []
+    asks: [],
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.match(match);
 
@@ -161,15 +168,12 @@ test('full order match', function() {
 });
 
 test('order change', function() {
-  var apiState = {
-    bids: [
-      [201, 10, 'super-duper-id-2'],
-      [200, 10, 'super-duper-id']
-    ],
-    asks: []
+  const apiState = {
+    bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
+    asks: [],
   };
 
-  var change = {
+  const change = {
     order_id: 'super-duper-id-2',
     old_size: '10.0',
     new_size: 3,
@@ -177,24 +181,27 @@ test('order change', function() {
     side: 'buy',
   };
 
-  var expectedState = {
+  const expectedState = {
     bids: [
-     { id: 'super-duper-id-2',
-       side: 'buy',
-       price: 201,
-       size: 3 },
-      { id: 'super-duper-id',
+      {
+        id: 'super-duper-id-2',
+        side: 'buy',
+        price: 201,
+        size: 3,
+      },
+      {
+        id: 'super-duper-id',
         side: 'buy',
         price: 200,
-        size: 10 }
+        size: 10,
+      },
     ],
-    asks: []
+    asks: [],
   };
 
-  var orderbook = new Gdax.Orderbook();
+  const orderbook = new Gdax.Orderbook();
   orderbook.state(apiState);
   orderbook.change(change);
 
   checkState(orderbook.state(), expectedState);
 });
-
