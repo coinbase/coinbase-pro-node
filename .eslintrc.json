@@ -1,0 +1,27 @@
+{
+  "root": true,
+  "extends": "eslint:recommended",
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  },
+  "rules": {
+    "constructor-super": "error",
+    "curly": ["error", "all"],
+    "eqeqeq": "error",
+    "func-names": ["error", "always"],
+    "linebreak-style": ["error", "unix"],
+    "no-const-assign": "error",
+    "no-this-before-super": "error",
+    "no-undef": "error",
+    "no-unreachable": "error",
+    "no-unused-vars": "error",
+    "prefer-destructuring": "error",
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
+    "valid-typeof": "error"
+  }
+}
