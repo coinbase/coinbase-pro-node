@@ -23,6 +23,8 @@
   "dependencies": {
     "async": "1.5.0",
     "bintrees": "1.0.0",
+    "husky": "^0.13.4",
+    "lint-staged": "^3.6.0",
     "lodash.assign": "3.0.0",
     "lodash.foreach": "3.0.0",
     "lodash.partial": "3.0.0",
@@ -59,6 +61,13 @@
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js",
-    "fmt": "node_modules/.bin/prettier --write 'index.js' 'lib/**/*.js' 'tests/**/*.js'"
+    "fmt": "node_modules/.bin/prettier --write 'index.js' 'lib/**/*.js' 'tests/**/*.js'",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "node_modules/.bin/prettier --write",
+      "git add"
+    ]
   }
 }
