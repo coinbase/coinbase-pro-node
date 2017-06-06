@@ -58,5 +58,10 @@
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+  },
+  {
+    "engines": {
+      "npm": ">=5.0.0"
+    }
   }
 }
