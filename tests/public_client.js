@@ -62,6 +62,8 @@ test('public client should stream trades', function(done) {
   var last = 8408014;
   var cnt = 0
 
+  nock.load('./tests/pubclient_stream_trades_mocks.json');
+
   publicClient.getProductTradeStream(last, 8409426)
     .on('data', function(data) {
       var current = data.trade_id;
@@ -71,6 +73,7 @@ test('public client should stream trades', function(done) {
     })
     .on('end', function() {
       assert.equal(last, 8409425, 'ended on ' + last);
+      nock.cleanAll();
       done();
     });
 });
@@ -79,6 +82,8 @@ test('public client should stream trades with function', function(done) {
   this.timeout(6000);
 
   var last = 8408014;
+
+  nock.load('./tests/pubclient_stream_trades_function_mocks.json');
 
   publicClient.getProductTradeStream(last, function(trade) {
       return Date.parse(trade.time) >= 1463068800000
@@ -90,6 +95,7 @@ test('public client should stream trades with function', function(done) {
     last = current;
   })
   .on('end', function() {
+    nock.cleanAll();
     assert.equal(last, 8409426, last);
     done();
   });
