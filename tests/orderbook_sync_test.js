@@ -8,9 +8,7 @@ let port = 56632;
 
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
-suite('OrderbookSync');
-
-describe('OrderbookSync', function() {
+suite('OrderbookSync', () => {
   test('emits a message event', function(done) {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
