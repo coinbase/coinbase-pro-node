@@ -61,12 +61,12 @@
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js",
-    "fmt": "node_modules/.bin/prettier --write 'index.js' 'lib/**/*.js' 'tests/**/*.js'",
+    "format": "prettier --single-quote --tab-width 4 --print-width 86 --trailing-comma es5 --write index.js 'lib/**/*.js' 'tests/**/*.js'",
     "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
-      "node_modules/.bin/prettier --write",
+      "prettier --write",
       "git add"
     ]
   }
