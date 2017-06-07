@@ -23,8 +23,6 @@
   "dependencies": {
     "async": "1.5.0",
     "bintrees": "1.0.0",
-    "husky": "^0.13.4",
-    "lint-staged": "^3.6.0",
     "lodash.assign": "3.0.0",
     "lodash.foreach": "3.0.0",
     "lodash.partial": "3.0.0",
@@ -35,6 +33,8 @@
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
+    "husky": "^0.13.4",
+    "lint-staged": "^3.6.0",
     "mocha": "1.20.1",
     "prettier": "^1.4.2"
   },
