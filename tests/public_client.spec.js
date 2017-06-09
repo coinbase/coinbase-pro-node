@@ -84,7 +84,7 @@ suite('PublicClient', () => {
     const to = 8409426;
 
     test('streams trades', done => {
-      nock.load('./tests/pubclient_stream_trades_mocks.json');
+      nock.load('./tests/mocks/pubclient_stream_trades.json');
 
       let last = from;
       let current;
@@ -111,7 +111,7 @@ suite('PublicClient', () => {
     });
 
     test('.getProductTradeStream() with function', done => {
-      nock.load('./tests/pubclient_stream_trades_function_mocks.json');
+      nock.load('./tests/mocks/pubclient_stream_trades_function.json');
       let last = from;
       let current;
 
