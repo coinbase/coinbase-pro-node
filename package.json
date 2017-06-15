@@ -58,5 +58,9 @@
   },
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter list tests/*.js"
+  },
+  "engineStrict" : true,
+  "engines": {
+    "node" : ">=4.0.0"
   }
 }
