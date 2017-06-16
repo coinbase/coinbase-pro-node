@@ -21,19 +21,22 @@
     }
   ],
   "dependencies": {
-    "async": "2.4.1",
     "bintrees": "1.0.1",
-    "nock": "9.0.13",
     "num": "0.3.0",
     "request": "2.81.0",
     "ws": "3.0.0"
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
-    "mocha": "3.4.2"
+    "eslint": "^4.0.0",
+    "mocha": "3.4.2",
+    "nock": "9.0.13"
   },
   "directories": {
     "lib": "./lib"
+  },
+  "engines": {
+    "node": ">=6.0.0"
   },
   "homepage": "https://github.com/coinbase/gdax-node",
   "keywords": [
