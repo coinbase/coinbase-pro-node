@@ -29,8 +29,11 @@
   "description": "Client for the GDAX API",
   "devDependencies": {
     "eslint": "^4.0.0",
+    "husky": "^0.13.4",
+    "lint-staged": "^3.6.1",
     "mocha": "3.4.2",
-    "nock": "9.0.13"
+    "nock": "9.0.13",
+    "prettier": "^1.4.4"
   },
   "directories": {
     "lib": "./lib"
@@ -57,6 +60,13 @@
     "url": "git://github.com/coinbase/gdax-node.git"
   },
   "scripts": {
-    "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js"
+    "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ]
   }
 }
