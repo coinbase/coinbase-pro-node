@@ -65,6 +65,7 @@ describe('OrderbookSync', function() {
 
     server.on('connection', function(socket) {
       server.close();
+      nock.clearAll();
       done();
     });
   });
