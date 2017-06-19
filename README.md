@@ -135,7 +135,7 @@ var sandboxURI = 'https://api-public.sandbox.gdax.com';
 
 // Defaults to https://api.gdax.com if apiURI omitted
 var authedClient = new Gdax.AuthenticatedClient(
-  key, b64secret, passphrase, apiURI);
+  key, b64secret, passphrase, apiURL, productID);
 ```
 
 Like the `PublicClient`, all API methods are callback based. The callback
