@@ -8,6 +8,21 @@ var EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('PublicClient');
 
+test('PublicClient with bad market input should return error on call to getProductTrades', function(done) {
+  var client = new Gdax.PublicClient('non-existant market');
+  client.getProductTrades(function(err, resp, data){
+    assert.ifError(!err);
+    done();
+  }); 
+});
+
+test('PublicClient with good market input should return null as error parameter on call to getProductTrades', function(done) {
+  publicClient.getProductTrades(function(err, resp, data) {
+    assert.ifError(err);
+    done();
+  });
+});
+
 test('get product trades', function(done) {
   var expectedResponse = [{
     "time": "2014-11-07T22:19:28.578544Z",
