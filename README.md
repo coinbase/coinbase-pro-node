@@ -96,6 +96,21 @@ publicClient.getProducts((error, resonse, data) => {
 });
 ```
 
+**NOTE:** if you supply a callback, the immediately-returned promise will never
+be fulfilled. This is to prevent potential `UnhandledPromiseRejectionWarning`s,
+which will cause future versions of Node to terminate.
+
+When using callbacks, you should treat the client methods as though they return
+`undefined` (future versions may do this).
+
+```js
+let promise = publicClient.getProducts(callback);
+
+promise
+  .then(() => { /* never called */ })
+  .catch(() => { /* never called */ })
+```
+
 ### Optional Parameters
 
 Some methods accept optional parameters, e.g.
