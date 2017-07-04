@@ -38,6 +38,32 @@ suite('OrderbookSync', () => {
     });
   });
 
+  test('emits an error event on error', function(done) {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=3')
+      .replyWithError('whoops');
+
+    const server = testserver(++port, () => {
+      const orderbookSync = new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port
+      );
+
+      orderbookSync.on('message', () =>
+        assert.fail('should not have emitted message')
+      );
+      orderbookSync.on('error', err =>
+        assert.equal(err, 'Failed to load orderbook: whoops')
+      );
+    });
+
+    server.on('connection', () => {
+      server.close();
+      done();
+    });
+  });
+
   test('builds specified books', function(done) {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
