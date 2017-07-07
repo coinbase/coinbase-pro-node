@@ -153,10 +153,9 @@ describe('WebsocketClient', function() {
         }        
       });
     });
+    
     server.on('connection', function (socket) {
       socket.on('message', function (data) {
-        console.log();
-        console.log(data);
         var msg = JSON.parse(data);
         
         calls[msg.type] = true;
