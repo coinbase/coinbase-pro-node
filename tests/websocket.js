@@ -138,4 +138,42 @@ describe('WebsocketClient', function() {
       });
     });
   });
+
+  test('passes heartbeat details through', function (done) {
+    var calls = {heartbeat: false, subscribe: false};
+
+    var server = testserver(++port, function () {
+      var websocketClient = new Gdax.WebsocketClient('ETH-USD', {
+        websocketURI: 'ws://localhost:' + port,
+        heartbeat: true,
+        auth: {
+          key: 'suchkey',
+          secret: 'suchsecret',
+          passphrase: 'muchpassphrase'
+        }        
+      });
+    });
+    server.on('connection', function (socket) {
+      socket.on('message', function (data) {
+        console.log();
+        console.log(data);
+        var msg = JSON.parse(data);
+        
+        calls[msg.type] = true;
+
+        assert.equal(msg.key, 'suchkey');
+        assert.equal(msg.passphrase, 'muchpassphrase');
+        assert(msg.timestamp);
+        assert(msg.signature);
+
+
+        if(msg.type === 'heartbeat') {
+          // assert both (heartbeat and subscribe) calls were made
+          assert.deepEqual(calls, { heartbeat: true, subscribe: true });
+          server.close();
+          done();
+        }
+      });
+    });
+  });  
 });
