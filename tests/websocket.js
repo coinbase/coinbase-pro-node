@@ -15,7 +15,7 @@ suite('WebsocketClient');
 describe('WebsocketClient', function() {
   test('connects to specified server', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient(['BTC-EUR'], {websocketURI: 'ws://localhost:' + port});
       websocketClient.on('open', function() {
         server.close();
         done();
@@ -25,7 +25,7 @@ describe('WebsocketClient', function() {
 
   test('subscribes to the default product (BTC-USD) if undefined', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient(null, {websocketURI: 'ws://localhost:' + port});
     });
     server.on('connection', function(socket) {
       socket.on('message', function(data) {
@@ -43,7 +43,7 @@ describe('WebsocketClient', function() {
 
   test('subscribes to the default product (BTC-USD) if empty string', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient('', 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient('', {websocketURI: 'ws://localhost:' + port});
     });
     server.on('connection', function(socket) {
       socket.on('message', function(data) {
@@ -61,7 +61,7 @@ describe('WebsocketClient', function() {
 
   test('subscribes to the default product (BTC-USD) if empty array passed', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient([], 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient([], {websocketURI: 'ws://localhost:' + port});
     });
     server.on('connection', function(socket) {
       socket.on('message', function(data) {
@@ -79,7 +79,7 @@ describe('WebsocketClient', function() {
 
   test('subscribes to the specified products', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient(['BTC-EUR'], {websocketURI: 'ws://localhost:' + port});
     });
     server.on('connection', function(socket) {
       socket.on('message', function(data) {
@@ -97,7 +97,7 @@ describe('WebsocketClient', function() {
 
   test('subscribes to the specified product (backward compatibility)', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port);
+      var websocketClient = new Gdax.WebsocketClient('ETH-USD', {websocketURI: 'ws://localhost:' + port});
     });
     server.on('connection', function(socket) {
       socket.on('message', function(data) {
@@ -115,10 +115,13 @@ describe('WebsocketClient', function() {
 
   test('passes authentication details through', function(done) {
     var server = testserver(++port, function() {
-      var websocketClient = new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {
-        key: 'suchkey',
-        secret: 'suchsecret',
-        passphrase: 'muchpassphrase'
+      var websocketClient = new Gdax.WebsocketClient('ETH-USD', { 
+        websocketURI: 'ws://localhost:' + port,
+        auth: {
+          key: 'suchkey',
+          secret: 'suchsecret',
+          passphrase: 'muchpassphrase'
+        }
       });
     });
     server.on('connection', function(socket) {
