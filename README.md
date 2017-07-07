@@ -319,7 +319,7 @@ websocket.on('message', function(data) { console.log(data); });
 
 Optionally set the heartbeat mode.
 ```javascript
-var websocket = new Gdax.WebsocketClient(['BTC-USD','ETH-USD'], true);
+var websocket = new Gdax.WebsocketClient(['BTC-USD','ETH-USD'], {heartbeat: true});
 ```
 
 The following events can be emitted from the `WebsocketClient`:
