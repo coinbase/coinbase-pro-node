@@ -214,6 +214,34 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+
+  test('.buy() market order', done => {
+    var order = {
+      funds : '20.00',
+      product_id : 'BTC-USD',
+      type : 'market'
+    };
+
+    const expectedOrder = order;
+    expectedOrder.side = 'buy'
+
+    var expectedResponse = {
+      "id": "0428b97b-bec1-429e-a94c-59992926778d"
+    }
+
+    nock(EXCHANGE_API_URL)
+        .post('/orders', expectedOrder)
+        .reply(200, expectedResponse)
+
+    authClient.buy(order, (err, resp, data) => {
+      assert.ifError(err);
+      assert.deepEqual(data, expectedResponse);
+
+      nock.cleanAll();
+      done();
+    });
+  });
+
   test('.sell()', done => {
     const order = {
       size: '10',
