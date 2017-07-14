@@ -15,12 +15,12 @@ the MIT License – please take the following message to heart:*
 
 ## Features
 
-* Easy programmatic trading.
-* A customizable, websocket-synced Order Book implementation.
-* API clients with convenient methods for every API endpoint.
-* Abstracted interfaces – don't worry about HMAC signing or JSON formatting, the
-  library does it for you.
-* Semantic versioning.
+* Easy functionality to use in programmatic trading
+* A customizable, websocket-synced Order Book implementation
+* API clients with convenient methods for every API endpoint
+* Abstracted interfaces – don't worry about HMAC signing or JSON formatting; the
+  library does it for you
+* Semantic versioning
 
 ## Installation
 
@@ -45,8 +45,8 @@ const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
 ```
 
-All API methods, unless otherwise specified, can be used in a manner consistent
-with both promises or callbacks.
+All methods, unless otherwise specified, can be used with either a promise or
+callback API.
 
 ### Using Promises
 
@@ -61,12 +61,15 @@ publicClient
   });
 ```
 
+The promise API can be used as expected in `async` functions in ES2017+
+environments:
+
 ```js
 async function yourFunction() {
 
   try {
 
-    let products = await publicClient.getProducts();
+    const products = await publicClient.getProducts();
 
   } catch(error) {
     /* ... */
@@ -87,7 +90,7 @@ Your callback should accept two arguments:
   encountered
 
 ```js
-publicClient.getProducts((error, resonse, data) => {
+publicClient.getProducts((error, response, data) => {
   if (error) {
     // handle the error
   } else {
@@ -96,19 +99,16 @@ publicClient.getProducts((error, resonse, data) => {
 });
 ```
 
-**NOTE:** if you supply a callback, the immediately-returned promise will never
-be fulfilled. This is to prevent potential `UnhandledPromiseRejectionWarning`s,
-which will cause future versions of Node to terminate.
-
-When using callbacks, you should treat the client methods as though they return
-`undefined` (future versions may do this).
+**NOTE:** if you supply a callback, no promise will be returned. This is to
+prevent potential `UnhandledPromiseRejectionWarning`s, which will cause future
+versions of Node to terminate.
 
 ```js
-let promise = publicClient.getProducts(callback);
+const myCallback = (err, response, data) => { /* ... */ };
 
-promise
-  .then(() => { /* never called */ })
-  .catch(() => { /* never called */ })
+const result = publicClient.getProducts(myCallback);
+
+result.then(() => { /* ... */ }); // TypeError: Cannot read property 'then' of undefined
 ```
 
 ### Optional Parameters
@@ -177,10 +177,10 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
 
 ```js
-let trades = publicClient.getProductTradeStream(8408000, 8409000);
+const trades = publicClient.getProductTradeStream(8408000, 8409000);
 
 // tradesTo can also be a function
-let trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(trade.time) >= 1463068e6);
+const trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(trade.time) >= 1463068e6);
 ```
 
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
@@ -246,14 +246,14 @@ authedClient.getAccounts(callback);
 * [`getAccount`](https://docs.gdax.com/#get-an-account)
 
 ```js
-let accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
+const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccount(accountID, callback);
 ```
 
 * [`getAccountHistory`](https://docs.gdax.com/#get-account-history)
 
 ```js
-let accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
+const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
 
 // For pagination, you can include extra page arguments
@@ -263,7 +263,7 @@ authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
 * [`getAccountHolds`](https://docs.gdax.com/#get-holds)
 
 ```js
-let accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
+const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
 
 // For pagination, you can include extra page arguments
@@ -274,7 +274,7 @@ authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
 
 ```js
 // Buy 1 BTC @ 100 USD
-let buyParams = {
+const buyParams = {
   'price': '100.00', // USD
   'size': '1',  // BTC
   'product_id': 'BTC-USD',
@@ -282,7 +282,7 @@ let buyParams = {
 authedClient.buy(buyParams, callback);
 
 // Sell 1 BTC @ 110 USD
-let sellParams = {
+const sellParams = {
   'price': '110.00', // USD
   'size': '1', // BTC
   'product_id': 'BTC-USD',
@@ -293,7 +293,7 @@ authedClient.sell(sellParams, callback);
 * [`cancelOrder`](https://docs.gdax.com/#cancel-an-order)
 
 ```js
-let orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
+const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.cancelOrder(orderID, callback);
 ```
 
@@ -327,7 +327,7 @@ authedClient.getOrders({'after': 3000}, callback);
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
 
 ```js
-let orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
+const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.getOrder(orderID, callback);
 ```
 
@@ -348,7 +348,7 @@ authedClient.getFundings({}, callback);
 * [`repay`](https://docs.gdax.com/#repay)
 
 ```js
-let params = {
+const params = {
   'amount': '2000.00',
   'currency': 'USD'
 };
@@ -358,7 +358,7 @@ authedClient.repay(params, callback);
 * [`marginTransfer`](https://docs.gdax.com/#margin-transfer)
 
 ```js
-let params =
+const params =
   'margin_profile_id': '45fa9e3b-00ba-4631-b907-8a98cbdf21be',
   'type': 'deposit',
   'currency': 'USD',
@@ -370,7 +370,7 @@ authedClient.marginTransfer(params, callback);
 * [`closePosition`](https://docs.gdax.com/#close)
 
 ```js
-let params = {
+const params = {
   'repay_only': false
 };
 authedClient.closePosition(params, callback);
@@ -380,28 +380,28 @@ authedClient.closePosition(params, callback);
 
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
-let depositParamsUSD = {
+const depositParamsUSD = {
   'amount': '100.00', // USD,
   'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.deposit(depositParamsUSD, callback);
 
 // Withdraw from your Exchange USD account to your Coinbase USD account.
-let withdrawParamsUSD = {
+const withdrawParamsUSD = {
   'amount': '100.00', // USD,
   'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsUSD, callback);
 
 // Deposit to your Exchange BTC account from your Coinbase BTC account.
-let depositParamsBTC = {
+const depositParamsBTC = {
   'amount': '2.0', // BTC,
   'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.deposit(depositParamsBTC, callback);
 
 // Withdraw from your Exchange BTC account to your Coinbase BTC account.
-let withdrawParamsBTC = {
+const withdrawParamsBTC = {
   'amount': '2.0', // BTC,
   'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
