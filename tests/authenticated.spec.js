@@ -285,7 +285,7 @@ suite('AuthenticatedClient', () => {
   });
 
   suite('.cancelAllOrders()', () => {
-    test('cancels all orders', async () => {
+    test('cancels all orders', () => {
       const cancelledOrdersOne = [
         'deleted-id-1',
         'deleted-id-2',
@@ -319,7 +319,7 @@ suite('AuthenticatedClient', () => {
 
       nockSetup();
 
-      await new Promise((resolve, reject) => {
+      let cbtest = new Promise((resolve, reject) => {
         const p = authClient.cancelAllOrders((err, resp, data) => {
           if (err) {
             reject(err);
@@ -334,25 +334,18 @@ suite('AuthenticatedClient', () => {
         }
       });
 
-      nockSetup();
-
-      assert.deepEqual(
-        await authClient.cancelAllOrders(),
-        totalExpectedDeleted
-      );
+      return cbtest
+        .then(() => {
+          nockSetup();
+          return authClient.cancelAllOrders();
+        })
+        .then(data => assert.deepEqual(data, totalExpectedDeleted));
     });
 
-    test('handles errors', async () => {
-      nock(EXCHANGE_API_URL).delete('/orders').reply(404, null);
+    test('handles errors', () => {
+      nock(EXCHANGE_API_URL).delete('/orders').times(2).reply(404, null);
 
-      try {
-        await authClient.cancelAllOrders();
-        assert.fail('should have thrown error');
-      } catch (err) {
-        assert(err);
-      }
-
-      return new Promise((resolve, reject) => {
+      let cbTest = new Promise((resolve, reject) => {
         authClient.cancelAllOrders(err => {
           if (err) {
             resolve();
@@ -361,6 +354,13 @@ suite('AuthenticatedClient', () => {
           }
         });
       });
+
+      return cbTest
+        .then(() => {
+          return authClient.cancelAllOrders();
+        })
+        .then(() => assert.fail('should have thrown an error'))
+        .catch(err => assert(err));
     });
   });
 
