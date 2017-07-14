@@ -54,7 +54,7 @@ suite('OrderbookSync', () => {
         assert.fail('should not have emitted message')
       );
       orderbookSync.on('error', err =>
-        assert.equal(err, 'Failed to load orderbook: whoops')
+        assert.equal(err.message, 'Failed to load orderbook: whoops')
       );
     });
 
