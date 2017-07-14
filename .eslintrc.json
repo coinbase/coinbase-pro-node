@@ -1,8 +1,7 @@
 {
   "root": true,
-  "extends": "eslint:recommended",  
+  "extends": "eslint:recommended",
   "env": {
-    "commonjs": true,
     "es6": true,
     "node": true
   },
@@ -11,14 +10,18 @@
     "ecmaVersion": 2015
   },
   "rules": {
-    "constructor-super": "warn", 
-    "linebreak-style": ["warn", "unix"],
-    "no-const-assign": "warn", 
-    "no-this-before-super": "warn", 
-    "no-undef": "warn", 
-    "no-unreachable": "warn", 
-    "no-unused-vars": "warn", 
-    "prefer-destructuring": "warn",
-    "valid-typeof": "warn"
+    "constructor-super": "error",
+    "curly": ["error", "all"],
+    "eqeqeq": "error",
+    "func-names": ["error", "always"],
+    "linebreak-style": ["error", "unix"],
+    "no-const-assign": "error",
+    "no-this-before-super": "error",
+    "no-undef": "error",
+    "no-unreachable": "error",
+    "no-unused-vars": "error",
+    "prefer-destructuring": "error",
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
+    "valid-typeof": "error"
   }
 }
