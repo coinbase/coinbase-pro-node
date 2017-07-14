@@ -2,12 +2,12 @@ const assert = require('assert');
 
 const Gdax = require('../index.js');
 
-const checkState = function(state, exp) {
+const checkState = (state, exp) => {
   assert.deepEqual(JSON.parse(JSON.stringify(state)), exp);
 };
 
 suite('Orderbook', () => {
-  test('.add()', function() {
+  test('.add()', () => {
     const state = {
       bids: [
         {
@@ -33,7 +33,7 @@ suite('Orderbook', () => {
     checkState(orderbook.state(), state);
   });
 
-  test('.remove()', function() {
+  test('.remove()', () => {
     const apiState = {
       bids: [
         [201, 10, 'super-duper-id-2'],
@@ -76,7 +76,7 @@ suite('Orderbook', () => {
     checkState(orderbook.state(), state);
   });
 
-  test('.get()', function() {
+  test('.get()', () => {
     const apiState = {
       bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
       asks: [],
@@ -96,7 +96,7 @@ suite('Orderbook', () => {
     assert.deepEqual(JSON.parse(JSON.stringify(order)), expected);
   });
 
-  test('.match() partial match', function() {
+  test('.match() partial match', () => {
     const apiState = {
       bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
       asks: [],
@@ -134,7 +134,7 @@ suite('Orderbook', () => {
     checkState(orderbook.state(), expectedState);
   });
 
-  test('.match() full match', function() {
+  test('.match() full match', () => {
     const apiState = {
       bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
       asks: [],
@@ -166,7 +166,7 @@ suite('Orderbook', () => {
     checkState(orderbook.state(), expectedState);
   });
 
-  test('.change()', function() {
+  test('.change()', () => {
     const apiState = {
       bids: [[201, 10, 'super-duper-id-2'], [200, 10, 'super-duper-id']],
       asks: [],

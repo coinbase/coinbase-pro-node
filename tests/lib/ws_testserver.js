@@ -1,5 +1,5 @@
 const wss = require('ws').Server;
 
-module.exports = function(port, cb) {
+module.exports = (port, cb) => {
   return new wss({ port }, cb);
 };

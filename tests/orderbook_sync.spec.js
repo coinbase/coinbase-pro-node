@@ -9,7 +9,7 @@ let port = 56632;
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('OrderbookSync', () => {
-  test('emits a message event', function(done) {
+  test('emits a message event', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .times(2)
@@ -38,7 +38,7 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('emits an error event on error', function(done) {
+  test('emits an error event on error', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
@@ -64,7 +64,7 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('builds specified books', function(done) {
+  test('builds specified books', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .times(2)
@@ -81,7 +81,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, function() {
+    const server = testserver(++port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,

@@ -34,7 +34,9 @@ suite('PublicClient', () => {
 
     let cbtest = new Promise((resolve, reject) => {
       publicClient.getProductTrades((err, resp, data) => {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+        }
         assert.deepEqual(data, expectedResponse);
         resolve();
       });
@@ -58,7 +60,9 @@ suite('PublicClient', () => {
 
     let cbtest = new Promise((resolve, reject) => {
       publicClient.getProductTicker((err, resp, data) => {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+        }
 
         assert.equal(data.trade_id, 'test-id');
         assert(data.price, '9.00');
