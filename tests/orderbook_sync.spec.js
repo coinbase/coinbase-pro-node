@@ -27,6 +27,7 @@ suite('OrderbookSync', () => {
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
           test: true,
+          product_id: 'BTC-USD',
         });
         server.close();
         done();
@@ -34,7 +35,39 @@ suite('OrderbookSync', () => {
     });
 
     server.on('connection', socket => {
-      socket.send(JSON.stringify({ test: true }));
+      socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
+    });
+  });
+
+  test('emits a message event (with AuthenticatedClient)', done => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=3')
+      .times(2)
+      .reply(200, {
+        asks: [],
+        bids: [],
+      });
+
+    const server = testserver(++port, () => {
+      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+      const orderbookSync = new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        authClient
+      );
+      orderbookSync.on('message', data => {
+        assert.deepEqual(data, {
+          test: true,
+          product_id: 'BTC-USD',
+        });
+        server.close();
+        done();
+      });
+    });
+
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
     });
   });
 
@@ -48,6 +81,34 @@ suite('OrderbookSync', () => {
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
+      );
+
+      orderbookSync.on('message', () =>
+        assert.fail('should not have emitted message')
+      );
+      orderbookSync.on('error', err =>
+        assert.equal(err.message, 'Failed to load orderbook: whoops')
+      );
+    });
+
+    server.on('connection', () => {
+      server.close();
+      done();
+    });
+  });
+
+  test('emits an error event on error (with AuthenticatedClient)', done => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=3')
+      .replyWithError('whoops');
+
+    const server = testserver(++port, () => {
+      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+      const orderbookSync = new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        authClient
       );
 
       orderbookSync.on('message', () =>
