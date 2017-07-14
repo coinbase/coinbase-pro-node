@@ -285,7 +285,7 @@ suite('AuthenticatedClient', () => {
   });
 
   suite('.cancelAllOrders()', () => {
-    test('cancels all orders', done => {
+    test('cancels all orders', async () => {
       const cancelledOrdersOne = [
         'deleted-id-1',
         'deleted-id-2',
@@ -319,8 +319,8 @@ suite('AuthenticatedClient', () => {
 
       nockSetup();
 
-      let cbtest = new Promise((resolve, reject) => {
-        authClient.cancelAllOrders((err, resp, data) => {
+      await new Promise((resolve, reject) => {
+        const p = authClient.cancelAllOrders((err, resp, data) => {
           if (err) {
             reject(err);
           } else {
@@ -328,28 +328,39 @@ suite('AuthenticatedClient', () => {
           }
           resolve();
         });
+
+        if (p !== undefined) {
+          reject();
+        }
       });
 
-      let promisetest = cbtest
-        .then(() => nockSetup())
-        .then(() => authClient.cancelAllOrders())
-        .then(data => assert.deepEqual(data, totalExpectedDeleted));
+      nockSetup();
 
-      Promise.all([cbtest, promisetest])
-        .then(() => done())
-        .catch(err => assert.ifError(err) || assert.fail());
+      assert.deepEqual(
+        await authClient.cancelAllOrders(),
+        totalExpectedDeleted
+      );
     });
 
-    test('handles errors', done => {
+    test('handles errors', async () => {
       nock(EXCHANGE_API_URL).delete('/orders').reply(404, null);
 
-      authClient
-        .cancelAllOrders(err => {
-          assert(err);
-        })
-        .then(() => assert.fail(`Didn't throw error`))
-        .catch(err => assert(err))
-        .then(() => done());
+      try {
+        await authClient.cancelAllOrders();
+        assert.fail('should have thrown error');
+      } catch (err) {
+        assert(err);
+      }
+
+      return new Promise((resolve, reject) => {
+        authClient.cancelAllOrders(err => {
+          if (err) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
     });
   });
 
