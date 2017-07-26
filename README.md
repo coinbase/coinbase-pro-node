@@ -2,17 +2,6 @@
 
 The official Node.js library for Coinbase's [GDAX API](https://docs.gdax.com/).
 
-*Note: this library may be subtly broken or buggy. The code is released under
-the MIT License – please take the following message to heart:*
-
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> SOFTWARE.
-
 ## Features
 
 * Easy functionality to use in programmatic trading
@@ -20,16 +9,11 @@ the MIT License – please take the following message to heart:*
 * API clients with convenient methods for every API endpoint
 * Abstracted interfaces – don't worry about HMAC signing or JSON formatting; the
   library does it for you
-* Semantic versioning
 
 ## Installation
 
 ```bash
-# from npm
 npm install gdax
-
-# from GitHub
-npm install coinbase/gdax-node
 ```
 
 You can learn about the API responses of each endpoint [by reading our
@@ -221,11 +205,12 @@ the API URI (defaults to `https://api.gdax.com`).
 const key = 'your_api_key';
 const b64secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
+const productID = 'BTC-USD';
 
 const apiURI = 'https://api.gdax.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
-const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, apiURI);
+const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, apiURI, productID);
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will
