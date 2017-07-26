@@ -9,6 +9,56 @@ let port = 56632;
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('OrderbookSync', () => {
+  test('not passes authentication details to websocket', done => {
+    const server = testserver(++port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.strictEqual(msg.key, undefined);
+        assert.strictEqual(msg.passphrase, undefined);
+
+        server.close();
+        done();
+      });
+    });
+  });
+
+  test('passes authentication details to websocket (with AuthenticatedClient)', done => {
+    const server = testserver(++port, () => {
+      const authClient = new Gdax.AuthenticatedClient(
+        'suchkey',
+        'suchsecret',
+        'muchpassphrase'
+      );
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        authClient
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'suchkey');
+        assert.equal(msg.passphrase, 'muchpassphrase');
+
+        server.close();
+        done();
+      });
+    });
+  });
+
   test('emits a message event', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
