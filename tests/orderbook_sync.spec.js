@@ -8,6 +8,10 @@ let port = 56632;
 
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
+const key = 'key';
+const b64secret = 'secret';
+const passphrase = 'passphrase';
+
 suite('OrderbookSync', () => {
   test('emits a message event', done => {
     nock(EXCHANGE_API_URL)
@@ -49,7 +53,14 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+      const authClient = new Gdax.AuthenticatedClient(
+        key,
+        b64secret,
+        passphrase,
+        {
+          rateLimit: Infinity,
+        }
+      );
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -103,7 +114,16 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+      const authClient = new Gdax.AuthenticatedClient(
+        key,
+        b64secret,
+        passphrase,
+        undefined,
+        undefined,
+        {
+          rateLimit: Infinity,
+        }
+      );
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,

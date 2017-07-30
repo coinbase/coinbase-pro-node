@@ -1,6 +1,6 @@
 {
   "name": "gdax",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "author": "Coinbase",
   "bugs": "https://github.com/coinbase/gdax-node/issues",
   "contributors": [
@@ -23,7 +23,10 @@
   "dependencies": {
     "bintrees": "1.0.1",
     "num": "0.3.0",
-    "request": "2.81.0",
+    "superagent": "3.5.2",
+    "superagent-prefix": "0.0.2",
+    "superagent-throttle": "0.2.5",
+    "superagent-use": "0.1.0",
     "ws": "3.0.0"
   },
   "description": "Client for the GDAX API",

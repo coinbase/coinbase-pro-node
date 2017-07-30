@@ -2,14 +2,16 @@ const assert = require('assert');
 const nock = require('nock');
 
 const Gdax = require('../index.js');
-const publicClient = new Gdax.PublicClient();
+const publicClient = new Gdax.PublicClient(undefined, undefined, {
+  rateLimit: Infinity,
+});
 
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
 
-  test('.getProductTrades()', done => {
+  test('.getProductTrades()', () => {
     const expectedResponse = [
       {
         time: '2014-11-07T22:19:28.578544Z',
@@ -33,25 +35,27 @@ suite('PublicClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTrades((err, resp, data) => {
+      const p = publicClient.getProductTrades((err, data) => {
         if (err) {
           reject(err);
         }
         assert.deepEqual(data, expectedResponse);
         resolve();
       });
+
+      if (typeof p !== 'undefined') {
+        reject('Should not return Promise when callback provided.');
+      }
     });
 
     let promisetest = publicClient
       .getProductTrades()
       .then(data => assert.deepEqual(data, expectedResponse));
 
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.isError(err) || assert.fail());
+    return Promise.all([cbtest, promisetest]);
   });
 
-  test('.getProductTicker() should return values', done => {
+  test('.getProductTicker() should return values', () => {
     nock(EXCHANGE_API_URL).get('/products/BTC-USD/ticker').times(2).reply(200, {
       trade_id: 'test-id',
       price: '9.00',
@@ -59,7 +63,7 @@ suite('PublicClient', () => {
     });
 
     let cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTicker((err, resp, data) => {
+      publicClient.getProductTicker((err, data) => {
         if (err) {
           reject(err);
         }
@@ -78,9 +82,7 @@ suite('PublicClient', () => {
       assert.equal(data.size, '5');
     });
 
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.isError(err) || assert.fail());
+    return Promise.all([cbtest, promisetest]);
   });
 
   suite('.getProductTradeStream()', () => {
@@ -124,8 +126,8 @@ suite('PublicClient', () => {
           from,
           trade => Date.parse(trade.time) >= 1463068800000
         )
-        .on('data', data => {
-          current = data.trade_id;
+        .on('data', trade => {
+          current = trade.trade_id;
           assert.equal(typeof current, 'number');
           assert.equal(
             current,
