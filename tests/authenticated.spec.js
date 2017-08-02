@@ -292,7 +292,7 @@ suite('AuthenticatedClient', () => {
       });
 
     let cbtest = new Promise((resolve, reject) => {
-      authClient.getProductOrderBook({ level: 3 }, 'BTC-USD', (err, data) => {
+      authClient.getProductOrderBook({ level: 3 }, (err, data) => {
         if (err) {
           reject(err);
         }
@@ -302,7 +302,7 @@ suite('AuthenticatedClient', () => {
     });
 
     let promisetest = authClient
-      .getProductOrderBook({ level: 3 }, 'BTC-USD')
+      .getProductOrderBook({ level: 3 })
       .then(data => assert(data));
 
     return Promise.all([cbtest, promisetest]);
