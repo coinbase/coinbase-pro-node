@@ -7,7 +7,7 @@ const key = 'key';
 const b64secret = 'secret';
 const passphrase = 'passphrase';
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const { DEFAULT_BOOK_LEVEL, GDAX_API_URI } = require('../lib/constants');
 
 const authClient = new Gdax.AuthenticatedClient(
   key,
@@ -49,7 +49,7 @@ suite('AuthenticatedClient', () => {
       currency: 'USD',
     };
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .get('/accounts/test-id')
       .times(2)
       .reply(200, expectedResponse);
@@ -82,10 +82,7 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
-      .get('/accounts')
-      .times(2)
-      .reply(200, expectedResponse);
+    nock(GDAX_API_URI).get('/accounts').times(2).reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) =>
       authClient.getAccounts((err, data) => {
@@ -120,7 +117,7 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .get('/accounts/test-id/ledger')
       .times(2)
       .reply(200, expectedResponse);
@@ -155,7 +152,7 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .get('/accounts/test-id/holds')
       .times(2)
       .reply(200, expectedResponse);
@@ -191,7 +188,7 @@ suite('AuthenticatedClient', () => {
       id: '0428b97b-bec1-429e-a94c-59992926778d',
     };
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/orders', expectedOrder)
       .times(2)
       .reply(200, expectedResponse);
@@ -227,7 +224,7 @@ suite('AuthenticatedClient', () => {
       id: '0428b97b-bec1-429e-a94c-59992926778d',
     };
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/orders', expectedOrder)
       .times(2)
       .reply(200, expectedResponse);
@@ -263,7 +260,7 @@ suite('AuthenticatedClient', () => {
       id: '0428b97b-bec1-429e-a94c-59992926778d',
     };
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/orders', expectedOrder)
       .times(2)
       .reply(200, expectedResponse);
@@ -286,8 +283,8 @@ suite('AuthenticatedClient', () => {
   });
 
   test('.getProductOrderBook()', () => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .times(2)
       .reply(200, {
         asks: [],
@@ -333,7 +330,7 @@ suite('AuthenticatedClient', () => {
 
       const nockSetup = () => {
         // first list of Id's that just got cancelled
-        nock(EXCHANGE_API_URL)
+        nock(GDAX_API_URI)
           .delete('/orders')
           .reply(200, cancelledOrdersOne)
           // second list of Id's that just got cancelled
@@ -367,7 +364,7 @@ suite('AuthenticatedClient', () => {
     });
 
     test('handles errors', () => {
-      nock(EXCHANGE_API_URL).delete('/orders').reply(404, null);
+      nock(GDAX_API_URI).delete('/orders').reply(404, null);
 
       return authClient
         .cancelAllOrders((err, data) => {
@@ -415,10 +412,7 @@ suite('AuthenticatedClient', () => {
         },
       ];
 
-      nock(EXCHANGE_API_URL)
-        .get('/orders')
-        .times(2)
-        .reply(200, expectedResponse);
+      nock(GDAX_API_URI).get('/orders').times(2).reply(200, expectedResponse);
 
       let cbtest = new Promise((resolve, reject) => {
         authClient.getOrders((err, data) => {
@@ -454,7 +448,7 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL).get('/fills').times(2).reply(200, expectedResponse);
+    nock(GDAX_API_URI).get('/fills').times(2).reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.getFills((err, data) => {
@@ -487,10 +481,7 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
-      .get('/funding')
-      .times(2)
-      .reply(200, expectedResponse);
+    nock(GDAX_API_URI).get('/funding').times(2).reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.getFundings((err, data) => {
@@ -513,10 +504,7 @@ suite('AuthenticatedClient', () => {
       currency: 'USD',
     };
 
-    nock(EXCHANGE_API_URL)
-      .post('/funding/repay', params)
-      .times(2)
-      .reply(200, {}); // TODO mock with actual data
+    nock(GDAX_API_URI).post('/funding/repay', params).times(2).reply(200, {}); // TODO mock with actual data
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.repay(params, (err, data) => {
@@ -556,7 +544,7 @@ suite('AuthenticatedClient', () => {
       nonce: 25,
     };
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/profiles/margin-transfer', params)
       .times(2)
       .reply(200, expectedResponse);
@@ -581,10 +569,7 @@ suite('AuthenticatedClient', () => {
       repay_only: false,
     };
 
-    nock(EXCHANGE_API_URL)
-      .post('/position/close', params)
-      .times(2)
-      .reply(200, {}); // TODO mock with real data
+    nock(GDAX_API_URI).post('/position/close', params).times(2).reply(200, {}); // TODO mock with real data
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.closePosition(params, (err, data) => {
@@ -610,7 +595,7 @@ suite('AuthenticatedClient', () => {
     const expectedTransfer = transfer;
     expectedTransfer.type = 'deposit';
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/transfers', expectedTransfer)
       .times(2)
       .reply(200, {}); // TODO mock with real data;
@@ -639,7 +624,7 @@ suite('AuthenticatedClient', () => {
     const expectedTransfer = transfer;
     expectedTransfer.type = 'withdraw';
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .post('/transfers', expectedTransfer)
       .times(2)
       .reply(200, {}); // TODO mock with real data

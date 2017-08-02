@@ -6,7 +6,7 @@ const publicClient = new Gdax.PublicClient(undefined, undefined, {
   rateLimit: Infinity,
 });
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const { GDAX_API_URI } = require('../lib/constants');
 
 suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
@@ -29,7 +29,7 @@ suite('PublicClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
+    nock(GDAX_API_URI)
       .get('/products/BTC-USD/trades')
       .times(2)
       .reply(200, expectedResponse);
@@ -56,7 +56,7 @@ suite('PublicClient', () => {
   });
 
   test('.getProductTicker() should return values', () => {
-    nock(EXCHANGE_API_URL).get('/products/BTC-USD/ticker').times(2).reply(200, {
+    nock(GDAX_API_URI).get('/products/BTC-USD/ticker').times(2).reply(200, {
       trade_id: 'test-id',
       price: '9.00',
       size: '5',
