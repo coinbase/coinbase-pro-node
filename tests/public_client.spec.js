@@ -139,5 +139,31 @@ suite('PublicClient', () => {
           done();
         });
     });
+
+    test('.getProductTradeStream() with current date function', done => {
+      nock.load('./tests/mocks/pubclient_stream_trades_function.json');
+      let last = from;
+      let current;
+
+      publicClient
+        .getProductTradeStream(
+          from,
+          trade => Date.parse(trade.time) >= Date.now()
+        )
+        .on('data', data => {
+          current = data.trade_id;
+          assert.equal(typeof current, 'number');
+          assert.equal(
+            current,
+            last + 1,
+            current + ' is next in series, last: ' + last
+          );
+          last = current;
+        })
+        .on('end', () => {
+          assert.equal(last, 8409514, last);
+          done();
+        });
+    });
   });
 });
