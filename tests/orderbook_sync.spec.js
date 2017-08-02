@@ -25,7 +25,6 @@ suite('OrderbookSync', () => {
     const server = testserver(++port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        GDAX_API_URI,
         'ws://localhost:' + port
       );
       orderbookSync.on('message', data => {
@@ -63,7 +62,6 @@ suite('OrderbookSync', () => {
       );
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        GDAX_API_URI,
         'ws://localhost:' + port,
         authClient
       );
@@ -90,7 +88,6 @@ suite('OrderbookSync', () => {
     const server = testserver(++port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        GDAX_API_URI,
         'ws://localhost:' + port
       );
 
@@ -126,7 +123,6 @@ suite('OrderbookSync', () => {
       );
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        GDAX_API_URI,
         'ws://localhost:' + port,
         authClient
       );
@@ -165,7 +161,6 @@ suite('OrderbookSync', () => {
     const server = testserver(++port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
-        GDAX_API_URI,
         'ws://localhost:' + port
       );
       const btc_usd_state = orderbookSync.books['BTC-USD'].state();
