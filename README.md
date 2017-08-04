@@ -237,6 +237,12 @@ only need to create a single client.
 
 #### Private API Methods
 
+* [`getCoinbaseAccounts`](https://docs.gdax.com/#coinbase-accounts)
+
+```javascript
+authedClient.getCoinbaseAccounts(callback);
+```
+
 * [`getAccounts`](https://docs.gdax.com/#list-accounts)
 
 ```js
