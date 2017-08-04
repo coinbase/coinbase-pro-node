@@ -16,7 +16,7 @@ const authClient = new Gdax.AuthenticatedClient(
   undefined,
   undefined,
   {
-    rateLimit: Infinity,
+    rateLimit: false,
   }
 );
 

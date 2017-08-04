@@ -57,7 +57,7 @@ suite('OrderbookSync', () => {
         b64secret,
         passphrase,
         {
-          rateLimit: Infinity,
+          rateLimit: false,
         }
       );
       const orderbookSync = new Gdax.OrderbookSync(
@@ -118,7 +118,7 @@ suite('OrderbookSync', () => {
         undefined,
         undefined,
         {
-          rateLimit: Infinity,
+          rateLimit: false,
         }
       );
       const orderbookSync = new Gdax.OrderbookSync(

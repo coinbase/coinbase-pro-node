@@ -3,7 +3,7 @@ const nock = require('nock');
 
 const Gdax = require('../index.js');
 const publicClient = new Gdax.PublicClient(undefined, undefined, {
-  rateLimit: Infinity,
+  rateLimit: false,
 });
 
 const { GDAX_API_URI } = require('../lib/constants');
