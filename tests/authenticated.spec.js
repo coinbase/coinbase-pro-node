@@ -31,6 +31,43 @@ suite('AuthenticatedClient', () => {
     assert(sig['CB-ACCESS-SIGN']);
   });
 
+  test('.getCoinbaseAccounts()', done => {
+    const expectedResponse = [
+      {
+        id: 'fc3a8a57-7142-542d-8436-95a3d82e1622',
+        name: 'ETH Wallet',
+        balance: '0.00000000',
+        currency: 'ETH',
+        type: 'wallet',
+        primary: false,
+        active: true,
+      },
+    ];
+
+    nock(EXCHANGE_API_URL)
+      .get('/coinbase-accounts')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getCoinbaseAccounts((err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getCoinbaseAccounts()
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   test('.getAccount()', done => {
     const expectedResponse = {
       id: 'a1b2c3d4',
