@@ -718,4 +718,89 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
+
+  test('.createReport()', done => {
+    const params = {
+      type: 'fills',
+      start_date: '2014-11-01T00:00:00.000Z',
+      end_date: '2014-11-30T23:59:59.000Z',
+      product_id: 'BTC-USD',
+      format: 'pdf',
+    };
+    const expectedResponse = {
+      id: 'test-id',
+      type: 'fills',
+      status: 'pending',
+      created_at: '2015-01-06T10:34:47.000Z',
+      completed_at: 'undefined',
+      expires_at: '2015-01-13T10:35:47.000Z',
+      file_url: 'undefined',
+      params: {
+        start_date: '2014-11-01T00:00:00.000Z',
+        end_date: '2014-11-30T23:59:59.000Z',
+      },
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/reports', params)
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.createReport(params, (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .createReport(params)
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.getReportStatus()', done => {
+    const expectedResponse = {
+      id: 'test-id',
+      type: 'fills',
+      status: 'ready',
+      created_at: '2015-01-06T10:34:47.000Z',
+      completed_at: '2015-01-06T10:35:47.000Z',
+      expires_at: '2015-01-13T10:35:47.000Z',
+      file_url: 'https://example.com/0428b97b.../fills.pdf',
+      params: {
+        start_date: '2014-11-01T00:00:00.000Z',
+        end_date: '2014-11-30T23:59:59.000Z',
+      },
+    };
+
+    nock(EXCHANGE_API_URL)
+      .get('/reports/test-id')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getReportStatus('test-id', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getReportStatus('test-id')
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
 });
