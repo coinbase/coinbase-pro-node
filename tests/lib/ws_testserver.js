@@ -1,4 +1,5 @@
-var wss = require('ws').Server;
-module.exports = function(port, cb) {
-  return new wss({ port: port }, cb);
-}
+const wss = require('ws').Server;
+
+module.exports = (port, cb) => {
+  return new wss({ port }, cb);
+};
