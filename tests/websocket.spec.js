@@ -169,17 +169,13 @@ test('passes heartbeat details through', done => {
   });
 });
 
-test('passes heartbeat details through', done => {
+test('passes heartbeat details through without authentication details', done => {
   let calls = 0;
   const server = testserver(++port, () => {
     new Gdax.WebsocketClient(
-      'ETH-USD',
+      ['BTC-USD', 'ETH-USD'],
       'ws://localhost:' + port,
-      {
-        key: 'suchkey',
-        secret: 'suchsecret',
-        passphrase: 'muchpassphrase',
-      },
+      null,
       { heartbeat: true }
     );
   });
@@ -189,10 +185,7 @@ test('passes heartbeat details through', done => {
       calls++;
 
       if (msg.type === 'subscribe') {
-        assert.equal(msg.key, 'suchkey');
-        assert.equal(msg.passphrase, 'muchpassphrase');
-        assert(msg.timestamp);
-        assert(msg.signature);
+        assert.deepEqual(msg.product_ids, ['BTC-USD', 'ETH-USD']);
       } else {
         assert.equal(msg.type, 'heartbeat');
         assert.equal(msg.on, true);

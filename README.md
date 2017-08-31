@@ -436,15 +436,16 @@ websocket.on('close', () => { /* ... */ });
 
 Optionally set the heartbeat mode or websocket URI.
 ```javascript
-var websocket = new Gdax.WebsocketClient(['BTC-USD','ETH-USD'], {
-  heartbeat: true,
-  websocketURI: 'https://api-public.sandbox.gdax.com',
-  auth: {
-    secret: '...',
-    key: '...',
-    passphrase: '...'
-  }
-});
+var websocket = new Gdax.WebsocketClient(
+  ['BTC-USD','ETH-USD'],
+  'https://api-public.sandbox.gdax.com',
+  {
+    key: 'suchkey',
+    secret: 'suchsecret',
+    passphrase: 'muchpassphrase',
+  },
+  { heartbeat: true }
+);
 ```
 
 The following events can be emitted from the `WebsocketClient`:
