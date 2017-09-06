@@ -803,4 +803,32 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
+
+  test('.withdrawCrypto()', done => {
+    const withdrawParams = {
+      amount: 10480,
+      currency: 'BTC',
+      crypto_address: 'test-address',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/withdrawals/crypto', withdrawParams)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.withdrawCrypto(withdrawParams, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.withdrawCrypto(withdrawParams);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
 });

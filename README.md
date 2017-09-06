@@ -382,7 +382,7 @@ const params = {
 authedClient.closePosition(params, callback);
 ```
 
-* [`deposit`, `withdraw`](https://docs.gdax.com/#list-fills)
+* [`deposit`, `withdraw`](https://docs.gdax.com/#deposits)
 
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
@@ -412,6 +412,14 @@ const withdrawParamsBTC = {
   'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsBTC, callback);
+
+// Withdraw from your Exchange BTC account to another BTC address.
+const withdrawAddressParams = {
+  'amount': 10.00,
+  'currency': 'BTC',
+  'crypto_address': '15USXR6S4DhSWVHUxXRCuTkD1SA6qAdy'
+}
+authedClient.withdraw(withdrawAddressParams, callback);
 ```
 
 * [`getTrailingVolume`](https://docs.gdax.com/#user-account)
