@@ -79,6 +79,16 @@ declare module "gdax" {
         hold: number    
     };
 
+    export type CoinbaseAccount = {
+        id: string,
+        name: string,
+        balance: number,
+        currency: "USD" | "BTC" | "LTC" | "ETH",
+        type: "wallet" | "fiat",
+        primary: boolean,
+        active: boolean  
+    };
+
     export class PublicClient {
         constructor(productId: string);
 
@@ -112,7 +122,9 @@ declare module "gdax" {
 
     export class AuthenticatedClient {
         constructor(key: string, b64secret: string, passphrase: string, apiURI: string);
-        // getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>); Does Not Exist Bad Documentation? :
+
+        getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
+        getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
         
         getAccounts(callback: callback<Account[]>);
         getAccounts(): Promise<Account[]>;
