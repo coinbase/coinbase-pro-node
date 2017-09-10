@@ -95,10 +95,18 @@ declare module "gdax" {
         id: string,
         name: string,
         balance: number,
-        currency: "USD" | "BTC" | "LTC" | "ETH",
+        currency: CurrencyType,
         type: "wallet" | "fiat",
         primary: boolean,
         active: boolean  
+    };
+
+    export type CurrencyType = "USD" | "BTC" | "LTC" | "ETH";
+
+    export type CurrencyInfo = {
+        id: CurrencyType,
+        name: string,
+        min_size: string
     };
 
     export class PublicClient {
@@ -125,8 +133,8 @@ declare module "gdax" {
         getProduct24HrStats(callback: callback<any>);
         getProduct24HrStats(): Promise<any>;
 
-        getCurrencies(callback: callback<any>);
-        getCurrencies(): Promise<any>;
+        getCurrencies(callback: callback<CurrencyInfo[]>);
+        getCurrencies(): Promise<CurrencyInfo[]>;
 
         getTime(callback: callback<any>);
         getTime(): Promise<any>;
