@@ -55,6 +55,7 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/coinbase/gdax-node.git"
