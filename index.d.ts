@@ -42,9 +42,9 @@ declare module "gdax" {
         funds: number;
     };
 
-    export type BuyOrderParams =  MarketOrder | LimitOrder;
+    export type BuyOrderParams =  MarketOrder | LimitOrder | StopOrder;
 
-    export type SellOrderParams = MarketOrder | StopOrder;
+    export type SellOrderParams = MarketOrder | LimitOrder | StopOrder;
 
     export type OrderResult = {
         id: string;
@@ -65,10 +65,22 @@ declare module "gdax" {
     }
 
     export type PageArgs = {
-        before?: number;
+        before: number;
         after?: number;
         limit?: number;
-    }
+    } |
+    {
+        before?: number;
+        after: number;
+        limit?: number;
+    } |
+    {
+        before?: number;
+        after?: number;
+        limit: number;
+    };
+
+
 
     export type Account = {
         id: string,
