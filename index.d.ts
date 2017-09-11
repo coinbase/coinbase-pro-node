@@ -14,8 +14,8 @@ declare module "gdax" {
     type LimitOrder = {
         type: "limit";
         product_id: string;
-        price: number;
-        size: number;
+        price: string;
+        size: string;
         time_in_force?: "GTC" | "GTT" | "IOC" | "FOK";
         cancel_after?: string;
     };
@@ -23,23 +23,23 @@ declare module "gdax" {
     type MarketOrder = {
         type: "market";
         product_id: string;
-        size: number;
+        size: string;
     } | 
     {
         type: "market";
         product_id: string;
-        funds: number;
+        funds: string;
     };
 
     type StopOrder = {
         type: "stop";
         product_id: string;
-        size: number;
+        size: string;
     } |
     {
         type: "stop";
         product_id: string;
-        funds: number;
+        funds: string;
     };
 
     export type BuyOrderParams =  MarketOrder | LimitOrder | StopOrder;
