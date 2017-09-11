@@ -9,6 +9,7 @@ suite('WebsocketClient', () => {
     const server = testserver(++port, () => {
       const websocketClient = new Gdax.WebsocketClient(
         ['BTC-EUR'],
+        'full',
         'ws://localhost:' + port
       );
       websocketClient.on('open', () => {
@@ -18,9 +19,9 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the default product (BTC-USD) if undefined', done => {
+  test('subscribes to the default product (BTC-USD) and channel (full) if undefined', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
+      new Gdax.WebsocketClient(null, null, 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -36,9 +37,9 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the default product (BTC-USD) if empty string', done => {
+  test('subscribes to the default product (BTC-USD) and channel (full) if empty string', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient('', 'ws://localhost:' + port);
+      new Gdax.WebsocketClient('', '', 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -54,9 +55,9 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the default product (BTC-USD) if empty array passed', done => {
+  test('subscribes to the default product (BTC-USD) and channel (full) if empty array passed', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient([], 'ws://localhost:' + port);
+      new Gdax.WebsocketClient([], [], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -72,9 +73,9 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the specified products', done => {
+  test('subscribes to the specified products and channels', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      new Gdax.WebsocketClient(['BTC-EUR'], ['ticker'], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -82,6 +83,7 @@ suite('WebsocketClient', () => {
         assert.deepEqual(msg, {
           type: 'subscribe',
           product_ids: ['BTC-EUR'],
+          channels: ['tikcer'],
         });
 
         server.close();
@@ -90,9 +92,9 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the specified product (backward compatibility)', done => {
+  test('subscribes to the specified product and channel (backward compatibility)', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port);
+      new Gdax.WebsocketClient('ETH-USD', 'ticker', 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -100,6 +102,7 @@ suite('WebsocketClient', () => {
         assert.deepEqual(msg, {
           type: 'subscribe',
           product_ids: ['ETH-USD'],
+          channels: ['ticker'],
         });
 
         server.close();
@@ -110,7 +113,7 @@ suite('WebsocketClient', () => {
 
   test('passes authentication details through', done => {
     const server = testserver(++port, () => {
-      new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {
+      new Gdax.WebsocketClient('ETH-USD', 'full', 'ws://localhost:' + port, {
         key: 'suchkey',
         secret: 'suchsecret',
         passphrase: 'muchpassphrase',
