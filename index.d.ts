@@ -2,12 +2,12 @@ declare module "gdax" {
     export type callback<T> = (err, response, data: T) => void;
     
     export type ProductTicker =  {
-        trade_id: number,
-        price: number,
-        size: number,
-        bid: number,
-        ask: number,
-        volume: number,
+        trade_id: string,
+        price: string,
+        size: string,
+        bid: string,
+        ask: string,
+        volume: string,
         time: Date
     }
 
@@ -18,6 +18,7 @@ declare module "gdax" {
         size: string;
         time_in_force?: "GTC" | "GTT" | "IOC" | "FOK";
         cancel_after?: string;
+        post_only: boolean;
     };
     
     type MarketOrder = {
