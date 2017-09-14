@@ -1,7 +1,7 @@
 declare module "gdax" {
     export type callback<T> = (err, response, data: T) => void;
-    
-    export type ProductTicker =  {
+
+    export type ProductTicker = {
         trade_id: string,
         price: string,
         size: string,
@@ -17,33 +17,33 @@ declare module "gdax" {
         price: string;
         size: string;
         time_in_force?: "GTC" | "GTT" | "IOC" | "FOK";
-        cancel_after?: string;
+        cancel_after?: "min" | "hour" | "day";
         post_only: boolean;
     };
-    
+
     type MarketOrder = {
         type: "market";
         product_id: string;
         size: string;
-    } | 
-    {
-        type: "market";
-        product_id: string;
-        funds: string;
-    };
+    } |
+        {
+            type: "market";
+            product_id: string;
+            funds: string;
+        };
 
     type StopOrder = {
         type: "stop";
         product_id: string;
         size: string;
     } |
-    {
-        type: "stop";
-        product_id: string;
-        funds: string;
-    };
+        {
+            type: "stop";
+            product_id: string;
+            funds: string;
+        };
 
-    export type BuyOrderParams =  MarketOrder | LimitOrder | StopOrder;
+    export type BuyOrderParams = MarketOrder | LimitOrder | StopOrder;
 
     export type SellOrderParams = MarketOrder | LimitOrder | StopOrder;
 
@@ -65,21 +65,42 @@ declare module "gdax" {
         settled: boolean;
     }
 
+    export type OrderInfo = {
+        id: string;
+        price: number;
+        size: number;
+        product_id: string;
+        side: "buy" | "sell";
+        stp: "dc" | "co" | "cn" | "cb";
+        funds: number;
+        specified_funds: number;
+        type: "market" | "limit" | "stop";
+        post_only: boolean,
+        created_at: string;
+        done_at: string;
+        done_reason: string;
+        fill_fees: number;
+        filled_size: number;
+        executed_value: number;
+        status: "received" | "open" | "done" | "pending";
+        settled: boolean;
+    }
+
     export type PageArgs = {
         before: number;
         after?: number;
         limit?: number;
     } |
-    {
-        before?: number;
-        after: number;
-        limit?: number;
-    } |
-    {
-        before?: number;
-        after?: number;
-        limit: number;
-    };
+        {
+            before?: number;
+            after: number;
+            limit?: number;
+        } |
+        {
+            before?: number;
+            after?: number;
+            limit: number;
+        };
 
 
 
@@ -89,7 +110,7 @@ declare module "gdax" {
         currency: "USD" | "BTC" | "LTC" | "ETH",
         balance: number,
         available: number,
-        hold: number    
+        hold: number
     };
 
     export type CoinbaseAccount = {
@@ -99,7 +120,7 @@ declare module "gdax" {
         currency: CurrencyType,
         type: "wallet" | "fiat",
         primary: boolean,
-        active: boolean  
+        active: boolean
     };
 
     export type CurrencyType = "USD" | "BTC" | "LTC" | "ETH";
@@ -146,19 +167,19 @@ declare module "gdax" {
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
-        
+
         getAccounts(callback: callback<Account[]>);
         getAccounts(): Promise<Account[]>;
 
         getAccount(accountID: string, callback: callback<Account>);
         getAccount(accountID: string): Promise<Account>;
-        
+
         getAccountHistory(accountID: string, callback: callback<any>);
         getAccountHistory(accountID: string): Promise<any>;
 
         getAccountHistory(accountID: string, pageArgs: PageArgs, callback: callback<any>)
         getAccountHistory(accountID: string, pageArgs: PageArgs): Promise<any>;
-        
+
         getAccountHolds(accountID: string, callback: callback<any>);
         getAccountHolds(accountID: string): Promise<any>;
 
@@ -174,14 +195,17 @@ declare module "gdax" {
         cancelOrder(orderID, callback: callback<any>);
         cancelOrder(orderID): Promise<any>;
 
-        cancelAllOrders(args: {product_id:string}, callback: callback<any>);
-        cancelAllOrders(args: {product_id:string}): Promise<any>;
+        cancelAllOrders(args: { product_id: string }, callback: callback<any>);
+        cancelAllOrders(args: { product_id: string }): Promise<any>;
 
         getOrders(callback: callback<any>);
         getOrders(): Promise<any>;
 
         getOrders(pageArgs: PageArgs, callback: callback<any>);
         getOrders(pageArgs: PageArgs): Promise<any>;
+
+        getOrder(orderID, callback: callback<OrderInfo>);
+        getOrder(orderID): Promise<OrderInfo>;
 
         getFills(callback: callback<any>);
         getFills(): Promise<any>;
