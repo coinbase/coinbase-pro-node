@@ -131,3 +131,70 @@ suite('WebsocketClient', () => {
     });
   });
 });
+
+test('passes heartbeat details through', done => {
+  let calls = 0;
+  const server = testserver(++port, () => {
+    new Gdax.WebsocketClient(
+      'ETH-USD',
+      'ws://localhost:' + port,
+      {
+        key: 'suchkey',
+        secret: 'suchsecret',
+        passphrase: 'muchpassphrase',
+      },
+      { heartbeat: true }
+    );
+  });
+  server.on('connection', socket => {
+    socket.on('message', data => {
+      const msg = JSON.parse(data);
+      calls++;
+
+      if (msg.type === 'subscribe') {
+        assert.equal(msg.key, 'suchkey');
+        assert.equal(msg.passphrase, 'muchpassphrase');
+        assert(msg.timestamp);
+        assert(msg.signature);
+      } else {
+        assert.equal(msg.type, 'heartbeat');
+        assert.equal(msg.on, true);
+      }
+
+      if (calls > 1) {
+        server.close();
+        done();
+      }
+    });
+  });
+});
+
+test('passes heartbeat details through without authentication details', done => {
+  let calls = 0;
+  const server = testserver(++port, () => {
+    new Gdax.WebsocketClient(
+      ['BTC-USD', 'ETH-USD'],
+      'ws://localhost:' + port,
+      null,
+      { heartbeat: true }
+    );
+  });
+  server.on('connection', socket => {
+    socket.on('message', data => {
+      const msg = JSON.parse(data);
+      calls++;
+
+      if (msg.type === 'subscribe') {
+        assert.deepEqual(msg.product_ids, ['BTC-USD', 'ETH-USD']);
+      } else {
+        assert.equal(msg.type, 'heartbeat');
+        assert.equal(msg.on, true);
+      }
+
+      if (calls > 1) {
+        server.close();
+        done();
+      }
+    });
+  });
+});
