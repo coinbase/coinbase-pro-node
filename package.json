@@ -1,6 +1,6 @@
 {
   "name": "gdax",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Coinbase",
   "bugs": "https://github.com/coinbase/gdax-node/issues",
   "contributors": [
