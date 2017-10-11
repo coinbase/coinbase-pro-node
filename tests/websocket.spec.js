@@ -130,6 +130,34 @@ suite('WebsocketClient', () => {
       });
     });
   });
+
+  test('passes channels through', done => {
+    const server = testserver(++port, () => {
+      new Gdax.WebsocketClient(
+        'ETH-USD',
+        'ws://localhost:' + port,
+        {
+          key: 'suchkey',
+          secret: 'suchsecret',
+          passphrase: 'muchpassphrase',
+        },
+        { channels: ['user', 'ticker'] }
+      );
+    });
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'suchkey');
+        assert.equal(msg.passphrase, 'muchpassphrase');
+        assert.deepEqual(msg.channels, ['user', 'ticker']);
+        assert(msg.timestamp);
+        assert(msg.signature);
+        server.close();
+        done();
+      });
+    });
+  });
 });
 
 test('passes heartbeat details through', done => {
