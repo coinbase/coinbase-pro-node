@@ -4,4 +4,4 @@
 
 ### Changed
 
-- Modify `lib/orderbook_sync` to be initialized with an array of product IDs instead of one product ID, and have it keep track of multiple books for these products in `orderbookSync.books`. `orderbookSync.book` is removed.
+- Let `Websocket` use proxy defined via `https_proxy` or `http_proxy` environment variables
