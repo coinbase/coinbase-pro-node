@@ -315,7 +315,7 @@ authedClient.cancelOrders(callback);
 // `cancelOrders` may require you to make the request multiple times until
 // all of the orders are deleted.
 
-// `cancelAllOrders` will handle making these requests for you asyncronously.
+// `cancelAllOrders` will handle making these requests for you asynchronously.
 // Also, you can add a `product_id` param to only delete orders of that product.
 
 // The data will be an array of the order IDs of all orders which were cancelled
