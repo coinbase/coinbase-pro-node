@@ -444,7 +444,7 @@ websocket.on('close', () => { /* ... */ });
 
 Optionally set the heartbeat mode or websocket URI.
 ```javascript
-var websocket = new Gdax.WebsocketClient(
+const websocket = new Gdax.WebsocketClient(
   ['BTC-USD','ETH-USD'],
   'https://api-public.sandbox.gdax.com',
   {
