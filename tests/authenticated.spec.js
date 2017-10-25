@@ -252,7 +252,7 @@ suite('AuthenticatedClient', () => {
   });
 
   test('.buy() market order', done => {
-    var order = {
+    const order = {
       funds: '20.00',
       product_id: 'BTC-USD',
       type: 'market',
@@ -261,7 +261,7 @@ suite('AuthenticatedClient', () => {
     const expectedOrder = order;
     expectedOrder.side = 'buy';
 
-    var expectedResponse = {
+    const expectedResponse = {
       id: '0428b97b-bec1-429e-a94c-59992926778d',
     };
 
@@ -407,7 +407,10 @@ suite('AuthenticatedClient', () => {
     });
 
     test('handles errors', () => {
-      nock(EXCHANGE_API_URL).delete('/orders').times(2).reply(404, null);
+      nock(EXCHANGE_API_URL)
+        .delete('/orders')
+        .times(2)
+        .reply(404, null);
 
       let cbTest = new Promise((resolve, reject) => {
         authClient.cancelAllOrders(err => {
@@ -506,7 +509,10 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL).get('/fills').times(2).reply(200, expectedResponse);
+    nock(EXCHANGE_API_URL)
+      .get('/fills')
+      .times(2)
+      .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.getFills((err, response, data) => {
@@ -569,8 +575,12 @@ suite('AuthenticatedClient', () => {
       currency: 'USD',
     };
 
-    nock(EXCHANGE_API_URL).post('/funding/repay', params).reply(200, {});
-    nock(EXCHANGE_API_URL).post('/funding/repay', params).reply(200, {});
+    nock(EXCHANGE_API_URL)
+      .post('/funding/repay', params)
+      .reply(200, {});
+    nock(EXCHANGE_API_URL)
+      .post('/funding/repay', params)
+      .reply(200, {});
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.repay(params, err => {
