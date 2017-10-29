@@ -132,7 +132,7 @@ declare module "gdax" {
     };
 
     export class PublicClient {
-        constructor(productId?: string);
+        constructor(productId?: string, apiURI?: string);
 
         getProducts(callback: callback<any>);
         getProducts(): Promise<any>;
@@ -163,7 +163,7 @@ declare module "gdax" {
     }
 
     export class AuthenticatedClient {
-        constructor(key: string, b64secret: string, passphrase: string, apiURI: string);
+        constructor(key: string, b64secret: string, passphrase: string, productID?: string, apiURI?: string);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
