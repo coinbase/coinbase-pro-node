@@ -387,28 +387,32 @@ authedClient.closePosition(params, callback);
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
 const depositParamsUSD = {
-  'amount': '100.00', // USD,
+  'amount': '100.00',
+  'currency': 'USD',
   'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.deposit(depositParamsUSD, callback);
 
 // Withdraw from your Exchange USD account to your Coinbase USD account.
 const withdrawParamsUSD = {
-  'amount': '100.00', // USD,
+  'amount': '100.00',
+  'currency': 'USD',
   'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsUSD, callback);
 
 // Deposit to your Exchange BTC account from your Coinbase BTC account.
 const depositParamsBTC = {
-  'amount': '2.0', // BTC,
+  'amount': '2.0',
+  'currency': 'BTC',
   'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.deposit(depositParamsBTC, callback);
 
 // Withdraw from your Exchange BTC account to your Coinbase BTC account.
 const withdrawParamsBTC = {
-  'amount': '2.0', // BTC,
+  'amount': '2.0',
+  'currency': 'BTC',
   'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsBTC, callback);
@@ -419,7 +423,7 @@ const withdrawAddressParams = {
   'currency': 'BTC',
   'crypto_address': '15USXR6S4DhSWVHUxXRCuTkD1SA6qAdy'
 }
-authedClient.withdraw(withdrawAddressParams, callback);
+authedClient.withdrawCrypto(withdrawAddressParams, callback);
 ```
 
 * [`getTrailingVolume`](https://docs.gdax.com/#user-account)
