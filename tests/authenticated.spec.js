@@ -672,14 +672,14 @@ suite('AuthenticatedClient', () => {
   test('.deposit()', done => {
     const transfer = {
       amount: 10480,
+      currency: 'USD',
       coinbase_account_id: 'test-id',
     };
 
     const expectedTransfer = transfer;
-    expectedTransfer.type = 'deposit';
 
     nock(EXCHANGE_API_URL)
-      .post('/transfers', expectedTransfer)
+      .post('/deposits/coinbase-account', expectedTransfer)
       .times(2)
       .reply(200, {});
 
@@ -702,14 +702,14 @@ suite('AuthenticatedClient', () => {
   test('.withdraw()', done => {
     const transfer = {
       amount: 10480,
+      currency: 'USD',
       coinbase_account_id: 'test-id',
     };
 
     const expectedTransfer = transfer;
-    expectedTransfer.type = 'withdraw';
 
     nock(EXCHANGE_API_URL)
-      .post('/transfers', expectedTransfer)
+      .post('/withdrawals/coinbase-account', expectedTransfer)
       .times(2)
       .reply(200, {});
 
