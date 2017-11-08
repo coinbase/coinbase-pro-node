@@ -107,7 +107,7 @@ declare module "gdax" {
     export type Account = {
         id: string,
         profile_id: string,
-        currency: "USD" | "BTC" | "LTC" | "ETH",
+        currency: CurrencyType,
         balance: number,
         available: number,
         hold: number
@@ -123,7 +123,7 @@ declare module "gdax" {
         active: boolean
     };
 
-    export type CurrencyType = "USD" | "BTC" | "LTC" | "ETH";
+    export type CurrencyType = "USD" | "BTC" | "LTC" | "ETH" | "B2X";
 
     export type CurrencyInfo = {
         id: CurrencyType,
@@ -131,11 +131,22 @@ declare module "gdax" {
         min_size: string
     };
 
-    export class PublicClient {
-        constructor(productId?: string);
+    export interface ProductInfo {
+        id: string;
+        base_currency: string;
+        quote_currency: string;
+        base_min_size: string;
+        base_max_size: string;
+        quote_increment: string;
+        display_name: string;
+        margin_enabled: boolean;
+    }
 
-        getProducts(callback: callback<any>);
-        getProducts(): Promise<any>;
+    export class PublicClient {
+        constructor(productId?: string, apiURI?: string);
+
+        getProducts(callback: callback<ProductInfo[]>);
+        getProducts(): Promise<ProductInfo[]>;
 
         getProductOrderBook(callback: callback<any>);
         getProductOrderBook(): Promise<any>;
