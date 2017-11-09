@@ -1,4 +1,4 @@
-declare module "gdax" {
+declare module 'gdax' {
     export type callback<T> = (err, response, data: T) => void;
 
     export type ProductTicker = {
@@ -13,18 +13,18 @@ declare module "gdax" {
 
     interface BaseOrder {
         type: string;
-        side: "buy" | "sell";
+        side: 'buy' | 'sell';
         product_id: string;
         client_oid?: string;
-        stp?: "dc" | "co" | "cn" | "cb";
+        stp?: 'dc' | 'co' | 'cn' | 'cb';
     }
 
     interface LimitOrder extends BaseOrder {
-        type: "limit";
+        type: 'limit';
         price: string;
         size: string;
-        time_in_force?: "GTC" | "GTT" | "IOC" | "FOK";
-        cancel_after?: "min" | "hour" | "day";
+        time_in_force?: 'GTC' | 'GTT' | 'IOC' | 'FOK';
+        cancel_after?: 'min' | 'hour' | 'day';
         post_only?: boolean;
     }
 
@@ -34,13 +34,13 @@ declare module "gdax" {
      * will prevent other orders from being placed in the interim. This can cause issues for HFT algorithms for example.
      */
     interface MarketOrder extends BaseOrder {
-        type: "market";
+        type: 'market';
         size: string;
         funds: string;
     }
 
     interface StopOrder extends BaseOrder {
-        type: "stop";
+        type: 'stop';
         size: string;
         funds: string;
     }
@@ -52,25 +52,25 @@ declare module "gdax" {
         price: number;
         size: number;
         product_id: string;
-        side: "buy" | "sell";
-        stp: "dc" | "co" | "cn" | "cb";
-        type: "limit" | "market" | "stop";
+        side: 'buy' | 'sell';
+        stp: 'dc' | 'co' | 'cn' | 'cb';
+        type: 'limit' | 'market' | 'stop';
         created_at: string;
         post_only: boolean;
         fill_fees: number;
         filled_size: number;
-        status: "received" | "open" | "done" | "pending";
+        status: 'received' | 'open' | 'done' | 'pending';
         settled: boolean;
         executed_value: number;
     }
 
     export interface OrderResult extends BaseOrderInfo {
-        time_in_force: "GTC" | "GTT" | "IOC" | "FOK";
-        status: "received" | "open" | "done";
+        time_in_force: 'GTC' | 'GTT' | 'IOC' | 'FOK';
+        status: 'received' | 'open' | 'done';
     }
 
     export interface OrderInfo extends BaseOrderInfo {
-        status: "received" | "open" | "done" | "pending";
+        status: 'received' | 'open' | 'done' | 'pending';
         funds: number;
         specified_funds: number;
         done_at: string;
@@ -108,12 +108,12 @@ declare module "gdax" {
         name: string,
         balance: number,
         currency: CurrencyType,
-        type: "wallet" | "fiat",
+        type: 'wallet' | 'fiat',
         primary: boolean,
         active: boolean
     };
 
-    export type CurrencyType = "USD" | "BTC" | "LTC" | "ETH" | "B2X";
+    export type CurrencyType = 'USD' | 'BTC' | 'LTC' | 'ETH' | 'B2X';
 
     export type CurrencyInfo = {
         id: CurrencyType,
@@ -242,9 +242,9 @@ declare module "gdax" {
     export class WebsocketClient {
         constructor(productIds: string[]);
 
-        on(event: "message", eventHandler: (data) => void);
-        on(event: "error", eventHandler: (err) => void);
-        on(event: "open", eventHandler: () => void);
-        on(event: "close", eventHandler: () => void);
+        on(event: 'message', eventHandler: (data) => void);
+        on(event: 'error', eventHandler: (err) => void);
+        on(event: 'open', eventHandler: () => void);
+        on(event: 'close', eventHandler: () => void);
     }
 }
