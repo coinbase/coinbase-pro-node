@@ -35,8 +35,8 @@ declare module 'gdax' {
      */
     interface MarketOrder extends BaseOrder {
         type: 'market';
-        size: string;
-        funds: string;
+        size: string | null;
+        funds: string | null;
     }
 
     interface StopOrder extends BaseOrder {
