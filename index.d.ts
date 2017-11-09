@@ -29,19 +29,20 @@ declare module "gdax" {
     }
 
     /**
-     * It"s allowed to pass *both* size and funds, and is often desirable, because if funds is omitted, your full account balance is put on hold
-     * until the order is matched, which can cause high frequency trades to get rejected with `insufficient funds` errors.
+     * Only one of `size` and `funds` are required for market and limit orders (the other can be explicitly assigned null or undefined). However,
+     * it is advisable to include both. If funds is not specified, the entire user balance is placed on hold until the order is filled which
+     * will prevent other orders from being placed in the interim. This can cause issues for HFT algorithms for example.
      */
     interface MarketOrder extends BaseOrder {
         type: "market";
-        size?: string;
-        funds?: string;
+        size: string;
+        funds: string;
     }
 
     interface StopOrder extends BaseOrder {
         type: "stop";
-        size?: string;
-        funds?: string;
+        size: string;
+        funds: string;
     }
 
     export type OrderParams = MarketOrder | LimitOrder | StopOrder;
