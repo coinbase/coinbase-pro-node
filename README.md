@@ -135,7 +135,7 @@ publicClient
 const publicClient = new Gdax.PublicClient(productID, endpoint);
 ```
 
-- `productID` *optional* - defaults to 'BTC-USD' if not specified.
+- `productID` *optional* - defaults to 'BTC-USD' if not specified. Other values accepted are 'ETH-USD' and 'LTC-USD'
 - `endpoint` *optional* - defaults to 'https://api.gdax.com' if not specified.
 
 #### Public API Methods
@@ -222,10 +222,11 @@ const key = 'your_api_key';
 const b64secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
+const productID = 'BTC-USD';
 const apiURI = 'https://api.gdax.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
-const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, apiURI);
+const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, productID, apiURI);
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will

@@ -163,8 +163,8 @@ declare module 'gdax' {
         getTime(): Promise<any>;
     }
 
-    export class AuthenticatedClient {
-        constructor(key: string, b64secret: string, passphrase: string, apiURI: string);
+    export class AuthenticatedClient extends PublicClient {
+        constructor(key: string, b64secret: string, passphrase: string, productID?: string, apiURI?: string);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
