@@ -326,8 +326,8 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 
 ```js
 authedClient.getOrders(callback);
-// For pagination, you can include extra page arguments
-authedClient.getOrders({'status': 'open'}, (err,response,data)=>{
+// Get all orders of 'open' status, from the page after 3000 pagination id.
+authedClient.getOrders({'after': 3000,'status': 'open'}, (err,response,data)=>{
   //console.log(data)
 })
 ```
