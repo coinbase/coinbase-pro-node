@@ -137,8 +137,8 @@ declare module "gdax" {
         getProducts(callback: callback<any>);
         getProducts(): Promise<any>;
 
-        getProductOrderBook(callback: callback<any>);
-        getProductOrderBook(): Promise<any>;
+        getProductOrderBook(args?: object, callback: callback<any>);
+        getProductOrderBook(args?: object): Promise<any>;
 
         getProductTicker(callback: callback<ProductTicker>);
         getProductTicker(): Promise<ProductTicker>;
