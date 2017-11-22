@@ -384,7 +384,7 @@ suite('AuthenticatedClient', () => {
       nockSetup();
 
       let cbtest = new Promise((resolve, reject) => {
-        const p = authClient.cancelAllOrders((err, resp, data) => {
+        authClient.cancelAllOrders((err, resp, data) => {
           if (err) {
             reject(err);
           } else {
@@ -392,10 +392,6 @@ suite('AuthenticatedClient', () => {
           }
           resolve();
         });
-
-        if (p !== undefined) {
-          reject();
-        }
       });
 
       return cbtest
