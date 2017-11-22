@@ -426,6 +426,12 @@ const withdrawAddressParams = {
 authedClient.withdrawCrypto(withdrawAddressParams, callback);
 ```
 
+* [`getPaymentMethods`](https://docs.gdax.com/#payment-methods)
+
+```js
+authedClient.getPaymentMethods(callback);
+```
+
 * [`getTrailingVolume`](https://docs.gdax.com/#user-account)
 
 ```js
