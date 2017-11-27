@@ -213,6 +213,33 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.placeOrder()', done => {
+    const order = {
+      side: 'buy',
+      funds: '20.00',
+      product_id: 'ETH-USD',
+      type: 'market',
+    };
+
+    const expectedOrder = order;
+
+    const expectedResponse = {
+      id: '0428b97b-bec1-429e-a94c-59992926778d',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/orders', expectedOrder)
+      .reply(200, expectedResponse);
+
+    authClient.placeOrder(order, (err, resp, data) => {
+      assert.ifError(err);
+      assert.deepEqual(data, expectedResponse);
+
+      nock.cleanAll();
+      done();
+    });
+  });
+
   test('.buy()', done => {
     const order = {
       size: '10',
