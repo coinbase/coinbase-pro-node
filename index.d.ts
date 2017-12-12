@@ -210,8 +210,8 @@ declare module "gdax" {
         getFills(callback: callback<any>);
         getFills(): Promise<any>;
 
-        getFills(pageArgs: PageArgs, callback: callback<any>);
-        getFills(pageArgs: PageArgs): Promise<any>;
+        getFills(args: { product_id: string }, callback: callback<any>);
+        getFills(args: { product_id: string }): Promise<any>;
 
         getFundings(params, callback: callback<any>);
         getFundings(params): Promise<any>;
