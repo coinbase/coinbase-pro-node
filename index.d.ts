@@ -240,9 +240,12 @@ declare module 'gdax' {
     }
 
     export class WebsocketClient {
-        constructor(productIds: string[]);
+        constructor(
+            productIds: string[],
+            websocketURI?: string,
+            auth?: {key:string, secret:string, passphrase:string});
 
-        on(event: 'message', eventHandler: (data) => void);
+        on(event: 'message', eventHandler: (data:object) => void);
         on(event: 'error', eventHandler: (err) => void);
         on(event: 'open', eventHandler: () => void);
         on(event: 'close', eventHandler: () => void);
