@@ -239,8 +239,24 @@ declare module 'gdax' {
         getTrailingVolume(): Promise<any>;
     }
 
+    export interface WebsocketAuthentiation {
+        key: string,
+        secret: string,
+        passphrase: string
+    }
+
+    export interface WebsocketChannels {
+        heartbeat?: boolean,
+        channels?: string[],
+    }
+
     export class WebsocketClient {
-        constructor(productIds: string[]);
+        constructor(
+            productIds: string[],
+            websocketURI?: string,
+            auth?: WebsocketAuthentiation,
+            channels?: WebsocketChannels
+        );
 
         on(event: 'message', eventHandler: (data) => void);
         on(event: 'error', eventHandler: (err) => void);
