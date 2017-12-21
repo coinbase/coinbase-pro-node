@@ -243,6 +243,12 @@ only need to create a single client.
 authedClient.getCoinbaseAccounts(callback);
 ```
 
+* [`getPaymentMethods`](https://docs.gdax.com/#payment-methods)
+
+```javascript
+authedClient.getPaymentMethods(callback);
+```
+
 * [`getAccounts`](https://docs.gdax.com/#list-accounts)
 
 ```js
