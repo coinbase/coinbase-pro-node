@@ -25,10 +25,10 @@ the MIT License – please take the following message to heart:*
 ## Installation
 
 ```bash
-# from npm
+# from npm (may be outdated)
 npm install gdax
 
-# from GitHub
+# from GitHub (most recent code)
 npm install coinbase/gdax-node
 ```
 
