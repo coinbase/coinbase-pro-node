@@ -164,7 +164,7 @@ declare module 'gdax' {
     }
 
     export class AuthenticatedClient {
-        constructor(key: string, b64secret: string, passphrase: string, apiURI: string);
+        constructor(key: string, secret: string, passphrase: string, apiURI: string);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;

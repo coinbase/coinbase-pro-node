@@ -219,13 +219,13 @@ the API URI (defaults to `https://api.gdax.com`).
 
 ```js
 const key = 'your_api_key';
-const b64secret = 'your_b64_secret';
+const secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
 const apiURI = 'https://api.gdax.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
-const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, apiURI);
+const authedClient = new Gdax.AuthenticatedClient(key, secret, passphrase, apiURI);
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will
