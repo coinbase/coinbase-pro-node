@@ -193,6 +193,9 @@ declare module 'gdax' {
         sell(params: OrderParams, callback: callback<OrderResult>);
         sell(params: OrderParams): Promise<OrderResult>;
 
+        placeOrder(params: OrderParams, callback: callback<OrderResult>);
+        placeOrder(params: OrderParams): Promise<OrderResult>;
+
         cancelOrder(orderID, callback: callback<any>);
         cancelOrder(orderID): Promise<any>;
 

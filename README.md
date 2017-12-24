@@ -302,6 +302,19 @@ const sellParams = {
 authedClient.sell(sellParams, callback);
 ```
 
+* [`placeOrder`](https://docs.gdax.com/#place-a-new-order)
+
+```js
+// Buy 1 LTC @ 75 USD
+const params = {
+  'side': 'buy',
+  'price': '75.00', // USD
+  'size': '1', // LTC
+  'product_id': 'LTC-USD',
+};
+authedClient.placeOrder(params, callback);
+```
+
 * [`cancelOrder`](https://docs.gdax.com/#cancel-an-order)
 
 ```js
