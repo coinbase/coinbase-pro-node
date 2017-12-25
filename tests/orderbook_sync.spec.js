@@ -54,6 +54,29 @@ suite('OrderbookSync', () => {
     });
   });
 
+  test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
+    const server = testserver(++port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        new Gdax.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'mykey');
+        assert.equal(msg.passphrase, 'mypassphrase');
+
+        server.close();
+        done();
+      });
+    });
+  });
+
   test('emits a message event', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
