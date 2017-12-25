@@ -31,18 +31,13 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('passes authentication details to websocket (with AuthenticatedClient)', done => {
+  test('passes authentication details to websocket', done => {
     const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient(
-        'suchkey',
-        'suchsecret',
-        'muchpassphrase'
-      );
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'suchkey', secret: 'suchsecret', passphrase: 'muchpassphrase' }
       );
     });
 
@@ -89,7 +84,7 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('emits a message event (with AuthenticatedClient)', done => {
+  test('emits a message event (with auth)', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .times(2)
@@ -99,12 +94,11 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
@@ -147,18 +141,17 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('emits an error event on error (with AuthenticatedClient)', done => {
+  test('emits an error event on error (with auth)', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
 
     const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
 
       orderbookSync.on('message', () =>
