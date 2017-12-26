@@ -18,17 +18,16 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the default product (BTC-USD) if undefined', done => {
+  test('subscribes to the default product (BTC-USD) and default channel (full) if undefined', done => {
     const server = testserver(++port, () => {
       new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
-        assert.deepEqual(msg, {
-          type: 'subscribe',
-          product_ids: ['BTC-USD'],
-        });
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['BTC-USD']);
+        assert.deepEqual(msg.channels, ['full', 'heartbeat']);
 
         server.close();
         done();
@@ -43,10 +42,8 @@ suite('WebsocketClient', () => {
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
-        assert.deepEqual(msg, {
-          type: 'subscribe',
-          product_ids: ['BTC-USD'],
-        });
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['BTC-USD']);
 
         server.close();
         done();
@@ -61,10 +58,8 @@ suite('WebsocketClient', () => {
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
-        assert.deepEqual(msg, {
-          type: 'subscribe',
-          product_ids: ['BTC-USD'],
-        });
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['BTC-USD']);
 
         server.close();
         done();
@@ -79,10 +74,8 @@ suite('WebsocketClient', () => {
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
-        assert.deepEqual(msg, {
-          type: 'subscribe',
-          product_ids: ['BTC-EUR'],
-        });
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['BTC-EUR']);
 
         server.close();
         done();
@@ -97,10 +90,8 @@ suite('WebsocketClient', () => {
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
-        assert.deepEqual(msg, {
-          type: 'subscribe',
-          product_ids: ['ETH-USD'],
-        });
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['ETH-USD']);
 
         server.close();
         done();
@@ -131,7 +122,7 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('passes channels through', done => {
+  test('passes channels through with heartbeat added', done => {
     const server = testserver(++port, () => {
       new Gdax.WebsocketClient(
         'ETH-USD',
@@ -150,79 +141,12 @@ suite('WebsocketClient', () => {
         assert.equal(msg.type, 'subscribe');
         assert.equal(msg.key, 'suchkey');
         assert.equal(msg.passphrase, 'muchpassphrase');
-        assert.deepEqual(msg.channels, ['user', 'ticker']);
+        assert.deepEqual(msg.channels, ['user', 'ticker', 'heartbeat']);
         assert(msg.timestamp);
         assert(msg.signature);
         server.close();
         done();
       });
-    });
-  });
-});
-
-test('passes heartbeat details through', done => {
-  let calls = 0;
-  const server = testserver(++port, () => {
-    new Gdax.WebsocketClient(
-      'ETH-USD',
-      'ws://localhost:' + port,
-      {
-        key: 'suchkey',
-        secret: 'suchsecret',
-        passphrase: 'muchpassphrase',
-      },
-      { heartbeat: true }
-    );
-  });
-  server.on('connection', socket => {
-    socket.on('message', data => {
-      const msg = JSON.parse(data);
-      calls++;
-
-      if (msg.type === 'subscribe') {
-        assert.equal(msg.key, 'suchkey');
-        assert.equal(msg.passphrase, 'muchpassphrase');
-        assert(msg.timestamp);
-        assert(msg.signature);
-      } else {
-        assert.equal(msg.type, 'heartbeat');
-        assert.equal(msg.on, true);
-      }
-
-      if (calls > 1) {
-        server.close();
-        done();
-      }
-    });
-  });
-});
-
-test('passes heartbeat details through without authentication details', done => {
-  let calls = 0;
-  const server = testserver(++port, () => {
-    new Gdax.WebsocketClient(
-      ['BTC-USD', 'ETH-USD'],
-      'ws://localhost:' + port,
-      null,
-      { heartbeat: true }
-    );
-  });
-  server.on('connection', socket => {
-    socket.on('message', data => {
-      const msg = JSON.parse(data);
-      calls++;
-
-      if (msg.type === 'subscribe') {
-        assert.deepEqual(msg.product_ids, ['BTC-USD', 'ETH-USD']);
-      } else {
-        assert.equal(msg.type, 'heartbeat');
-        assert.equal(msg.on, true);
-      }
-
-      if (calls > 1) {
-        server.close();
-        done();
-      }
     });
   });
 });

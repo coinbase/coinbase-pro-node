@@ -243,7 +243,6 @@ declare module 'gdax' {
     }
 
     interface WebsocketClientOptions {
-        heartbeat?: boolean;
         channels?: string[];
     }
 
@@ -252,7 +251,7 @@ declare module 'gdax' {
             productIds: string[],
             websocketURI?: string,
             auth?: {key:string, secret:string, passphrase:string},
-            { heartbeat, channels }?: WebsocketClientOptions );
+            { channels }?: WebsocketClientOptions );
 
         on(event: 'message', eventHandler: (data:object) => void);
         on(event: 'error', eventHandler: (err) => void);
