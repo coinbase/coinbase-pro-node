@@ -112,9 +112,9 @@ suite('PublicClient', () => {
       .catch(err => assert.isError(err) || assert.fail());
   });
 
-  test('.getProductTicker() should return values', done => {
+  test('.getProductTicker()', () => {
     nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/ticker')
+      .get('/products/ETH-USD/ticker')
       .times(2)
       .reply(200, {
         trade_id: 'test-id',
@@ -122,8 +122,8 @@ suite('PublicClient', () => {
         size: '5',
       });
 
-    let cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTicker((err, resp, data) => {
+    const cbtest = new Promise((resolve, reject) => {
+      publicClient.getProductTicker('ETH-USD', (err, resp, data) => {
         if (err) {
           reject(err);
         }
@@ -136,15 +136,30 @@ suite('PublicClient', () => {
       });
     });
 
-    let promisetest = publicClient.getProductTicker().then(data => {
+    const promisetest = publicClient.getProductTicker('ETH-USD').then(data => {
       assert.equal(data.trade_id, 'test-id');
       assert.equal(data.price, '9.00');
       assert.equal(data.size, '5');
     });
 
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.isError(err) || assert.fail());
+    return Promise.all([cbtest, promisetest]);
+  });
+
+  // Delete this test when the deprecation is final
+  test('.getProductTicker() (with deprecated signature implying default product ID)', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/ticker')
+      .reply(200, {
+        trade_id: 'test-id',
+        price: '90.00',
+        size: '2',
+      });
+
+    return publicClient.getProductTicker().then(data => {
+      assert.equal(data.trade_id, 'test-id');
+      assert.equal(data.price, '90.00');
+      assert.equal(data.size, '2');
+    });
   });
 
   suite('.getProductTradeStream()', () => {

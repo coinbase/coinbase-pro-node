@@ -153,13 +153,13 @@ publicClient.getProducts(callback);
 publicClient.getProductOrderBook('BTC-USD', callback);
 
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook('LTC-USD', {'level': 3}, callback);
+publicClient.getProductOrderBook('LTC-USD', { level: 3 }, callback);
 ```
 
 * [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)
 
 ```js
-publicClient.getProductTicker(callback);
+publicClient.getProductTicker('ETH-USD', callback);
 ```
 
 * [`getProductTrades`](https://docs.gdax.com/#get-trades)
@@ -168,7 +168,7 @@ publicClient.getProductTicker(callback);
 publicClient.getProductTrades(callback);
 
 // To make paginated requests, include page parameters
-publicClient.getProductTrades({'after': 1000}, callback);
+publicClient.getProductTrades({ after: 1000 }, callback);
 ```
 
 * [`getProductTradeStream`](https://docs.gdax.com/#get-trades)
@@ -189,7 +189,7 @@ const trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(t
 publicClient.getProductHistoricRates(callback);
 
 // To include extra parameters:
-publicClient.getProductHistoricRates({'granularity': 3000}, callback);
+publicClient.getProductHistoricRates({ granularity: 3000 }, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
@@ -269,7 +269,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
+authedClient.getAccountHistory(accountID, { before: 3000 }, callback);
 ```
 
 * [`getAccountHolds`](https://docs.gdax.com/#get-holds)
@@ -279,7 +279,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
+authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
 ```
 
 * [`buy`, `sell`](https://docs.gdax.com/#place-a-new-order)
@@ -346,7 +346,7 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 ```js
 authedClient.getOrders(callback);
 // For pagination, you can include extra page arguments
-authedClient.getOrders({'after': 3000}, callback);
+authedClient.getOrders({ after: 3000 }, callback);
 ```
 
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
@@ -361,7 +361,7 @@ authedClient.getOrder(orderID, callback);
 ```js
 authedClient.getFills(callback);
 // For pagination, you can include extra page arguments
-authedClient.getFills({'before': 3000}, callback);
+authedClient.getFills({ before: 3000 }, callback);
 ```
 
 * [`getFundings`](https://docs.gdax.com/#list-fundings)
