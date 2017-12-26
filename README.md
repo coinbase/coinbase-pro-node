@@ -117,7 +117,7 @@ Some methods accept optional parameters, e.g.
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 })
+  .getProductOrderBook('BTC-USD', { level: 3 })
   .then(book => { /* ... */ });
 ```
 
@@ -126,7 +126,7 @@ parameter(s) and the callback as the last parameter:
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 }, (error, response, book) => { /* ... */ });
+  .getProductOrderBook('ETH-USD', { level: 3 }, (error, response, book) => { /* ... */ });
 ```
 
 ### The Public API Client
@@ -150,10 +150,10 @@ publicClient.getProducts(callback);
 
 ```js
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook(callback);
+publicClient.getProductOrderBook('BTC-USD', callback);
 
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook({'level': 3}, callback);
+publicClient.getProductOrderBook('LTC-USD', {'level': 3}, callback);
 ```
 
 * [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)

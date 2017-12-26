@@ -26,6 +26,50 @@ suite('PublicClient', () => {
     assert.equal(client.productID, 'LTC-USD');
   });
 
+  test('.getProductOrderBook()', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/LTC-USD/book?level=3')
+      .times(2)
+      .reply(200, {
+        asks: [],
+        bids: [],
+      });
+
+    const cbtest = new Promise((resolve, reject) => {
+      publicClient.getProductOrderBook(
+        'LTC-USD',
+        { level: 3 },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert(data);
+          resolve();
+        }
+      );
+    });
+
+    const promisetest = publicClient
+      .getProductOrderBook('LTC-USD', { level: 3 })
+      .then(data => assert(data));
+
+    return Promise.all([cbtest, promisetest]);
+  });
+
+  // Delete this test when the deprecation is final
+  test('.getProductOrderBook() (with deprecated signature implying default product ID)', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=2')
+      .reply(200, {
+        asks: [],
+        bids: [],
+      });
+
+    return publicClient
+      .getProductOrderBook({ level: 2 })
+      .then(data => assert(data));
+  });
+
   test('.getProductTrades()', done => {
     const expectedResponse = [
       {
@@ -69,11 +113,14 @@ suite('PublicClient', () => {
   });
 
   test('.getProductTicker() should return values', done => {
-    nock(EXCHANGE_API_URL).get('/products/BTC-USD/ticker').times(2).reply(200, {
-      trade_id: 'test-id',
-      price: '9.00',
-      size: '5',
-    });
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/ticker')
+      .times(2)
+      .reply(200, {
+        trade_id: 'test-id',
+        price: '9.00',
+        size: '5',
+      });
 
     let cbtest = new Promise((resolve, reject) => {
       publicClient.getProductTicker((err, resp, data) => {
