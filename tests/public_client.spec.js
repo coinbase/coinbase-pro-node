@@ -346,4 +346,62 @@ suite('PublicClient', () => {
       assert.equal(data[2][0], 1514273100);
     });
   });
+
+  test('.getProduct24HrStats()', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/ETH-USD/stats')
+      .times(2)
+      .reply(200, {
+        open: '720',
+        high: '770',
+        low: '710',
+        volume: '110000',
+        last: '760',
+        volume_30day: '9800000',
+      });
+
+    const cbtest = new Promise((resolve, reject) => {
+      publicClient.getProduct24HrStats('ETH-USD', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+
+        assert.equal(data.open, 720);
+        assert.equal(data.high, 770);
+        assert.equal(data.volume, 110000);
+
+        resolve();
+      });
+    });
+
+    const promisetest = publicClient
+      .getProduct24HrStats('ETH-USD')
+      .then(data => {
+        assert.equal(data.open, 720);
+        assert.equal(data.high, 770);
+        assert.equal(data.volume, 110000);
+      });
+
+    return Promise.all([cbtest, promisetest]);
+  });
+
+  // Delete this test when the deprecation is final
+  test('.getProduct24HrStats() (with deprecated signature implying default product ID)', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/stats')
+      .reply(200, {
+        open: '14000',
+        high: '15700',
+        low: '13800',
+        volume: '17400',
+        last: '15300',
+        volume_30day: '1100000',
+      });
+
+    return publicClient.getProduct24HrStats().then(data => {
+      assert.equal(data.open, 14000);
+      assert.equal(data.high, 15700);
+      assert.equal(data.volume, 17400);
+    });
+  });
 });

@@ -195,7 +195,7 @@ publicClient.getProductHistoricRates('BTC-USD', { granularity: 3000 }, callback)
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
 
 ```js
-publicClient.getProduct24HrStats(callback);
+publicClient.getProduct24HrStats('BTC-USD', callback);
 ```
 
 * [`getCurrencies`](https://docs.gdax.com/#get-currencies)

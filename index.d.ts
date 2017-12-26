@@ -153,8 +153,8 @@ declare module 'gdax' {
         getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>);
         getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
 
-        getProduct24HrStats(callback: callback<any>);
-        getProduct24HrStats(): Promise<any>;
+        getProduct24HrStats(productID: string, callback: callback<any>);
+        getProduct24HrStats(productID: string): Promise<any>;
 
         getCurrencies(callback: callback<CurrencyInfo[]>);
         getCurrencies(): Promise<CurrencyInfo[]>;
