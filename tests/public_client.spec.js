@@ -9,6 +9,23 @@ const EXCHANGE_API_URL = 'https://api.gdax.com';
 suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
 
+  test('.constructor()', () => {
+    let client = new Gdax.PublicClient();
+    assert.equal(client.apiURI, EXCHANGE_API_URL);
+    assert.equal(client.API_LIMIT, 100);
+    assert.equal(client.productID, 'BTC-USD'); // deprecated
+
+    client = new Gdax.PublicClient('https://api-public.sandbox.gdax.com');
+    assert.equal(client.apiURI, 'https://api-public.sandbox.gdax.com');
+  });
+
+  // Delete this test when the deprecation is final
+  test('.constructor() (with deprecated signature accepting a product ID)', () => {
+    let client = new Gdax.PublicClient('LTC-USD');
+    assert.equal(client.apiURI, EXCHANGE_API_URL);
+    assert.equal(client.productID, 'LTC-USD');
+  });
+
   test('.getProductTrades()', done => {
     const expectedResponse = [
       {

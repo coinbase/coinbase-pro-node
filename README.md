@@ -132,7 +132,7 @@ publicClient
 ### The Public API Client
 
 ```js
-const publicClient = new Gdax.PublicClient(productID, endpoint);
+const publicClient = new Gdax.PublicClient(endpoint);
 ```
 
 - `productID` *optional* - defaults to 'BTC-USD' if not specified.

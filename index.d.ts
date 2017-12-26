@@ -133,7 +133,7 @@ declare module 'gdax' {
     }
 
     export class PublicClient {
-        constructor(productId?: string, apiURI?: string);
+        constructor(apiURI?: string);
 
         getProducts(callback: callback<ProductInfo[]>);
         getProducts(): Promise<ProductInfo[]>;
