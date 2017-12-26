@@ -294,4 +294,56 @@ suite('PublicClient', () => {
         });
     });
   });
+
+  test('.getProductHistoricRates()', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/ETH-USD/candles')
+      .times(2)
+      .reply(200, [
+        [1514273340, 759.75, 759.97, 759.75, 759.97, 8.03891157],
+        [1514273280, 758.99, 759.74, 758.99, 759.74, 17.36616621],
+        [1514273220, 758.99, 759, 759, 759, 10.6524787],
+      ]);
+
+    const cbtest = new Promise((resolve, reject) => {
+      publicClient.getProductHistoricRates('ETH-USD', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+
+        assert.equal(data[0][0], 1514273340);
+        assert.equal(data[0][1], 759.75);
+        assert.equal(data[2][0], 1514273220);
+
+        resolve();
+      });
+    });
+
+    const promisetest = publicClient
+      .getProductHistoricRates('ETH-USD')
+      .then(data => {
+        assert.equal(data[0][0], 1514273340);
+        assert.equal(data[0][1], 759.75);
+        assert.equal(data[2][0], 1514273220);
+      });
+
+    return Promise.all([cbtest, promisetest]);
+  });
+
+  // Delete this test when the deprecation is final
+  test('.getProductHistoricRates() (with deprecated signature implying default product ID)', () => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/candles')
+      .reply(200, [
+        [1514273220, 15399.99, 15400, 15399, 15399, 0.369797],
+        [1514273160, 15399.99, 15400, 15400, 15400, 0.673643],
+        [1514273100, 15399.99, 15400, 15400, 15400, 0.849436],
+      ]);
+
+    return publicClient.getProductHistoricRates().then(data => {
+      assert.equal(data[0][0], 1514273220);
+      assert.equal(data[0][1], 15399.99);
+      assert.equal(data[2][0], 1514273100);
+    });
+  });
 });

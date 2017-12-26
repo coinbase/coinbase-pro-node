@@ -186,10 +186,10 @@ const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => D
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
 
 ```js
-publicClient.getProductHistoricRates(callback);
+publicClient.getProductHistoricRates('BTC-USD', callback);
 
 // To include extra parameters:
-publicClient.getProductHistoricRates({ granularity: 3000 }, callback);
+publicClient.getProductHistoricRates('BTC-USD', { granularity: 3000 }, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
