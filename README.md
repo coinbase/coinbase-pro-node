@@ -177,10 +177,10 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
 
 ```js
-const trades = publicClient.getProductTradeStream(8408000, 8409000);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, 8409000);
 
 // tradesTo can also be a function
-const trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(trade.time) >= 1463068e6);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => Date.parse(trade.time) >= 1463068e6);
 ```
 
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)

@@ -192,6 +192,34 @@ suite('PublicClient', () => {
       let current;
 
       publicClient
+        .getProductTradeStream('BTC-USD', from, to)
+        .on('data', data => {
+          current = data.trade_id;
+          assert.equal(typeof current, 'number');
+          assert.equal(
+            current,
+            last + 1,
+            current + ' is next in series, last: ' + last
+          );
+          last = current;
+        })
+        .on('end', () => {
+          assert((current = to - 1));
+          done();
+        })
+        .on('error', err => {
+          assert.fail(err);
+        });
+    });
+
+    // Delete this test when the deprecation is final
+    test('streams trades (with deprecated signature implying default product ID)', done => {
+      nock.load('./tests/mocks/pubclient_stream_trades.json');
+
+      let last = from;
+      let current;
+
+      publicClient
         .getProductTradeStream(from, to)
         .on('data', data => {
           current = data.trade_id;
@@ -219,6 +247,7 @@ suite('PublicClient', () => {
 
       publicClient
         .getProductTradeStream(
+          'BTC-USD',
           from,
           trade => Date.parse(trade.time) >= 1463068800000
         )
@@ -245,6 +274,7 @@ suite('PublicClient', () => {
 
       publicClient
         .getProductTradeStream(
+          'BTC-USD',
           from,
           trade => Date.parse(trade.time) >= Date.now()
         )

@@ -147,8 +147,8 @@ declare module 'gdax' {
         getProductTrades(productID: string, callback: callback<any>);
         getProductTrades(productID: string, ): Promise<any>;
 
-        getProductTradeStream(callback: callback<any>);
-        getProductTradeStream(): Promise<any>;
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>);
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
 
         getProductHistoricRates(args: any, callback: callback<any[][]>);
         getProductHistoricRates(args: any): Promise<any[][]>;
