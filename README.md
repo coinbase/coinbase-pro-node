@@ -165,10 +165,10 @@ publicClient.getProductTicker('ETH-USD', callback);
 * [`getProductTrades`](https://docs.gdax.com/#get-trades)
 
 ```js
-publicClient.getProductTrades(callback);
+publicClient.getProductTrades('BTC-USD', callback);
 
 // To make paginated requests, include page parameters
-publicClient.getProductTrades({ after: 1000 }, callback);
+publicClient.getProductTrades('BTC-USD', { after: 1000 }, callback);
 ```
 
 * [`getProductTradeStream`](https://docs.gdax.com/#get-trades)

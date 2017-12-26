@@ -144,8 +144,8 @@ declare module 'gdax' {
         getProductTicker(productID: string, callback: callback<ProductTicker>);
         getProductTicker(productID: string, ): Promise<ProductTicker>;
 
-        getProductTrades(callback: callback<any>);
-        getProductTrades(): Promise<any>;
+        getProductTrades(productID: string, callback: callback<any>);
+        getProductTrades(productID: string, ): Promise<any>;
 
         getProductTradeStream(callback: callback<any>);
         getProductTradeStream(): Promise<any>;

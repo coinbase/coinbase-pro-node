@@ -70,7 +70,7 @@ suite('PublicClient', () => {
       .then(data => assert(data));
   });
 
-  test('.getProductTrades()', done => {
+  test('.getProductTrades()', () => {
     const expectedResponse = [
       {
         time: '2014-11-07T22:19:28.578544Z',
@@ -89,12 +89,12 @@ suite('PublicClient', () => {
     ];
 
     nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/trades')
+      .get('/products/LTC-USD/trades')
       .times(2)
       .reply(200, expectedResponse);
 
-    let cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTrades((err, resp, data) => {
+    const cbtest = new Promise((resolve, reject) => {
+      publicClient.getProductTrades('LTC-USD', (err, resp, data) => {
         if (err) {
           reject(err);
         }
@@ -103,13 +103,32 @@ suite('PublicClient', () => {
       });
     });
 
-    let promisetest = publicClient
-      .getProductTrades()
+    const promisetest = publicClient
+      .getProductTrades('LTC-USD')
       .then(data => assert.deepEqual(data, expectedResponse));
 
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.isError(err) || assert.fail());
+    return Promise.all([cbtest, promisetest]);
+  });
+
+  // Delete this test when the deprecation is final
+  test('.getProductTrades() (with deprecated signature implying default product ID)', () => {
+    const expectedResponse = [
+      {
+        time: '2014-11-07T22:19:28.578544Z',
+        trade_id: 74,
+        price: '10.00000000',
+        size: '0.01000000',
+        side: 'buy',
+      },
+    ];
+
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/trades')
+      .reply(200, expectedResponse);
+
+    return publicClient
+      .getProductTrades()
+      .then(data => assert.deepEqual(data, expectedResponse));
   });
 
   test('.getProductTicker()', () => {
