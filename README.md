@@ -117,7 +117,7 @@ Some methods accept optional parameters, e.g.
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 })
+  .getProductOrderBook('BTC-USD', { level: 3 })
   .then(book => { /* ... */ });
 ```
 
@@ -126,13 +126,13 @@ parameter(s) and the callback as the last parameter:
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 }, (error, response, book) => { /* ... */ });
+  .getProductOrderBook('ETH-USD', { level: 3 }, (error, response, book) => { /* ... */ });
 ```
 
 ### The Public API Client
 
 ```js
-const publicClient = new Gdax.PublicClient(productID, endpoint);
+const publicClient = new Gdax.PublicClient(endpoint);
 ```
 
 - `productID` *optional* - defaults to 'BTC-USD' if not specified.
@@ -150,25 +150,25 @@ publicClient.getProducts(callback);
 
 ```js
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook(callback);
+publicClient.getProductOrderBook('BTC-USD', callback);
 
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook({'level': 3}, callback);
+publicClient.getProductOrderBook('LTC-USD', { level: 3 }, callback);
 ```
 
 * [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)
 
 ```js
-publicClient.getProductTicker(callback);
+publicClient.getProductTicker('ETH-USD', callback);
 ```
 
 * [`getProductTrades`](https://docs.gdax.com/#get-trades)
 
 ```js
-publicClient.getProductTrades(callback);
+publicClient.getProductTrades('BTC-USD', callback);
 
 // To make paginated requests, include page parameters
-publicClient.getProductTrades({'after': 1000}, callback);
+publicClient.getProductTrades('BTC-USD', { after: 1000 }, callback);
 ```
 
 * [`getProductTradeStream`](https://docs.gdax.com/#get-trades)
@@ -177,25 +177,25 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
 
 ```js
-const trades = publicClient.getProductTradeStream(8408000, 8409000);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, 8409000);
 
 // tradesTo can also be a function
-const trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(trade.time) >= 1463068e6);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => Date.parse(trade.time) >= 1463068e6);
 ```
 
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
 
 ```js
-publicClient.getProductHistoricRates(callback);
+publicClient.getProductHistoricRates('BTC-USD', callback);
 
 // To include extra parameters:
-publicClient.getProductHistoricRates({'granularity': 3000}, callback);
+publicClient.getProductHistoricRates('BTC-USD', { granularity: 3000 }, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
 
 ```js
-publicClient.getProduct24HrStats(callback);
+publicClient.getProduct24HrStats('BTC-USD', callback);
 ```
 
 * [`getCurrencies`](https://docs.gdax.com/#get-currencies)
@@ -269,7 +269,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
+authedClient.getAccountHistory(accountID, { before: 3000 }, callback);
 ```
 
 * [`getAccountHolds`](https://docs.gdax.com/#get-holds)
@@ -279,7 +279,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
+authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
 ```
 
 * [`buy`, `sell`](https://docs.gdax.com/#place-a-new-order)
@@ -346,7 +346,7 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 ```js
 authedClient.getOrders(callback);
 // For pagination, you can include extra page arguments
-authedClient.getOrders({'after': 3000}, callback);
+authedClient.getOrders({ after: 3000 }, callback);
 ```
 
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
@@ -361,7 +361,7 @@ authedClient.getOrder(orderID, callback);
 ```js
 authedClient.getFills(callback);
 // For pagination, you can include extra page arguments
-authedClient.getFills({'before': 3000}, callback);
+authedClient.getFills({ before: 3000 }, callback);
 ```
 
 * [`getFundings`](https://docs.gdax.com/#list-fundings)

@@ -343,38 +343,6 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
-  test('.getProductOrderBook()', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
-      .times(2)
-      .reply(200, {
-        asks: [],
-        bids: [],
-      });
-
-    let cbtest = new Promise((resolve, reject) => {
-      authClient.getProductOrderBook(
-        { level: 3 },
-        'BTC-USD',
-        (err, resp, data) => {
-          if (err) {
-            reject(err);
-          }
-          assert(data);
-          resolve();
-        }
-      );
-    });
-
-    let promisetest = authClient
-      .getProductOrderBook({ level: 3 }, 'BTC-USD')
-      .then(data => assert(data));
-
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail());
-  });
-
   suite('.cancelAllOrders()', () => {
     test('cancels all orders', () => {
       const cancelledOrdersOne = [

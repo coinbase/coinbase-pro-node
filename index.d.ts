@@ -133,28 +133,28 @@ declare module 'gdax' {
     }
 
     export class PublicClient {
-        constructor(productId?: string, apiURI?: string);
+        constructor(apiURI?: string);
 
         getProducts(callback: callback<ProductInfo[]>);
         getProducts(): Promise<ProductInfo[]>;
 
-        getProductOrderBook(options: any, callback: callback<any>);
-        getProductOrderBook(options: any): Promise<any>;
+        getProductOrderBook(productID: string, options: any, callback: callback<any>);
+        getProductOrderBook(productID: string, options: any): Promise<any>;
 
-        getProductTicker(callback: callback<ProductTicker>);
-        getProductTicker(): Promise<ProductTicker>;
+        getProductTicker(productID: string, callback: callback<ProductTicker>);
+        getProductTicker(productID: string, ): Promise<ProductTicker>;
 
-        getProductTrades(callback: callback<any>);
-        getProductTrades(): Promise<any>;
+        getProductTrades(productID: string, callback: callback<any>);
+        getProductTrades(productID: string, ): Promise<any>;
 
-        getProductTradeStream(callback: callback<any>);
-        getProductTradeStream(): Promise<any>;
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>);
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
 
-        getProductHistoricRates(args: any, callback: callback<any[][]>);
-        getProductHistoricRates(args: any): Promise<any[][]>;
+        getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>);
+        getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
 
-        getProduct24HrStats(callback: callback<any>);
-        getProduct24HrStats(): Promise<any>;
+        getProduct24HrStats(productID: string, callback: callback<any>);
+        getProduct24HrStats(productID: string): Promise<any>;
 
         getCurrencies(callback: callback<CurrencyInfo[]>);
         getCurrencies(): Promise<CurrencyInfo[]>;
