@@ -3,3 +3,5 @@ node_modules
 
 /.idea
 /package-lock.json
+/yarn.lock
+/.node-version
