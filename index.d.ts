@@ -253,7 +253,7 @@ declare module 'gdax' {
             auth?: {key:string, secret:string, passphrase:string},
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data:object) => void);
+        on<T>(event: 'message', eventHandler: (data:T) => void);
         on(event: 'error', eventHandler: (err) => void);
         on(event: 'open', eventHandler: () => void);
         on(event: 'close', eventHandler: () => void);
