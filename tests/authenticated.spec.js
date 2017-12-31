@@ -31,6 +31,23 @@ suite('AuthenticatedClient', () => {
     assert(sig['CB-ACCESS-SIGN']);
   });
 
+  test('.startSynchronizingWithServer()', done => {
+    const fiveMinutesMillis = 5 * 60 * 1000;
+    const now = new Date();
+    const expectedResponse = { 'iso' : now.toISOString(), 'epoch' : now.getTime() / 1000}
+
+    nock(EXCHANGE_API_URL)
+      .get('/time')
+      .reply(200, expectedResponse);
+
+    authClient.startSynchronizingWithServer(fiveMinutesMillis, (err, response, data) => {
+      assert.ifError(err);
+      assert(data.success === true);
+      authClient.stopSynchronizingWithServer();
+      done();
+    });
+  });
+
   test('.getCoinbaseAccounts()', done => {
     const expectedResponse = [
       {
