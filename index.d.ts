@@ -93,6 +93,9 @@ declare module 'gdax' {
             limit: number;
         };
 
+    export type BoolResult = {
+        success: boolean
+    };
 
     export type Account = {
         id: string,
@@ -165,6 +168,9 @@ declare module 'gdax' {
 
     export class AuthenticatedClient {
         constructor(key: string, secret: string, passphrase: string, apiURI: string);
+
+        startSynchronizingWithServer(frequencyMilliseconds: number, callback: callback<BoolResult>);
+        stopSynchronizingWithServer();
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
