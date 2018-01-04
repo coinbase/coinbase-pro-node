@@ -1,5 +1,5 @@
 declare module 'gdax' {
-    export type callback<T> = (err, response, data: T) => void;
+    export type callback<T> = (err: any, response: any, data: T) => void;
 
     export type ProductTicker = {
         trade_id: string,
@@ -135,110 +135,110 @@ declare module 'gdax' {
     export class PublicClient {
         constructor(apiURI?: string);
 
-        getProducts(callback: callback<ProductInfo[]>);
+        getProducts(callback: callback<ProductInfo[]>): void;
         getProducts(): Promise<ProductInfo[]>;
 
-        getProductOrderBook(productID: string, options: any, callback: callback<any>);
+        getProductOrderBook(productID: string, options: any, callback: callback<any>): void;
         getProductOrderBook(productID: string, options: any): Promise<any>;
 
-        getProductTicker(productID: string, callback: callback<ProductTicker>);
+        getProductTicker(productID: string, callback: callback<ProductTicker>): void;
         getProductTicker(productID: string, ): Promise<ProductTicker>;
 
-        getProductTrades(productID: string, callback: callback<any>);
+        getProductTrades(productID: string, callback: callback<any>): void;
         getProductTrades(productID: string, ): Promise<any>;
 
-        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>);
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>): void;
         getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
 
-        getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>);
+        getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>): void;
         getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
 
-        getProduct24HrStats(productID: string, callback: callback<any>);
+        getProduct24HrStats(productID: string, callback: callback<any>): void;
         getProduct24HrStats(productID: string): Promise<any>;
 
-        getCurrencies(callback: callback<CurrencyInfo[]>);
+        getCurrencies(callback: callback<CurrencyInfo[]>): void;
         getCurrencies(): Promise<CurrencyInfo[]>;
 
-        getTime(callback: callback<any>);
+        getTime(callback: callback<any>): void;
         getTime(): Promise<any>;
     }
 
     export class AuthenticatedClient {
         constructor(key: string, secret: string, passphrase: string, apiURI: string);
 
-        getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>)
+        getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
 
-        getAccounts(callback: callback<Account[]>);
+        getAccounts(callback: callback<Account[]>): void;
         getAccounts(): Promise<Account[]>;
 
-        getAccount(accountID: string, callback: callback<Account>);
+        getAccount(accountID: string, callback: callback<Account>): void;
         getAccount(accountID: string): Promise<Account>;
 
-        getAccountHistory(accountID: string, callback: callback<any>);
+        getAccountHistory(accountID: string, callback: callback<any>): void;
         getAccountHistory(accountID: string): Promise<any>;
 
-        getAccountHistory(accountID: string, pageArgs: PageArgs, callback: callback<any>)
+        getAccountHistory(accountID: string, pageArgs: PageArgs, callback: callback<any>): void
         getAccountHistory(accountID: string, pageArgs: PageArgs): Promise<any>;
 
-        getAccountHolds(accountID: string, callback: callback<any>);
+        getAccountHolds(accountID: string, callback: callback<any>): void;
         getAccountHolds(accountID: string): Promise<any>;
 
-        getAccountHolds(accountID: string, pageArgs: PageArgs, callback: callback<any>);
+        getAccountHolds(accountID: string, pageArgs: PageArgs, callback: callback<any>): void;
         getAccountHolds(accountID: string, pageArgs: PageArgs): Promise<any>;
 
-        buy(params: OrderParams, callback: callback<OrderResult>);
+        buy(params: OrderParams, callback: callback<OrderResult>): void;
         buy(params: OrderParams): Promise<OrderResult>;
 
-        sell(params: OrderParams, callback: callback<OrderResult>);
+        sell(params: OrderParams, callback: callback<OrderResult>): void;
         sell(params: OrderParams): Promise<OrderResult>;
 
-        placeOrder(params: OrderParams, callback: callback<OrderResult>);
+        placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
         placeOrder(params: OrderParams): Promise<OrderResult>;
 
-        cancelOrder(orderID, callback: callback<any>);
-        cancelOrder(orderID): Promise<any>;
+        cancelOrder(orderID: any, callback: callback<any>): void;
+        cancelOrder(orderID: any): Promise<any>;
 
-        cancelAllOrders(args: { product_id: string }, callback: callback<any>);
+        cancelAllOrders(args: { product_id: string }, callback: callback<any>): void;
         cancelAllOrders(args: { product_id: string }): Promise<any>;
 
-        getOrders(callback: callback<any>);
+        getOrders(callback: callback<any>): void;
         getOrders(): Promise<any>;
 
-        getOrders(pageArgs: PageArgs, callback: callback<any>);
+        getOrders(pageArgs: PageArgs, callback: callback<any>): void;
         getOrders(pageArgs: PageArgs): Promise<any>;
 
-        getOrder(orderID, callback: callback<OrderInfo>);
-        getOrder(orderID): Promise<OrderInfo>;
+        getOrder(orderID: any, callback: callback<OrderInfo>): void;
+        getOrder(orderID: any): Promise<OrderInfo>;
 
-        getFills(callback: callback<any>);
+        getFills(callback: callback<any>): void;
         getFills(): Promise<any>;
 
-        getFills(pageArgs: PageArgs, callback: callback<any>);
+        getFills(pageArgs: PageArgs, callback: callback<any>): void;
         getFills(pageArgs: PageArgs): Promise<any>;
 
-        getFundings(params, callback: callback<any>);
-        getFundings(params): Promise<any>;
+        getFundings(params: any, callback: callback<any>): void;
+        getFundings(params: any): Promise<any>;
 
-        repay(params, callback: callback<any>);
-        repay(params): Promise<any>;
+        repay(params: any, callback: callback<any>): void;
+        repay(params: any): Promise<any>;
 
-        marginTransfer(params, callback: callback<any>);
-        marginTransfer(params): Promise<any>;
+        marginTransfer(params: any, callback: callback<any>): void;
+        marginTransfer(params: any): Promise<any>;
 
-        closePosition(params, callback: callback<any>);
-        closePosition(params): Promise<any>;
+        closePosition(params: any, callback: callback<any>): void;
+        closePosition(params: any): Promise<any>;
 
-        deposit(params, callback: callback<any>);
-        deposit(params): Promise<any>;
+        deposit(params: any, callback: callback<any>): void;
+        deposit(params: any): Promise<any>;
 
-        withdraw(params, callback: callback<any>);
-        withdraw(params): Promise<any>;
+        withdraw(params: any, callback: callback<any>): void;
+        withdraw(params: any): Promise<any>;
 
-        withdrawCrypto(params, callback: callback<any>);
-        withdrawCrypto(params): Promise<any>;
+        withdrawCrypto(params: any, callback: callback<any>): void;
+        withdrawCrypto(params: any): Promise<any>;
 
-        getTrailingVolume(callback: callback<any>);
+        getTrailingVolume(callback: callback<any>): void;
         getTrailingVolume(): Promise<any>;
     }
 
@@ -253,9 +253,9 @@ declare module 'gdax' {
             auth?: {key:string, secret:string, passphrase:string},
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data:object) => void);
-        on(event: 'error', eventHandler: (err) => void);
-        on(event: 'open', eventHandler: () => void);
-        on(event: 'close', eventHandler: () => void);
+        on(event: 'message', eventHandler: (data:object) => void): void;
+        on(event: 'error', eventHandler: (err:any) => void): void;
+        on(event: 'open', eventHandler: () => void): void;
+        on(event: 'close', eventHandler: () => void): void;
     }
 }
