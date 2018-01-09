@@ -49,19 +49,19 @@ declare module 'gdax' {
 
     export interface BaseOrderInfo {
         id: string;
-        price: number;
-        size: number;
+        price: string;
+        size: string;
         product_id: string;
         side: 'buy' | 'sell';
         stp: 'dc' | 'co' | 'cn' | 'cb';
         type: 'limit' | 'market' | 'stop';
         created_at: string;
         post_only: boolean;
-        fill_fees: number;
-        filled_size: number;
+        fill_fees: string;
+        filled_size: string;
         status: 'received' | 'open' | 'done' | 'pending';
         settled: boolean;
-        executed_value: number;
+        executed_value: string;
     }
 
     export interface OrderResult extends BaseOrderInfo {
@@ -74,7 +74,7 @@ declare module 'gdax' {
         funds: number;
         specified_funds: number;
         done_at: string;
-        executed_value: number;
+        executed_value: string;
     }
 
     export type PageArgs = {
