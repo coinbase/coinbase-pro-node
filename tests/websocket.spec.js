@@ -118,7 +118,7 @@ suite('WebsocketClient', () => {
           server.close();
           done();
         });
-        client.subscribeProduct('ETH-BTC', 'ETH-USD');
+        client.subscribe({ product_ids: ['ETH-BTC', 'ETH-USD'] });
       });
     });
   });
@@ -136,21 +136,13 @@ suite('WebsocketClient', () => {
         socket.on('message', data => {
           const msg = JSON.parse(data);
           assert.equal(msg.type, 'unsubscribe');
-          assert.deepEqual(msg.channels, [
-            {
-              name: 'full',
-              product_ids: ['BTC-USD'],
-            },
-            {
-              name: 'heartbeat',
-              product_ids: ['BTC-USD'],
-            },
-          ]);
+          assert.deepEqual(msg.product_ids, ['BTC-USD']);
+          assert.deepEqual(msg.channels, ['full']);
 
           server.close();
           done();
         });
-        client.unsubscribeProduct('BTC-USD');
+        client.unsubscribe({ product_ids: ['BTC-USD'], channels: ['full'] });
       });
     });
   });
@@ -173,13 +165,19 @@ suite('WebsocketClient', () => {
         socket.on('message', data => {
           const msg = JSON.parse(data);
           assert.equal(msg.type, 'subscribe');
-          assert.deepEqual(msg.product_ids, ['BTC-USD']);
-          assert.deepEqual(msg.channels, ['heartbeat', 'ticker', 'user']);
+          assert.deepEqual(msg.channels, [
+            {
+              name: 'ticker',
+              product_ids: ['LTC-USD'],
+            },
+          ]);
 
           server.close();
           done();
         });
-        client.subscribeChannel('ticker', 'user');
+        client.subscribe({
+          channels: [{ name: 'ticker', product_ids: ['LTC-USD'] }],
+        });
       });
     });
   });
@@ -207,7 +205,7 @@ suite('WebsocketClient', () => {
           server.close();
           done();
         });
-        client.unsubscribeChannel('ticker');
+        client.unsubscribe({ channels: ['ticker'] });
       });
     });
   });
