@@ -33,7 +33,7 @@
     "lint-staged": "^3.6.1",
     "mocha": "3.4.2",
     "nock": "9.0.13",
-    "prettier": "^1.4.4"
+    "prettier": "^1.9.2"
   },
   "directories": {
     "lib": "./lib"
