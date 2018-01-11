@@ -149,4 +149,26 @@ suite('WebsocketClient', () => {
       });
     });
   });
+
+  test('emits errors when receiving an error message', done => {
+    const server = testserver(++port, () => {
+      const client = new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
+
+      client.once('error', err => {
+        assert.equal(err.message, 'test error');
+        assert.equal(err.reason, 'because error');
+        done();
+      });
+    });
+
+    server.once('connection', socket => {
+      socket.send(
+        JSON.stringify({
+          type: 'error',
+          message: 'test error',
+          reason: 'because error',
+        })
+      );
+    });
+  });
 });
