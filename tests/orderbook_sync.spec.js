@@ -10,7 +10,7 @@ const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('OrderbookSync', () => {
   test('not passes authentication details to websocket', done => {
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -32,7 +32,7 @@ suite('OrderbookSync', () => {
   });
 
   test('passes authentication details to websocket', done => {
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -55,7 +55,7 @@ suite('OrderbookSync', () => {
   });
 
   test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -86,7 +86,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -116,7 +116,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -143,7 +143,7 @@ suite('OrderbookSync', () => {
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -169,7 +169,7 @@ suite('OrderbookSync', () => {
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -208,7 +208,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
