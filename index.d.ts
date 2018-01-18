@@ -257,5 +257,8 @@ declare module 'gdax' {
         on(event: 'error', eventHandler: (err:any) => void): void;
         on(event: 'open', eventHandler: () => void): void;
         on(event: 'close', eventHandler: () => void): void;
+
+        connect(): void;
+        disconnect(): void;
     }
 }
