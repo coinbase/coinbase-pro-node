@@ -405,11 +405,13 @@ suite('AuthenticatedClient', () => {
       nock(EXCHANGE_API_URL)
         .delete('/orders')
         .times(2)
-        .reply(404, null);
+        .reply(400, { message: 'some error' });
 
-      let cbTest = new Promise((resolve, reject) => {
+      const cbtest = new Promise((resolve, reject) => {
         authClient.cancelAllOrders(err => {
           if (err) {
+            assert.equal(err.response.statusCode, 400);
+            assert.equal(err.data.message, 'some error');
             resolve();
           } else {
             reject();
@@ -417,12 +419,15 @@ suite('AuthenticatedClient', () => {
         });
       });
 
-      return cbTest
-        .then(() => {
-          return authClient.cancelAllOrders();
-        })
+      const promisetest = authClient
+        .cancelAllOrders()
         .then(() => assert.fail('should have thrown an error'))
-        .catch(err => assert(err));
+        .catch(err => {
+          assert.equal(err.response.statusCode, 400);
+          assert.equal(err.data.message, 'some error');
+        });
+
+      return Promise.all([cbtest, promisetest]);
     });
   });
 

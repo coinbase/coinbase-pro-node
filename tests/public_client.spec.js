@@ -27,6 +27,39 @@ suite('PublicClient', () => {
     assert.equal(client.productID, 'LTC-USD');
   });
 
+  suite('.request()', () => {
+    test('handles errors', () => {
+      nock(EXCHANGE_API_URL)
+        .get('/some/path')
+        .times(2)
+        .reply(400, { message: 'some error' });
+
+      const cbtest = new Promise((resolve, reject) => {
+        publicClient.request('get', ['some', 'path'], {}, err => {
+          if (err) {
+            assert.equal(err.message, 'HTTP 400 Error: some error');
+            assert.equal(err.response.statusCode, 400);
+            assert.equal(err.data.message, 'some error');
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
+
+      const promisetest = publicClient
+        .request('get', ['some', 'path'])
+        .then(() => assert.fail('should have thrown an error'))
+        .catch(err => {
+          assert.equal(err.message, 'HTTP 400 Error: some error');
+          assert.equal(err.response.statusCode, 400);
+          assert(err.data.message, 'some error');
+        });
+
+      return Promise.all([cbtest, promisetest]);
+    });
+  });
+
   test('.getProductOrderBook()', () => {
     nock(EXCHANGE_API_URL)
       .get('/products/LTC-USD/book?level=3')
