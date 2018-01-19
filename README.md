@@ -21,7 +21,7 @@ npm install coinbase/gdax-node
 ```
 
 You can learn about the API responses of each endpoint [by reading our
-documentation](https://docs.gdax.com/#market-data).
+documentation](https://docs.gdax.com).
 
 ## Quick Start
 
@@ -49,6 +49,24 @@ publicClient
   });
 ```
 
+Promises will be resolved with an object `data` whose structure varies depending
+on the GDAX endpoint called (see the [GDAX API docs](https://docs.gdax.com)).
+
+Upon encountering an error, the Promise will be rejected with an `error` object.
+If the error is related to the network or a response recieved from the GDAX API,
+`error` may contain additional properties as described in `superagent`'s [error
+handling docs](https://visionmedia.github.io/superagent/#error-handling).
+
+```js
+publicClient
+  .getProducts() // assume this produces some error
+  .then(data => { /* ... */ })
+  .catch(error => {
+    error typeof Error; // true
+    typeof error.message; // string
+  });
+```
+
 The promise API can be used as expected in `async` functions in ES2017+
 environments:
 
@@ -68,17 +86,14 @@ async function yourFunction() {
 
 ### Using Callbacks
 
-Your callback should accept two arguments:
+Your callback should accept two arguments, `error` and `data`, as described
+above. In callbacks,
 
-- `error`: contains an error message (`string`), or `null` if no was error
-  encountered
-- `response`: a generic HTTP response abstraction created by the [`request`
-  library](https://github.com/request/request)
-- `data`: contains data returned by the GDAX API, or `undefined` if an error was
-  encountered
+- `error` will be `null` if no error is encountered
+- `data` will be `undefined` if an error is encountered
 
 ```js
-publicClient.getProducts((error, response, data) => {
+publicClient.getProducts((error, data) => {
   if (error) {
     // handle the error
   } else {
@@ -92,7 +107,7 @@ prevent potential `UnhandledPromiseRejectionWarning`s, which will cause future
 versions of Node to terminate.
 
 ```js
-const myCallback = (err, response, data) => { /* ... */ };
+const myCallback = (err, data) => { /* ... */ };
 
 const result = publicClient.getProducts(myCallback);
 
@@ -106,7 +121,8 @@ Some methods accept optional parameters, e.g.
 ```js
 publicClient
   .getProductOrderBook('BTC-USD', { level: 3 })
-  .then(book => { /* ... */ });
+  .then(book => { /* ... */ })
+  .catch(error => { /* ... */ };
 ```
 
 To use optional parameters with callbacks, supply the options as the first
@@ -120,11 +136,11 @@ publicClient
 ### The Public API Client
 
 ```js
-const publicClient = new Gdax.PublicClient(endpoint);
+const publicClient = new Gdax.PublicClient(apiURI);
 ```
 
-- `productID` *optional* - defaults to 'BTC-USD' if not specified.
-- `endpoint` *optional* - defaults to 'https://api.gdax.com' if not specified.
+- `productID` *optional* - defaults to `'BTC-USD'`
+- `apiURI` *optional* - defaults to `'https://api.gdax.com'`
 
 #### Public API Methods
 
@@ -219,9 +235,9 @@ const authedClient = new Gdax.AuthenticatedClient(key, secret, passphrase, apiUR
 Like `PublicClient`, all API methods can be used with either callbacks or will
 return promises.
 
-`AuthenticatedClient` inherits all of the API methods from
-`PublicClient`, so if you're hitting both public and private API endpoints you
-only need to create a single client.
+`AuthenticatedClient` inherits all of the API methods from `PublicClient`, so if
+you're hitting both public and private API endpoints you only need to create a
+single authenticated client.
 
 #### Private API Methods
 

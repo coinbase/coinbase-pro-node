@@ -2,9 +2,11 @@ const assert = require('assert');
 const nock = require('nock');
 
 const Gdax = require('../index.js');
-const publicClient = new Gdax.PublicClient();
+const publicClient = new Gdax.PublicClient(undefined, undefined, {
+  rateLimit: false,
+});
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const { GDAX_API_URI } = require('../lib/constants');
 
 suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
@@ -122,12 +124,12 @@ suite('PublicClient', () => {
       },
     ];
 
-    nock(EXCHANGE_API_URL)
-      .get('/products/LTC-USD/trades')
+    nock(GDAX_API_URI)
+      .get('/products/BTC-USD/trades')
       .times(2)
       .reply(200, expectedResponse);
 
-    const cbtest = new Promise((resolve, reject) => {
+    let cbtest = new Promise((resolve, reject) => {
       publicClient.getProductTrades('LTC-USD', (err, resp, data) => {
         if (err) {
           reject(err);
@@ -135,6 +137,10 @@ suite('PublicClient', () => {
         assert.deepEqual(data, expectedResponse);
         resolve();
       });
+
+      if (typeof p !== 'undefined') {
+        reject('Should not return Promise when callback provided.');
+      }
     });
 
     const promisetest = publicClient
@@ -165,15 +171,12 @@ suite('PublicClient', () => {
       .then(data => assert.deepEqual(data, expectedResponse));
   });
 
-  test('.getProductTicker()', () => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/ETH-USD/ticker')
-      .times(2)
-      .reply(200, {
-        trade_id: 'test-id',
-        price: '9.00',
-        size: '5',
-      });
+  test('.getProductTicker() should return values', () => {
+    nock(GDAX_API_URI).get('/products/BTC-USD/ticker').times(2).reply(200, {
+      trade_id: 'test-id',
+      price: '9.00',
+      size: '5',
+    });
 
     const cbtest = new Promise((resolve, reject) => {
       publicClient.getProductTicker('ETH-USD', (err, resp, data) => {
@@ -285,8 +288,8 @@ suite('PublicClient', () => {
           from,
           trade => Date.parse(trade.time) >= 1463068800000
         )
-        .on('data', data => {
-          current = data.trade_id;
+        .on('data', trade => {
+          current = trade.trade_id;
           assert.equal(typeof current, 'number');
           assert.equal(
             current,

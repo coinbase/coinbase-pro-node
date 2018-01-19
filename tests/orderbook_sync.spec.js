@@ -6,7 +6,11 @@ const Gdax = require('../index.js');
 const testserver = require('./lib/ws_testserver');
 let port = 56632;
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const { DEFAULT_BOOK_LEVEL, GDAX_API_URI } = require('../lib/constants');
+
+const key = 'key';
+const b64secret = 'secret';
+const passphrase = 'passphrase';
 
 suite('OrderbookSync', () => {
   test('not passes authentication details to websocket', done => {
@@ -78,8 +82,8 @@ suite('OrderbookSync', () => {
   });
 
   test('emits a message event', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .times(2)
       .reply(200, {
         asks: [],
@@ -89,7 +93,6 @@ suite('OrderbookSync', () => {
     const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
       orderbookSync.on('message', data => {
@@ -107,6 +110,9 @@ suite('OrderbookSync', () => {
     });
   });
 
+  test('emits a message event (with AuthenticatedClient)', done => {
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
   test('emits a message event (with auth)', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
@@ -117,9 +123,16 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
+      const authClient = new Gdax.AuthenticatedClient(
+        key,
+        b64secret,
+        passphrase,
+        {
+          rateLimit: false,
+        }
+      );
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        EXCHANGE_API_URL,
         'ws://localhost:' + port,
         { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
@@ -139,14 +152,13 @@ suite('OrderbookSync', () => {
   });
 
   test('emits an error event on error', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
 
@@ -164,15 +176,25 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('emits an error event on error (with auth)', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
+  test('emits an error event on error (with AuthenticatedClient)', done => {
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
+      const authClient = new Gdax.AuthenticatedClient(
+        key,
+        b64secret,
+        passphrase,
+        undefined,
+        undefined,
+        {
+          rateLimit: false,
+        }
+      );
+
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
-        EXCHANGE_API_URL,
         'ws://localhost:' + port,
         { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
@@ -192,16 +214,16 @@ suite('OrderbookSync', () => {
   });
 
   test('builds specified books', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
+    nock(GDAX_API_URI)
+      .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .times(2)
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    nock(EXCHANGE_API_URL)
-      .get('/products/ETH-USD/book?level=3')
+    nock(GDAX_API_URI)
+      .get(`/products/ETH-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .times(2)
       .reply(200, {
         asks: [],
@@ -211,7 +233,6 @@ suite('OrderbookSync', () => {
     const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
-        EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
       const btc_usd_state = orderbookSync.books['BTC-USD'].state();
