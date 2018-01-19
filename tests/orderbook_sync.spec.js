@@ -150,17 +150,15 @@ suite('OrderbookSync', () => {
         'ws://localhost:' + port
       );
 
-      orderbookSync.on('message', () =>
-        assert.fail('should not have emitted message')
-      );
-      orderbookSync.on('error', err =>
-        assert.equal(err.message, 'Failed to load orderbook: whoops')
-      );
+      orderbookSync.on('error', err => {
+        assert.equal(err.message, 'Failed to load orderbook: whoops');
+        server.close();
+        done();
+      });
     });
 
-    server.on('connection', () => {
-      server.close();
-      done();
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
     });
   });
 
@@ -177,17 +175,15 @@ suite('OrderbookSync', () => {
         { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
 
-      orderbookSync.on('message', () =>
-        assert.fail('should not have emitted message')
-      );
-      orderbookSync.on('error', err =>
-        assert.equal(err.message, 'Failed to load orderbook: whoops')
-      );
+      orderbookSync.on('error', err => {
+        assert.equal(err.message, 'Failed to load orderbook: whoops');
+        server.close();
+        done();
+      });
     });
 
-    server.on('connection', () => {
-      server.close();
-      done();
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
     });
   });
 
