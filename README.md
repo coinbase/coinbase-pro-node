@@ -2,17 +2,6 @@
 
 The official Node.js library for Coinbase's [GDAX API](https://docs.gdax.com/).
 
-*Note: this library may be subtly broken or buggy. The code is released under
-the MIT License – please take the following message to heart:*
-
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> SOFTWARE.
-
 ## Features
 
 * Easy functionality to use in programmatic trading
@@ -20,7 +9,6 @@ the MIT License – please take the following message to heart:*
 * API clients with convenient methods for every API endpoint
 * Abstracted interfaces – don't worry about HMAC signing or JSON formatting; the
   library does it for you
-* Semantic versioning
 
 ## Installation
 
@@ -117,7 +105,7 @@ Some methods accept optional parameters, e.g.
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 })
+  .getProductOrderBook('BTC-USD', { level: 3 })
   .then(book => { /* ... */ });
 ```
 
@@ -126,13 +114,13 @@ parameter(s) and the callback as the last parameter:
 
 ```js
 publicClient
-  .getProductOrderBook({ level: 3 }, (error, response, book) => { /* ... */ });
+  .getProductOrderBook('ETH-USD', { level: 3 }, (error, response, book) => { /* ... */ });
 ```
 
 ### The Public API Client
 
 ```js
-const publicClient = new Gdax.PublicClient(productID, endpoint);
+const publicClient = new Gdax.PublicClient(endpoint);
 ```
 
 - `productID` *optional* - defaults to 'BTC-USD' if not specified.
@@ -150,25 +138,25 @@ publicClient.getProducts(callback);
 
 ```js
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook(callback);
+publicClient.getProductOrderBook('BTC-USD', callback);
 
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook({'level': 3}, callback);
+publicClient.getProductOrderBook('LTC-USD', { level: 3 }, callback);
 ```
 
 * [`getProductTicker`](https://docs.gdax.com/#get-product-ticker)
 
 ```js
-publicClient.getProductTicker(callback);
+publicClient.getProductTicker('ETH-USD', callback);
 ```
 
 * [`getProductTrades`](https://docs.gdax.com/#get-trades)
 
 ```js
-publicClient.getProductTrades(callback);
+publicClient.getProductTrades('BTC-USD', callback);
 
 // To make paginated requests, include page parameters
-publicClient.getProductTrades({'after': 1000}, callback);
+publicClient.getProductTrades('BTC-USD', { after: 1000 }, callback);
 ```
 
 * [`getProductTradeStream`](https://docs.gdax.com/#get-trades)
@@ -177,25 +165,25 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
 
 ```js
-const trades = publicClient.getProductTradeStream(8408000, 8409000);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, 8409000);
 
 // tradesTo can also be a function
-const trades = publicClient.getProductTradeStream(8408000, trade => Date.parse(trade.time) >= 1463068e6);
+const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => Date.parse(trade.time) >= 1463068e6);
 ```
 
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
 
 ```js
-publicClient.getProductHistoricRates(callback);
+publicClient.getProductHistoricRates('BTC-USD', callback);
 
 // To include extra parameters:
-publicClient.getProductHistoricRates({'granularity': 3000}, callback);
+publicClient.getProductHistoricRates('BTC-USD', { granularity: 3600 }, callback);
 ```
 
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
 
 ```js
-publicClient.getProduct24HrStats(callback);
+publicClient.getProduct24HrStats('BTC-USD', callback);
 ```
 
 * [`getCurrencies`](https://docs.gdax.com/#get-currencies)
@@ -219,13 +207,13 @@ the API URI (defaults to `https://api.gdax.com`).
 
 ```js
 const key = 'your_api_key';
-const b64secret = 'your_b64_secret';
+const secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
 const apiURI = 'https://api.gdax.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
-const authedClient = new Gdax.AuthenticatedClient(key, b64secret, passphrase, apiURI);
+const authedClient = new Gdax.AuthenticatedClient(key, secret, passphrase, apiURI);
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will
@@ -241,6 +229,12 @@ only need to create a single client.
 
 ```javascript
 authedClient.getCoinbaseAccounts(callback);
+```
+
+* [`getPaymentMethods`](https://docs.gdax.com/#payment-methods)
+
+```javascript
+authedClient.getPaymentMethods(callback);
 ```
 
 * [`getAccounts`](https://docs.gdax.com/#list-accounts)
@@ -263,7 +257,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHistory(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHistory(accountID, {'before': 3000}, callback);
+authedClient.getAccountHistory(accountID, { before: 3000 }, callback);
 ```
 
 * [`getAccountHolds`](https://docs.gdax.com/#get-holds)
@@ -273,7 +267,7 @@ const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccountHolds(accountID, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHolds(accountID, {'before': 3000}, callback);
+authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
 ```
 
 * [`buy`, `sell`](https://docs.gdax.com/#place-a-new-order)
@@ -294,6 +288,19 @@ const sellParams = {
   'product_id': 'BTC-USD',
 };
 authedClient.sell(sellParams, callback);
+```
+
+* [`placeOrder`](https://docs.gdax.com/#place-a-new-order)
+
+```js
+// Buy 1 LTC @ 75 USD
+const params = {
+  'side': 'buy',
+  'price': '75.00', // USD
+  'size': '1', // LTC
+  'product_id': 'LTC-USD',
+};
+authedClient.placeOrder(params, callback);
 ```
 
 * [`cancelOrder`](https://docs.gdax.com/#cancel-an-order)
@@ -326,10 +333,9 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 
 ```js
 authedClient.getOrders(callback);
-// Get all orders of 'open' status, from the page after 3000 pagination id.
-authedClient.getOrders({'after': 3000,'status': 'open'}, (err,response,data)=>{
-  //console.log(data)
-})
+// For pagination, you can include extra page arguments
+// Get all orders of 'open' status
+authedClient.getOrders({'after': 3000,'status': 'open'}, callback);
 ```
 
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
@@ -344,7 +350,7 @@ authedClient.getOrder(orderID, callback);
 ```js
 authedClient.getFills(callback);
 // For pagination, you can include extra page arguments
-authedClient.getFills({'before': 3000}, callback);
+authedClient.getFills({ before: 3000 }, callback);
 ```
 
 * [`getFundings`](https://docs.gdax.com/#list-fundings)
