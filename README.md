@@ -334,7 +334,8 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 ```js
 authedClient.getOrders(callback);
 // For pagination, you can include extra page arguments
-authedClient.getOrders({ after: 3000 }, callback);
+// Get all orders of 'open' status
+authedClient.getOrders({'after': 3000,'status': 'open'}, callback);
 ```
 
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
