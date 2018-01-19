@@ -21,10 +21,10 @@
     }
   ],
   "dependencies": {
-    "bintrees": "1.0.1",
-    "num": "0.3.0",
-    "request": "2.81.0",
-    "ws": "3.0.0"
+    "bintrees": "^1.0.1",
+    "num": "^0.3.0",
+    "request": "^2.81.0",
+    "ws": "^4.0.0"
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
