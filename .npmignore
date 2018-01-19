@@ -1,0 +1,9 @@
+*.swp
+
+/.idea
+/package-lock.json
+/yarn.lock
+/.node-version
+
+circle.yml
+/tests
