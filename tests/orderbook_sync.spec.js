@@ -13,6 +13,74 @@ const b64secret = 'secret';
 const passphrase = 'passphrase';
 
 suite('OrderbookSync', () => {
+  test('not passes authentication details to websocket', done => {
+    const server = testserver(port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.strictEqual(msg.key, undefined);
+        assert.strictEqual(msg.passphrase, undefined);
+
+        server.close();
+        done();
+      });
+    });
+  });
+
+  test('passes authentication details to websocket', done => {
+    const server = testserver(port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        { key: 'suchkey', secret: 'suchsecret', passphrase: 'muchpassphrase' }
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'suchkey');
+        assert.equal(msg.passphrase, 'muchpassphrase');
+
+        server.close();
+        done();
+      });
+    });
+  });
+
+  test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
+    const server = testserver(port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        new Gdax.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'mykey');
+        assert.equal(msg.passphrase, 'mypassphrase');
+
+        server.close();
+        done();
+      });
+    });
+  });
+
   test('emits a message event', done => {
     nock(GDAX_API_URI)
       .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
@@ -22,7 +90,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         'ws://localhost:' + port
@@ -45,13 +113,16 @@ suite('OrderbookSync', () => {
   test('emits a message event (with AuthenticatedClient)', done => {
     nock(GDAX_API_URI)
       .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
+  test('emits a message event (with auth)', done => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=3')
       .times(2)
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const authClient = new Gdax.AuthenticatedClient(
         key,
         b64secret,
@@ -63,7 +134,7 @@ suite('OrderbookSync', () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
@@ -85,7 +156,7 @@ suite('OrderbookSync', () => {
       .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         'ws://localhost:' + port
@@ -110,7 +181,7 @@ suite('OrderbookSync', () => {
       .get(`/products/BTC-USD/book?level=${DEFAULT_BOOK_LEVEL}`)
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const authClient = new Gdax.AuthenticatedClient(
         key,
         b64secret,
@@ -121,10 +192,11 @@ suite('OrderbookSync', () => {
           rateLimit: false,
         }
       );
+
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
 
       orderbookSync.on('message', () =>
@@ -158,7 +230,7 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         'ws://localhost:' + port

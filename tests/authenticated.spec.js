@@ -40,6 +40,43 @@ suite('AuthenticatedClient', () => {
     assert(sig['CB-ACCESS-SIGN']);
   });
 
+  test('.getCoinbaseAccounts()', done => {
+    const expectedResponse = [
+      {
+        id: 'fc3a8a57-7142-542d-8436-95a3d82e1622',
+        name: 'ETH Wallet',
+        balance: '0.00000000',
+        currency: 'ETH',
+        type: 'wallet',
+        primary: false,
+        active: true,
+      },
+    ];
+
+    nock(EXCHANGE_API_URL)
+      .get('/coinbase-accounts')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getCoinbaseAccounts((err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getCoinbaseAccounts()
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   test('.getAccount()', () => {
     const expectedResponse = {
       id: 'a1b2c3d4',
@@ -172,6 +209,33 @@ suite('AuthenticatedClient', () => {
       .then(data => assert.deepEqual(data, expectedResponse));
 
     return Promise.all([cbtest, promisetest]);
+  });
+
+  test('.placeOrder()', done => {
+    const order = {
+      side: 'buy',
+      funds: '20.00',
+      product_id: 'ETH-USD',
+      type: 'market',
+    };
+
+    const expectedOrder = order;
+
+    const expectedResponse = {
+      id: '0428b97b-bec1-429e-a94c-59992926778d',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/orders', expectedOrder)
+      .reply(200, expectedResponse);
+
+    authClient.placeOrder(order, (err, resp, data) => {
+      assert.ifError(err);
+      assert.deepEqual(data, expectedResponse);
+
+      nock.cleanAll();
+      done();
+    });
   });
 
   test('.buy()', () => {
@@ -364,15 +428,32 @@ suite('AuthenticatedClient', () => {
     });
 
     test('handles errors', () => {
-      nock(GDAX_API_URI).delete('/orders').reply(404, null);
+      nock(EXCHANGE_API_URL)
+        .delete('/orders')
+        .times(2)
+        .reply(400, { message: 'some error' });
 
-      return authClient
-        .cancelAllOrders((err, data) => {
-          assert(err);
-          assert.ifError(data);
-        })
-        .then(() => assert.fail(`Didn't throw error`))
-        .catch(err => assert(err));
+      const cbtest = new Promise((resolve, reject) => {
+        authClient.cancelAllOrders(err => {
+          if (err) {
+            assert.equal(err.response.statusCode, 400);
+            assert.equal(err.data.message, 'some error');
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
+
+      const promisetest = authClient
+        .cancelAllOrders()
+        .then(() => assert.fail('should have thrown an error'))
+        .catch(err => {
+          assert.equal(err.response.statusCode, 400);
+          assert.equal(err.data.message, 'some error');
+        });
+
+      return Promise.all([cbtest, promisetest]);
     });
   });
 
@@ -448,7 +529,10 @@ suite('AuthenticatedClient', () => {
       },
     ];
 
-    nock(GDAX_API_URI).get('/fills').times(2).reply(200, expectedResponse);
+    nock(EXCHANGE_API_URL)
+      .get('/fills')
+      .times(2)
+      .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.getFills((err, data) => {
@@ -504,7 +588,12 @@ suite('AuthenticatedClient', () => {
       currency: 'USD',
     };
 
-    nock(GDAX_API_URI).post('/funding/repay', params).times(2).reply(200, {}); // TODO mock with actual data
+    nock(GDAX_API_URI)
+      .post('/funding/repay', params)
+      .reply(200, {});
+    nock(GDAX_API_URI)
+      .post('/funding/repay', params)
+      .reply(200, {});
 
     let cbtest = new Promise((resolve, reject) => {
       authClient.repay(params, (err, data) => {
@@ -589,14 +678,14 @@ suite('AuthenticatedClient', () => {
   test('.deposit()', () => {
     const transfer = {
       amount: 10480,
+      currency: 'USD',
       coinbase_account_id: 'test-id',
     };
 
     const expectedTransfer = transfer;
-    expectedTransfer.type = 'deposit';
 
     nock(GDAX_API_URI)
-      .post('/transfers', expectedTransfer)
+      .post('/deposits/coinbase-account', expectedTransfer)
       .times(2)
       .reply(200, {}); // TODO mock with real data;
 
@@ -618,14 +707,14 @@ suite('AuthenticatedClient', () => {
   test('.withdraw()', () => {
     const transfer = {
       amount: 10480,
+      currency: 'USD',
       coinbase_account_id: 'test-id',
     };
 
     const expectedTransfer = transfer;
-    expectedTransfer.type = 'withdraw';
 
     nock(GDAX_API_URI)
-      .post('/transfers', expectedTransfer)
+      .post('/withdrawals/coinbase-account', expectedTransfer)
       .times(2)
       .reply(200, {}); // TODO mock with real data
 
@@ -642,5 +731,118 @@ suite('AuthenticatedClient', () => {
     let promisetest = authClient.withdraw(transfer);
 
     return Promise.all([cbtest, promisetest]);
+  });
+
+  test('.createReport()', done => {
+    const params = {
+      type: 'fills',
+      start_date: '2014-11-01T00:00:00.000Z',
+      end_date: '2014-11-30T23:59:59.000Z',
+      product_id: 'BTC-USD',
+      format: 'pdf',
+    };
+    const expectedResponse = {
+      id: 'test-id',
+      type: 'fills',
+      status: 'pending',
+      created_at: '2015-01-06T10:34:47.000Z',
+      completed_at: 'undefined',
+      expires_at: '2015-01-13T10:35:47.000Z',
+      file_url: 'undefined',
+      params: {
+        start_date: '2014-11-01T00:00:00.000Z',
+        end_date: '2014-11-30T23:59:59.000Z',
+      },
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/reports', params)
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.createReport(params, (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .createReport(params)
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.getReportStatus()', done => {
+    const expectedResponse = {
+      id: 'test-id',
+      type: 'fills',
+      status: 'ready',
+      created_at: '2015-01-06T10:34:47.000Z',
+      completed_at: '2015-01-06T10:35:47.000Z',
+      expires_at: '2015-01-13T10:35:47.000Z',
+      file_url: 'https://example.com/0428b97b.../fills.pdf',
+      params: {
+        start_date: '2014-11-01T00:00:00.000Z',
+        end_date: '2014-11-30T23:59:59.000Z',
+      },
+    };
+
+    nock(EXCHANGE_API_URL)
+      .get('/reports/test-id')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getReportStatus('test-id', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getReportStatus('test-id')
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.withdrawCrypto()', done => {
+    const withdrawParams = {
+      amount: 10480,
+      currency: 'BTC',
+      crypto_address: 'test-address',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/withdrawals/crypto', withdrawParams)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.withdrawCrypto(withdrawParams, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.withdrawCrypto(withdrawParams);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 });
