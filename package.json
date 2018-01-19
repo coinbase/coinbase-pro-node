@@ -65,9 +65,9 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,json,md}": [
       "eslint --fix",
-      "prettier --single-quote --trailing-comma es5 --write",
+      "prettier --write",
       "git add"
     ]
   }
