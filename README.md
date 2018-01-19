@@ -54,15 +54,11 @@ environments:
 
 ```js
 async function yourFunction() {
-
   try {
-
     const products = await publicClient.getProducts();
-
-  } catch(error) {
+  } catch (error) {
     /* ... */
   }
-
 }
 ```
 
@@ -70,11 +66,11 @@ async function yourFunction() {
 
 Your callback should accept two arguments:
 
-- `error`: contains an error message (`string`), or `null` if no was error
+* `error`: contains an error message (`string`), or `null` if no was error
   encountered
-- `response`: a generic HTTP response abstraction created by the [`request`
+* `response`: a generic HTTP response abstraction created by the [`request`
   library](https://github.com/request/request)
-- `data`: contains data returned by the GDAX API, or `undefined` if an error was
+* `data`: contains data returned by the GDAX API, or `undefined` if an error was
   encountered
 
 ```js
@@ -92,11 +88,15 @@ prevent potential `UnhandledPromiseRejectionWarning`s, which will cause future
 versions of Node to terminate.
 
 ```js
-const myCallback = (err, response, data) => { /* ... */ };
+const myCallback = (err, response, data) => {
+  /* ... */
+};
 
 const result = publicClient.getProducts(myCallback);
 
-result.then(() => { /* ... */ }); // TypeError: Cannot read property 'then' of undefined
+result.then(() => {
+  /* ... */
+}); // TypeError: Cannot read property 'then' of undefined
 ```
 
 ### Optional Parameters
@@ -104,17 +104,22 @@ result.then(() => { /* ... */ }); // TypeError: Cannot read property 'then' of u
 Some methods accept optional parameters, e.g.
 
 ```js
-publicClient
-  .getProductOrderBook('BTC-USD', { level: 3 })
-  .then(book => { /* ... */ });
+publicClient.getProductOrderBook('BTC-USD', { level: 3 }).then(book => {
+  /* ... */
+});
 ```
 
 To use optional parameters with callbacks, supply the options as the first
 parameter(s) and the callback as the last parameter:
 
 ```js
-publicClient
-  .getProductOrderBook('ETH-USD', { level: 3 }, (error, response, book) => { /* ... */ });
+publicClient.getProductOrderBook(
+  'ETH-USD',
+  { level: 3 },
+  (error, response, book) => {
+    /* ... */
+  }
+);
 ```
 
 ### The Public API Client
@@ -123,8 +128,8 @@ publicClient
 const publicClient = new Gdax.PublicClient(endpoint);
 ```
 
-- `productID` *optional* - defaults to 'BTC-USD' if not specified.
-- `endpoint` *optional* - defaults to 'https://api.gdax.com' if not specified.
+* `productID` _optional_ - defaults to 'BTC-USD' if not specified.
+* `endpoint` _optional_ - defaults to 'https://api.gdax.com' if not specified.
 
 #### Public API Methods
 
@@ -168,7 +173,11 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, 8409000);
 
 // tradesTo can also be a function
-const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => Date.parse(trade.time) >= 1463068e6);
+const trades = publicClient.getProductTradeStream(
+  'BTC-USD',
+  8408000,
+  trade => Date.parse(trade.time) >= 1463068e6
+);
 ```
 
 * [`getProductHistoricRates`](https://docs.gdax.com/#get-historic-rates)
@@ -177,7 +186,11 @@ const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, trade => D
 publicClient.getProductHistoricRates('BTC-USD', callback);
 
 // To include extra parameters:
-publicClient.getProductHistoricRates('BTC-USD', { granularity: 3600 }, callback);
+publicClient.getProductHistoricRates(
+  'BTC-USD',
+  { granularity: 3600 },
+  callback
+);
 ```
 
 * [`getProduct24HrStats`](https://docs.gdax.com/#get-24hr-stats)
@@ -213,7 +226,12 @@ const passphrase = 'your_passphrase';
 const apiURI = 'https://api.gdax.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
-const authedClient = new Gdax.AuthenticatedClient(key, secret, passphrase, apiURI);
+const authedClient = new Gdax.AuthenticatedClient(
+  key,
+  secret,
+  passphrase,
+  apiURI
+);
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will
@@ -275,17 +293,17 @@ authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
 ```js
 // Buy 1 BTC @ 100 USD
 const buyParams = {
-  'price': '100.00', // USD
-  'size': '1',  // BTC
-  'product_id': 'BTC-USD',
+  price: '100.00', // USD
+  size: '1', // BTC
+  product_id: 'BTC-USD',
 };
 authedClient.buy(buyParams, callback);
 
 // Sell 1 BTC @ 110 USD
 const sellParams = {
-  'price': '110.00', // USD
-  'size': '1', // BTC
-  'product_id': 'BTC-USD',
+  price: '110.00', // USD
+  size: '1', // BTC
+  product_id: 'BTC-USD',
 };
 authedClient.sell(sellParams, callback);
 ```
@@ -295,10 +313,10 @@ authedClient.sell(sellParams, callback);
 ```js
 // Buy 1 LTC @ 75 USD
 const params = {
-  'side': 'buy',
-  'price': '75.00', // USD
-  'size': '1', // LTC
-  'product_id': 'LTC-USD',
+  side: 'buy',
+  price: '75.00', // USD
+  size: '1', // LTC
+  product_id: 'LTC-USD',
 };
 authedClient.placeOrder(params, callback);
 ```
@@ -326,7 +344,7 @@ authedClient.cancelOrders(callback);
 // Also, you can add a `product_id` param to only delete orders of that product.
 
 // The data will be an array of the order IDs of all orders which were cancelled
-authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
+authedClient.cancelAllOrders({ product_id: 'BTC-USD' }, callback);
 ```
 
 * [`getOrders`](https://docs.gdax.com/#list-open-orders)
@@ -335,7 +353,7 @@ authedClient.cancelAllOrders({product_id: 'BTC-USD'}, callback);
 authedClient.getOrders(callback);
 // For pagination, you can include extra page arguments
 // Get all orders of 'open' status
-authedClient.getOrders({'after': 3000,'status': 'open'}, callback);
+authedClient.getOrders({ after: 3000, status: 'open' }, callback);
 ```
 
 * [`getOrder`](https://docs.gdax.com/#get-an-order)
@@ -363,8 +381,8 @@ authedClient.getFundings({}, callback);
 
 ```js
 const params = {
-  'amount': '2000.00',
-  'currency': 'USD'
+  amount: '2000.00',
+  currency: 'USD',
 };
 authedClient.repay(params, callback);
 ```
@@ -385,7 +403,7 @@ authedClient.marginTransfer(params, callback);
 
 ```js
 const params = {
-  'repay_only': false
+  repay_only: false,
 };
 authedClient.closePosition(params, callback);
 ```
@@ -395,42 +413,42 @@ authedClient.closePosition(params, callback);
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
 const depositParamsUSD = {
-  'amount': '100.00',
-  'currency': 'USD',
-  'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
+  amount: '100.00',
+  currency: 'USD',
+  coinbase_account_id: '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.deposit(depositParamsUSD, callback);
 
 // Withdraw from your Exchange USD account to your Coinbase USD account.
 const withdrawParamsUSD = {
-  'amount': '100.00',
-  'currency': 'USD',
-  'coinbase_account_id': '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
+  amount: '100.00',
+  currency: 'USD',
+  coinbase_account_id: '60680c98bfe96c2601f27e9c', // USD Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsUSD, callback);
 
 // Deposit to your Exchange BTC account from your Coinbase BTC account.
 const depositParamsBTC = {
-  'amount': '2.0',
-  'currency': 'BTC',
-  'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
+  amount: '2.0',
+  currency: 'BTC',
+  coinbase_account_id: '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.deposit(depositParamsBTC, callback);
 
 // Withdraw from your Exchange BTC account to your Coinbase BTC account.
 const withdrawParamsBTC = {
-  'amount': '2.0',
-  'currency': 'BTC',
-  'coinbase_account_id': '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
+  amount: '2.0',
+  currency: 'BTC',
+  coinbase_account_id: '536a541fa9393bb3c7000023', // BTC Coinbase Account ID
 };
 authedClient.withdraw(withdrawParamsBTC, callback);
 
 // Withdraw from your Exchange BTC account to another BTC address.
 const withdrawAddressParams = {
-  'amount': 10.00,
-  'currency': 'BTC',
-  'crypto_address': '15USXR6S4DhSWVHUxXRCuTkD1SA6qAdy'
-}
+  amount: 10.0,
+  currency: 'BTC',
+  crypto_address: '15USXR6S4DhSWVHUxXRCuTkD1SA6qAdy',
+};
 authedClient.withdrawCrypto(withdrawAddressParams, callback);
 ```
 
@@ -449,15 +467,22 @@ websocket messages](https://docs.gdax.com/#messages).
 ```js
 const websocket = new Gdax.WebsocketClient(['BTC-USD', 'ETH-USD']);
 
-websocket.on('message', data => { /* work with data */ });
-websocket.on('error', err => { /* handle error */ });
-websocket.on('close', () => { /* ... */ });
+websocket.on('message', data => {
+  /* work with data */
+});
+websocket.on('error', err => {
+  /* handle error */
+});
+websocket.on('close', () => {
+  /* ... */
+});
 ```
 
 Optionally set the heartbeat mode or websocket URI.
+
 ```javascript
 const websocket = new Gdax.WebsocketClient(
-  ['BTC-USD','ETH-USD'],
+  ['BTC-USD', 'ETH-USD'],
   'https://api-public.sandbox.gdax.com',
   {
     key: 'suchkey',
@@ -470,10 +495,10 @@ const websocket = new Gdax.WebsocketClient(
 
 The following events can be emitted from the `WebsocketClient`:
 
-- `open`
-- `message`
-- `close`
-- `error`
+* `open`
+* `message`
+* `close`
+* `error`
 
 ### Orderbook
 
@@ -483,14 +508,15 @@ orderbook.
 ```js
 const orderbook = new Gdax.Orderbook();
 ```
+
 The orderbook has the following methods:
 
-- `state(book)`
-- `get(orderId)`
-- `add(order)`
-- `remove(orderId)`
-- `match(match)`
-- `change(change)`
+* `state(book)`
+* `get(orderId)`
+* `add(order)`
+* `remove(orderId)`
+* `match(match)`
+* `change(change)`
 
 ### Orderbook Sync
 
