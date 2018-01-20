@@ -144,6 +144,7 @@ suite('WebsocketClient', () => {
         assert.deepEqual(msg.channels, ['user', 'ticker', 'heartbeat']);
         assert(msg.timestamp);
         assert(msg.signature);
+
         server.close();
         done();
       });
@@ -157,6 +158,8 @@ suite('WebsocketClient', () => {
       client.once('error', err => {
         assert.equal(err.message, 'test error');
         assert.equal(err.reason, 'because error');
+
+        server.close();
         done();
       });
     });
