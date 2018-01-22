@@ -101,7 +101,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to additional products', done => {
     var client;
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       client = new Gdax.WebsocketClient([], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
@@ -125,7 +125,7 @@ suite('WebsocketClient', () => {
 
   test('unsubscribes from product', done => {
     var client;
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       client = new Gdax.WebsocketClient(['BTC-USD'], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
@@ -149,7 +149,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to additional channels', done => {
     var client;
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       client = new Gdax.WebsocketClient(
         ['BTC-USD'],
         'ws://localhost:' + port,
@@ -184,7 +184,7 @@ suite('WebsocketClient', () => {
 
   test('unsubscribes from channel', done => {
     var client;
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       client = new Gdax.WebsocketClient(
         ['BTC-USD'],
         'ws://localhost:' + port,
