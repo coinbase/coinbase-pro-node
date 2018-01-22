@@ -99,6 +99,117 @@ suite('WebsocketClient', () => {
     });
   });
 
+  test('subscribes to additional products', done => {
+    let client;
+    const server = testserver(port, () => {
+      client = new Gdax.WebsocketClient([], 'ws://localhost:' + port);
+    });
+    server.on('connection', socket => {
+      socket.once('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+
+        socket.on('message', data => {
+          const msg = JSON.parse(data);
+          assert.equal(msg.type, 'subscribe');
+          assert.ok(msg.product_ids.includes('ETH-BTC'));
+          assert.ok(msg.product_ids.includes('ETH-USD'));
+
+          server.close();
+          done();
+        });
+        client.subscribe({ product_ids: ['ETH-BTC', 'ETH-USD'] });
+      });
+    });
+  });
+
+  test('unsubscribes from product', done => {
+    let client;
+    const server = testserver(port, () => {
+      client = new Gdax.WebsocketClient(['BTC-USD'], 'ws://localhost:' + port);
+    });
+    server.on('connection', socket => {
+      socket.once('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+
+        socket.on('message', data => {
+          const msg = JSON.parse(data);
+          assert.equal(msg.type, 'unsubscribe');
+          assert.deepEqual(msg.product_ids, ['BTC-USD']);
+          assert.deepEqual(msg.channels, ['full']);
+
+          server.close();
+          done();
+        });
+        client.unsubscribe({ product_ids: ['BTC-USD'], channels: ['full'] });
+      });
+    });
+  });
+
+  test('subscribes to additional channels', done => {
+    let client;
+    const server = testserver(port, () => {
+      client = new Gdax.WebsocketClient(
+        ['BTC-USD'],
+        'ws://localhost:' + port,
+        null,
+        { channels: ['heartbeat'] }
+      );
+    });
+    server.on('connection', socket => {
+      socket.once('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+
+        socket.on('message', data => {
+          const msg = JSON.parse(data);
+          assert.equal(msg.type, 'subscribe');
+          assert.deepEqual(msg.channels, [
+            {
+              name: 'ticker',
+              product_ids: ['LTC-USD'],
+            },
+          ]);
+
+          server.close();
+          done();
+        });
+        client.subscribe({
+          channels: [{ name: 'ticker', product_ids: ['LTC-USD'] }],
+        });
+      });
+    });
+  });
+
+  test('unsubscribes from channel', done => {
+    let client;
+    const server = testserver(port, () => {
+      client = new Gdax.WebsocketClient(
+        ['BTC-USD'],
+        'ws://localhost:' + port,
+        null,
+        { channels: ['ticker'] }
+      );
+    });
+    server.on('connection', socket => {
+      socket.once('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+
+        socket.on('message', data => {
+          const msg = JSON.parse(data);
+          assert.equal(msg.type, 'unsubscribe');
+          assert.deepEqual(msg.channels, ['ticker']);
+
+          server.close();
+          done();
+        });
+        client.unsubscribe({ channels: ['ticker'] });
+      });
+    });
+  });
+
   test('passes authentication details through', done => {
     const server = testserver(port, () => {
       new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {

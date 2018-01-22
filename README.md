@@ -474,7 +474,9 @@ websocket.on('close', () => {
 });
 ```
 
-Optionally set the heartbeat mode or websocket URI.
+The client will automatically subscribe to the `heartbeat` channel. By
+default, the `full` channel will be subscribed to unless other channels are
+requested.
 
 ```javascript
 const websocket = new Gdax.WebsocketClient(
@@ -485,8 +487,34 @@ const websocket = new Gdax.WebsocketClient(
     secret: 'suchsecret',
     passphrase: 'muchpassphrase',
   },
-  { heartbeat: true }
+  { channels: ['full', 'level2'] }
 );
+
+```
+
+Optionally, [change subscriptions at runtime](https://docs.gdax.com/#subscribe):
+
+```javascript
+websocket.unsubscribe({ channels: ['full'] });
+
+websocket.subscribe({ product_ids: ['LTC-USD'], channels: ['ticker', 'user'] });
+
+websocket.subscribe({
+  channels: [{
+    name: 'user',
+    product_ids: ['ETH-USD']
+  }]
+});
+
+websocket.unsubscribe({
+  channels: [{
+    name: 'user',
+    product_ids: ['LTC-USD']
+  }, {
+    name: 'user',
+    product_ids: ['ETH-USD']
+  }]
+});
 ```
 
 The following events can be emitted from the `WebsocketClient`:
