@@ -78,29 +78,27 @@ declare module 'gdax' {
     }
 
     export type PageArgs = {
-        before: number;
+        before?: number;
         after?: number;
         limit?: number;
-    } |
-        {
-            before?: number;
-            after: number;
-            limit?: number;
-        } |
-        {
-            before?: number;
-            after?: number;
-            limit: number;
-        };
+    };
 
+    export type FillFilter = {
+        product_id?: string;
+    } & PageArgs;
+
+    export type OrderFilter = {
+        product_id?: string;
+        status?: string;
+    } & PageArgs;
 
     export type Account = {
         id: string,
         profile_id: string,
         currency: CurrencyType,
-        balance: number,
-        available: number,
-        hold: number
+        balance: string,
+        available: string,
+        hold: string
     };
 
     export type CoinbaseAccount = {
@@ -205,8 +203,8 @@ declare module 'gdax' {
         getOrders(callback: callback<any>): void;
         getOrders(): Promise<any>;
 
-        getOrders(pageArgs: PageArgs, callback: callback<any>): void;
-        getOrders(pageArgs: PageArgs): Promise<any>;
+        getOrders(props: OrderFilter, callback: callback<any>): void;
+        getOrders(props: OrderFilter): Promise<any>;
 
         getOrder(orderID: any, callback: callback<OrderInfo>): void;
         getOrder(orderID: any): Promise<OrderInfo>;
@@ -214,8 +212,8 @@ declare module 'gdax' {
         getFills(callback: callback<any>): void;
         getFills(): Promise<any>;
 
-        getFills(pageArgs: PageArgs, callback: callback<any>): void;
-        getFills(pageArgs: PageArgs): Promise<any>;
+        getFills(props: FillFilter, callback: callback<any>): void;
+        getFills(props: FillFilter): Promise<any>;
 
         getFundings(params: any, callback: callback<any>): void;
         getFundings(params: any): Promise<any>;
