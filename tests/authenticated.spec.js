@@ -175,7 +175,7 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
-  
+
   test('.getAccountTransfers()', done => {
     const expectedResponse = [
       {
@@ -741,7 +741,7 @@ suite('AuthenticatedClient', () => {
 
   test('.depositCrypto()', done => {
     const params = {
-      currency: 'BTC'
+      currency: 'BTC',
     };
     const expectedAccountsRespons = [
       {
@@ -751,8 +751,8 @@ suite('AuthenticatedClient', () => {
         currency: 'BTC',
         type: 'wallet',
         primary: true,
-        active: true
-      }
+        active: true,
+      },
     ];
     const expectedAddressResponse = {
       id: 'test-id',
@@ -765,9 +765,10 @@ suite('AuthenticatedClient', () => {
       resource: 'address',
       resource_path: '/v2/accounts/test-account-id/addresses/test-id',
       warning_title: 'Only send Bitcoin (BTC) to this address',
-      warning_details: 'Sending any other digital asset, including Bitcoin Cash (BCH), will result in permanent loss.',
+      warning_details:
+        'Sending any other digital asset, including Bitcoin Cash (BCH), will result in permanent loss.',
       callback_url: null,
-      exchange_deposit_address: true
+      exchange_deposit_address: true,
     };
 
     nock(EXCHANGE_API_URL)

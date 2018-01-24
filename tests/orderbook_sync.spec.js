@@ -245,9 +245,9 @@ suite('OrderbookSync', () => {
       );
 
       orderbookSync.on('sync', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
+        server.close();
+        done();
       });
     });
 
@@ -272,9 +272,9 @@ suite('OrderbookSync', () => {
       );
 
       orderbookSync.on('synced', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
+        server.close();
+        done();
       });
     });
 

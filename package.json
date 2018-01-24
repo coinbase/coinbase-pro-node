@@ -62,6 +62,9 @@
     "url": "git://github.com/coinbase/gdax-node.git"
   },
   "scripts": {
+    "lint": "eslint --ext .js ./",
+    "prettier": "prettier -l README.md *.js **/*.js",
+    "prettier-write": "npm run prettier -- --write",
     "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js",
     "precommit": "lint-staged"
   },
