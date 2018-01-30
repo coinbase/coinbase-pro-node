@@ -175,6 +175,46 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
+  
+  test('.getAccountTransfers()', done => {
+    const expectedResponse = [
+      {
+        id: '100',
+        created_at: '2014-11-07T08:19:27.028459Z',
+        amount: '0.001',
+        balance: '239.669',
+        type: 'fee',
+        details: {
+          order_id: 'd50ec984-77a8-460a-b958-66f114b0de9b',
+          trade_id: '74',
+          product_id: 'BTC-USD',
+        },
+      },
+    ];
+
+    nock(EXCHANGE_API_URL)
+      .get('/accounts/test-id/transfers')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getAccountTransfers('test-id', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getAccountTransfers('test-id')
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
 
   test('.getAccountHolds()', done => {
     const expectedResponse = [
