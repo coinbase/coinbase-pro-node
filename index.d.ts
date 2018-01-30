@@ -176,8 +176,14 @@ declare module 'gdax' {
         getAccountHistory(accountID: string, callback: callback<any>): void;
         getAccountHistory(accountID: string): Promise<any>;
 
-        getAccountHistory(accountID: string, pageArgs: PageArgs, callback: callback<any>): void
+        getAccountHistory(accountID: string, pageArgs: PageArgs, callback: callback<any>): void;
         getAccountHistory(accountID: string, pageArgs: PageArgs): Promise<any>;
+
+        getAccountTransfers(accountID: string, callback: callback<any>): void;
+        getAccountTransfers(accountID: string): Promise<any>;
+
+        getAccountTransfers(accountID: string, pageArgs: PageArgs, callback: callback<any>): void
+        getAccountTransfers(accountID: string, pageArgs: PageArgs): Promise<any>;
 
         getAccountHolds(accountID: string, callback: callback<any>): void;
         getAccountHolds(accountID: string): Promise<any>;
@@ -246,7 +252,7 @@ declare module 'gdax' {
         secret: string,
         passphrase: string
     }
-    
+
     interface WebsocketClientOptions {
         channels?: string[];
     }
