@@ -175,6 +175,46 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
+  
+  test('.getAccountTransfers()', done => {
+    const expectedResponse = [
+      {
+        id: '100',
+        created_at: '2014-11-07T08:19:27.028459Z',
+        amount: '0.001',
+        balance: '239.669',
+        type: 'fee',
+        details: {
+          order_id: 'd50ec984-77a8-460a-b958-66f114b0de9b',
+          trade_id: '74',
+          product_id: 'BTC-USD',
+        },
+      },
+    ];
+
+    nock(EXCHANGE_API_URL)
+      .get('/accounts/test-id/transfers')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) =>
+      authClient.getAccountTransfers('test-id', (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      })
+    );
+
+    let promisetest = authClient
+      .getAccountTransfers('test-id')
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
 
   test('.getAccountHolds()', done => {
     const expectedResponse = [
@@ -211,6 +251,33 @@ suite('AuthenticatedClient', () => {
     Promise.all([cbtest, promisetest])
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.placeOrder()', done => {
+    const order = {
+      side: 'buy',
+      funds: '20.00',
+      product_id: 'ETH-USD',
+      type: 'market',
+    };
+
+    const expectedOrder = order;
+
+    const expectedResponse = {
+      id: '0428b97b-bec1-429e-a94c-59992926778d',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/orders', expectedOrder)
+      .reply(200, expectedResponse);
+
+    authClient.placeOrder(order, (err, resp, data) => {
+      assert.ifError(err);
+      assert.deepEqual(data, expectedResponse);
+
+      nock.cleanAll();
+      done();
+    });
   });
 
   test('.buy()', done => {
@@ -316,38 +383,6 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
-  test('.getProductOrderBook()', done => {
-    nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=3')
-      .times(2)
-      .reply(200, {
-        asks: [],
-        bids: [],
-      });
-
-    let cbtest = new Promise((resolve, reject) => {
-      authClient.getProductOrderBook(
-        { level: 3 },
-        'BTC-USD',
-        (err, resp, data) => {
-          if (err) {
-            reject(err);
-          }
-          assert(data);
-          resolve();
-        }
-      );
-    });
-
-    let promisetest = authClient
-      .getProductOrderBook({ level: 3 }, 'BTC-USD')
-      .then(data => assert(data));
-
-    Promise.all([cbtest, promisetest])
-      .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail());
-  });
-
   suite('.cancelAllOrders()', () => {
     test('cancels all orders', () => {
       const cancelledOrdersOne = [
@@ -410,11 +445,13 @@ suite('AuthenticatedClient', () => {
       nock(EXCHANGE_API_URL)
         .delete('/orders')
         .times(2)
-        .reply(404, null);
+        .reply(400, { message: 'some error' });
 
-      let cbTest = new Promise((resolve, reject) => {
+      const cbtest = new Promise((resolve, reject) => {
         authClient.cancelAllOrders(err => {
           if (err) {
+            assert.equal(err.response.statusCode, 400);
+            assert.equal(err.data.message, 'some error');
             resolve();
           } else {
             reject();
@@ -422,12 +459,15 @@ suite('AuthenticatedClient', () => {
         });
       });
 
-      return cbTest
-        .then(() => {
-          return authClient.cancelAllOrders();
-        })
+      const promisetest = authClient
+        .cancelAllOrders()
         .then(() => assert.fail('should have thrown an error'))
-        .catch(err => assert(err));
+        .catch(err => {
+          assert.equal(err.response.statusCode, 400);
+          assert.equal(err.data.message, 'some error');
+        });
+
+      return Promise.all([cbtest, promisetest]);
     });
   });
 

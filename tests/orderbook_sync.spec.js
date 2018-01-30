@@ -9,8 +9,10 @@ let port = 56632;
 const EXCHANGE_API_URL = 'https://api.gdax.com';
 
 suite('OrderbookSync', () => {
+  afterEach(() => nock.cleanAll());
+
   test('not passes authentication details to websocket', done => {
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -31,18 +33,13 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('passes authentication details to websocket (with AuthenticatedClient)', done => {
-    const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient(
-        'suchkey',
-        'suchsecret',
-        'muchpassphrase'
-      );
+  test('passes authentication details to websocket', done => {
+    const server = testserver(port, () => {
       new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'suchkey', secret: 'suchsecret', passphrase: 'muchpassphrase' }
       );
     });
 
@@ -59,16 +56,38 @@ suite('OrderbookSync', () => {
     });
   });
 
+  test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
+    const server = testserver(port, () => {
+      new Gdax.OrderbookSync(
+        'BTC-USD',
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port,
+        new Gdax.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
+      );
+    });
+
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.equal(msg.key, 'mykey');
+        assert.equal(msg.passphrase, 'mypassphrase');
+
+        server.close();
+        done();
+      });
+    });
+  });
+
   test('emits a message event', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
-      .times(2)
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
@@ -89,22 +108,20 @@ suite('OrderbookSync', () => {
     });
   });
 
-  test('emits a message event (with AuthenticatedClient)', done => {
+  test('emits a message event (with auth)', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
-      .times(2)
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
@@ -126,59 +143,53 @@ suite('OrderbookSync', () => {
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
 
-      orderbookSync.on('message', () =>
-        assert.fail('should not have emitted message')
-      );
-      orderbookSync.on('error', err =>
-        assert.equal(err.message, 'Failed to load orderbook: whoops')
-      );
+      orderbookSync.on('error', err => {
+        assert.equal(err.message, 'Failed to load orderbook: whoops');
+        server.close();
+        done();
+      });
     });
 
-    server.on('connection', () => {
-      server.close();
-      done();
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
     });
   });
 
-  test('emits an error event on error (with AuthenticatedClient)', done => {
+  test('emits an error event on error (with auth)', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
       .replyWithError('whoops');
 
-    const server = testserver(++port, () => {
-      const authClient = new Gdax.AuthenticatedClient('key', 'secret', 'pass');
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        authClient
+        { key: 'key', secret: 'secret', passphrase: 'pass' }
       );
 
-      orderbookSync.on('message', () =>
-        assert.fail('should not have emitted message')
-      );
-      orderbookSync.on('error', err =>
-        assert.equal(err.message, 'Failed to load orderbook: whoops')
-      );
+      orderbookSync.on('error', err => {
+        assert.equal(err.message, 'Failed to load orderbook: whoops');
+        server.close();
+        done();
+      });
     });
 
-    server.on('connection', () => {
-      server.close();
-      done();
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
     });
   });
 
   test('builds specified books', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
-      .times(2)
       .reply(200, {
         asks: [],
         bids: [],
@@ -186,29 +197,35 @@ suite('OrderbookSync', () => {
 
     nock(EXCHANGE_API_URL)
       .get('/products/ETH-USD/book?level=3')
-      .times(2)
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    const server = testserver(++port, () => {
+    let count = 0;
+    const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
-      const btc_usd_state = orderbookSync.books['BTC-USD'].state();
-      const eth_usd_state = orderbookSync.books['ETH-USD'].state();
 
-      assert.deepEqual(btc_usd_state, { asks: [], bids: [] });
-      assert.deepEqual(eth_usd_state, { asks: [], bids: [] });
-      assert.equal(orderbookSync.books['ETH-BTC'], undefined);
+      orderbookSync.on('message', data => {
+        const state = orderbookSync.books[data.product_id].state();
+
+        assert.deepEqual(state, { asks: [], bids: [] });
+        assert.equal(orderbookSync.books['ETH-BTC'], undefined);
+
+        if (++count >= 2) {
+          server.close();
+          done();
+        }
+      });
     });
 
-    server.on('connection', () => {
-      server.close();
-      done();
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.send(JSON.stringify({ product_id: 'ETH-USD' }));
     });
   });
 });
