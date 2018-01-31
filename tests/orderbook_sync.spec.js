@@ -229,6 +229,33 @@ suite('OrderbookSync', () => {
     });
   });
 
+  test('emits sync message', done => {
+    nock(EXCHANGE_API_URL)
+      .get('/products/BTC-USD/book?level=3')
+      .reply(200, {
+        asks: [],
+        bids: [],
+      });
+
+    const server = testserver(port, () => {
+      const orderbookSync = new Gdax.OrderbookSync(
+        ['BTC-USD', 'ETH-USD'],
+        EXCHANGE_API_URL,
+        'ws://localhost:' + port
+      );
+
+      orderbookSync.on('sync', productID => {
+         assert.equal(productID, 'BTC-USD');
+         server.close();
+         done();
+      });
+    });
+
+    server.on('connection', socket => {
+      socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+    });
+  });
+
   test('emits synced message', done => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/book?level=3')
@@ -244,11 +271,11 @@ suite('OrderbookSync', () => {
         'ws://localhost:' + port
       );
 
-       orderbookSync.on('synced', productID => {
-          assert.equal(productID, 'BTC-USD');
-          server.close();
-          done();
-       });
+      orderbookSync.on('synced', productID => {
+         assert.equal(productID, 'BTC-USD');
+         server.close();
+         done();
+      });
     });
 
     server.on('connection', socket => {
