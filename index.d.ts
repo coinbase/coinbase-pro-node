@@ -8,7 +8,7 @@ declare module 'gdax' {
         bid: string,
         ask: string,
         volume: string,
-        time: Date
+        time: string
     }
 
     interface BaseOrder {
