@@ -449,6 +449,12 @@ const withdrawParamsBTC = {
 };
 authedClient.withdraw(withdrawParamsBTC, callback);
 
+// Fetch a deposit address from your Exchange BTC account.
+const depositAddressParams = {
+  currency: 'BTC',
+};
+authedClient.depositCrypto(depositAddressParams, callback);
+
 // Withdraw from your Exchange BTC account to another BTC address.
 const withdrawAddressParams = {
   amount: 10.0,
@@ -499,7 +505,6 @@ const websocket = new Gdax.WebsocketClient(
   },
   { channels: ['full', 'level2'] }
 );
-
 ```
 
 Optionally, [change subscriptions at runtime](https://docs.gdax.com/#subscribe):
@@ -510,20 +515,25 @@ websocket.unsubscribe({ channels: ['full'] });
 websocket.subscribe({ product_ids: ['LTC-USD'], channels: ['ticker', 'user'] });
 
 websocket.subscribe({
-  channels: [{
-    name: 'user',
-    product_ids: ['ETH-USD']
-  }]
+  channels: [
+    {
+      name: 'user',
+      product_ids: ['ETH-USD'],
+    },
+  ],
 });
 
 websocket.unsubscribe({
-  channels: [{
-    name: 'user',
-    product_ids: ['LTC-USD']
-  }, {
-    name: 'user',
-    product_ids: ['ETH-USD']
-  }]
+  channels: [
+    {
+      name: 'user',
+      product_ids: ['LTC-USD'],
+    },
+    {
+      name: 'user',
+      product_ids: ['ETH-USD'],
+    },
+  ],
 });
 ```
 
