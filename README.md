@@ -491,7 +491,7 @@ requested.
 ```javascript
 const websocket = new Gdax.WebsocketClient(
   ['BTC-USD', 'ETH-USD'],
-  'https://api-public.sandbox.gdax.com',
+  'wss://ws-feed-public.sandbox.gdax.com',
   {
     key: 'suchkey',
     secret: 'suchsecret',
