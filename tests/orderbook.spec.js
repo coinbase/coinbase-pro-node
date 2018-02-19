@@ -204,4 +204,34 @@ suite('Orderbook', () => {
 
     checkState(orderbook.state(), expectedState);
   });
+
+  test('.change() market order', () => {
+    const apiState = {
+      bids: [[200, 10, 'super-duper-id']],
+      asks: [],
+    };
+
+    const change = {
+      order_id: 'super-duper-id-2',
+      side: 'buy',
+    };
+
+    const expectedState = {
+      bids: [
+        {
+          id: 'super-duper-id',
+          side: 'buy',
+          price: 200,
+          size: 10,
+        },
+      ],
+      asks: [],
+    };
+
+    const orderbook = new Gdax.Orderbook();
+    orderbook.state(apiState);
+    orderbook.change(change);
+
+    checkState(orderbook.state(), expectedState);
+  });
 });
