@@ -66,7 +66,7 @@ declare module 'gdax' {
 
     export interface OrderResult extends BaseOrderInfo {
         time_in_force: 'GTC' | 'GTT' | 'IOC' | 'FOK';
-        status: 'received' | 'open' | 'done';
+        status: 'rejected' | 'received' | 'open' | 'done';
     }
 
     export interface OrderInfo extends BaseOrderInfo {
