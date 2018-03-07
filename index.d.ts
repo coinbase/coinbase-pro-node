@@ -1,6 +1,11 @@
 declare module 'gdax' {
     export type callback<T> = (err: any, response: any, data: T) => void;
 
+    interface ApiServerTime {
+        iso: string;
+        epoch: number;
+    }
+
     export type ProductTicker = {
         trade_id: string,
         price: string,
@@ -157,8 +162,8 @@ declare module 'gdax' {
         getCurrencies(callback: callback<CurrencyInfo[]>): void;
         getCurrencies(): Promise<CurrencyInfo[]>;
 
-        getTime(callback: callback<any>): void;
-        getTime(): Promise<any>;
+        getTime(callback: callback<ApiServerTime>): void;
+        getTime(): Promise<ApiServerTime>;
     }
 
     export class AuthenticatedClient extends PublicClient {
