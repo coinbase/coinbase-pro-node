@@ -1,3 +1,5 @@
+import { EventEmitter } from "events";
+
 declare module 'gdax' {
     export type callback<T> = (err: any, response: any, data: T) => void;
 
@@ -64,7 +66,7 @@ declare module 'gdax' {
         post_only: boolean;
         fill_fees: string;
         filled_size: string;
-        status: 'received' | 'open' | 'done' | 'pending';
+        status: 'rejected' | 'received' | 'open' | 'done' | 'pending';
         settled: boolean;
         executed_value: string;
     }
@@ -262,17 +264,17 @@ declare module 'gdax' {
         channels?: string[];
     }
 
-    export class WebsocketClient {
+    export class WebsocketClient extends EventEmitter {
         constructor(
             productIds: string[],
             websocketURI?: string,
             auth?: WebsocketAuthentication,
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data:object) => void): void;
-        on(event: 'error', eventHandler: (err:any) => void): void;
-        on(event: 'open', eventHandler: () => void): void;
-        on(event: 'close', eventHandler: () => void): void;
+        on(event: 'message', eventHandler: (data:object) => void): this;
+        on(event: 'error', eventHandler: (err:any) => void): this;
+        on(event: 'open', eventHandler: () => void): this;
+        on(event: 'close', eventHandler: () => void): this;
 
         connect(): void;
         disconnect(): void;
