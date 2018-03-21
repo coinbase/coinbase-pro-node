@@ -62,7 +62,7 @@ async function yourFunction() {
 
 Your callback should accept two arguments:
 
-* `error`: contains an error message (`string`), or `null` if no was error
+* `error`: contains an error message (`string`), or `null` if no error was
   encountered
 * `response`: a generic HTTP response abstraction created by the [`request`
   library](https://github.com/request/request)
