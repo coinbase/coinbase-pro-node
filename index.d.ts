@@ -290,8 +290,6 @@ declare module 'gdax' {
             order_type: 'market'
             funds: string
         }
-        // Only for our own matches, given that we have authenticated (should always be the case for our
-        // purposes)
         export type Match = {
             type: 'match'
             trade_id: number
