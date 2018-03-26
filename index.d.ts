@@ -22,6 +22,8 @@ declare module 'gdax' {
         product_id: string;
         client_oid?: string;
         stp?: 'dc' | 'co' | 'cn' | 'cb';
+        stop?: 'loss' | 'entry';
+        stop_price?: string;
     }
 
     interface LimitOrder extends BaseOrder {
