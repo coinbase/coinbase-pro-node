@@ -60,7 +60,7 @@ async function yourFunction() {
 
 ### Using Callbacks
 
-Your callback should accept two arguments:
+Your callback should accept three arguments:
 
 * `error`: contains an error message (`string`), or `null` if no error was
   encountered
