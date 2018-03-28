@@ -66,7 +66,6 @@ declare module 'gdax' {
         post_only: boolean;
         fill_fees: string;
         filled_size: string;
-        status: 'received' | 'open' | 'done' | 'pending';
         settled: boolean;
         executed_value: string;
     }
