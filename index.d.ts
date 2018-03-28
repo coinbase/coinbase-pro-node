@@ -80,7 +80,6 @@ declare module 'gdax' {
         funds: number;
         specified_funds: number;
         done_at: string;
-        executed_value: string;
     }
 
     export type PageArgs = {
