@@ -1,5 +1,7 @@
+import { Response } from 'request';
+
 declare module 'gdax' {
-    export type callback<T> = (err: any, response: any, data: T) => void;
+    export type callback<T> = (err: any, response: Response, data: T) => void;
 
     interface ApiServerTime {
         iso: string;
@@ -134,6 +136,16 @@ declare module 'gdax' {
         quote_increment: string;
         display_name: string;
         margin_enabled: boolean;
+    }
+
+    /**
+     * If a PublicClient or AuthenticatedClient method that does an
+     * HTTP request throws an error, then it will have this shape.
+     */
+    export interface HttpError {
+        message: string;
+        response: Response;
+        data?: any;
     }
 
     export class PublicClient {
