@@ -206,8 +206,8 @@ declare module 'gdax' {
         placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
         placeOrder(params: OrderParams): Promise<OrderResult>;
 
-        cancelOrder(orderID: string, callback: callback<string>): void;
-        cancelOrder(orderID: string): Promise<string>;
+        cancelOrder(orderID: string, callback: callback<string[]>): void;
+        cancelOrder(orderID: string): Promise<string[]>;
 
         cancelAllOrders(args: { product_id: string }, callback: callback<string[]>): void;
         cancelAllOrders(args: { product_id: string }): Promise<string[]>;
