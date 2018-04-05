@@ -1,3 +1,4 @@
+import { EventEmitter } from "events";
 import { Response } from 'request';
 
 declare module 'gdax' {
@@ -275,17 +276,17 @@ declare module 'gdax' {
         channels?: string[];
     }
 
-    export class WebsocketClient {
+    export class WebsocketClient extends EventEmitter {
         constructor(
             productIds: string[],
             websocketURI?: string,
             auth?: WebsocketAuthentication,
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data:object) => void): void;
-        on(event: 'error', eventHandler: (err:any) => void): void;
-        on(event: 'open', eventHandler: () => void): void;
-        on(event: 'close', eventHandler: () => void): void;
+        on(event: 'message', eventHandler: (data:object) => void): this;
+        on(event: 'error', eventHandler: (err:any) => void): this;
+        on(event: 'open', eventHandler: () => void): this;
+        on(event: 'close', eventHandler: () => void): this;
 
         connect(): void;
         disconnect(): void;
