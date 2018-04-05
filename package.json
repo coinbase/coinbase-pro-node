@@ -21,6 +21,7 @@
     }
   ],
   "dependencies": {
+    "@types/request": "2.47.0",
     "bignumber.js": "^5.0.0",
     "bintrees": "^1.0.1",
     "request": "^2.81.0",
