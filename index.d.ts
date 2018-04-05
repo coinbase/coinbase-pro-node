@@ -1,5 +1,8 @@
+import { EventEmitter } from "events";
+import { Response } from 'request';
+
 declare module 'gdax' {
-    export type callback<T> = (err: any, response: any, data: T) => void;
+    export type callback<T> = (err: any, response: Response, data: T) => void;
 
     interface ApiServerTime {
         iso: string;
@@ -22,6 +25,8 @@ declare module 'gdax' {
         product_id: string;
         client_oid?: string;
         stp?: 'dc' | 'co' | 'cn' | 'cb';
+        stop?: 'loss' | 'entry';
+        stop_price?: string;
     }
 
     interface LimitOrder extends BaseOrder {
@@ -64,6 +69,7 @@ declare module 'gdax' {
         post_only: boolean;
         fill_fees: string;
         filled_size: string;
+        status: 'rejected' | 'received' | 'open' | 'done' | 'pending';
         settled: boolean;
         executed_value: string;
     }
@@ -78,7 +84,6 @@ declare module 'gdax' {
         funds: number;
         specified_funds: number;
         done_at: string;
-        executed_value: string;
     }
 
     export type PageArgs = {
@@ -134,8 +139,14 @@ declare module 'gdax' {
         margin_enabled: boolean;
     }
 
-    export interface ErrorMessage {
-      message: string
+    /**
+     * If a PublicClient or AuthenticatedClient method that does an
+     * HTTP request throws an error, then it will have this shape.
+     */
+    export interface HttpError {
+        message: string;
+        response: Response;
+        data?: any;
     }
 
     export class PublicClient {
@@ -208,11 +219,11 @@ declare module 'gdax' {
         placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
         placeOrder(params: OrderParams): Promise<OrderResult>;
 
-        cancelOrder(orderID: string, callback: callback<string | ErrorMessage>): void;
-        cancelOrder(orderID: string): Promise<string | ErrorMessage>;
+        cancelOrder(orderID: string, callback: callback<string[]>): void;
+        cancelOrder(orderID: string): Promise<string[]>;
 
-        cancelAllOrders(args: { product_id: string }, callback: callback<string[] | ErrorMessage>): void;
-        cancelAllOrders(args?: { product_id: string }): Promise<string[] | ErrorMessage>;
+        cancelAllOrders(args?: { product_id: string }, callback: callback<string[]>): void;
+        cancelAllOrders(args?: { product_id: string }): Promise<string[]>;
 
         getOrders(callback: callback<OrderInfo[]>): void;
         getOrders(): Promise<OrderInfo[]>;
@@ -323,17 +334,17 @@ declare module 'gdax' {
         channels?: string[];
     }
 
-    export class WebsocketClient {
+    export class WebsocketClient extends EventEmitter {
         constructor(
             productIds: string[],
             websocketURI?: string,
             auth?: WebsocketAuthentication,
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data: WebsocketMessage) => void): void;
-        on(event: 'error', eventHandler: (err: any) => void): void;
-        on(event: 'open', eventHandler: () => void): void;
-        on(event: 'close', eventHandler: () => void): void;
+        on(event: 'message', eventHandler: (data: WebsocketMessage) => void): this;
+        on(event: 'error', eventHandler: (err:any) => void): this;
+        on(event: 'open', eventHandler: () => void): this;
+        on(event: 'close', eventHandler: () => void): this;
 
         connect(): void;
         disconnect(): void;

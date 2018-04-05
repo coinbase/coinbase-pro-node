@@ -739,6 +739,62 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail);
   });
 
+  test('.depositCrypto()', done => {
+    const params = {
+      currency: 'BTC'
+    };
+    const expectedAccountsRespons = [
+      {
+        id: 'test-id',
+        name: 'BTC Wallet',
+        balance: '0.00000000',
+        currency: 'BTC',
+        type: 'wallet',
+        primary: true,
+        active: true
+      }
+    ];
+    const expectedAddressResponse = {
+      id: 'test-id',
+      address: 'test-address',
+      name: 'New exchange deposit address',
+      created_at: '2018-02-18T06:26:10Z',
+      updated_at: '2018-02-18T06:26:10Z',
+      network: 'bitcoin',
+      uri_scheme: 'bitcoin',
+      resource: 'address',
+      resource_path: '/v2/accounts/test-account-id/addresses/test-id',
+      warning_title: 'Only send Bitcoin (BTC) to this address',
+      warning_details: 'Sending any other digital asset, including Bitcoin Cash (BCH), will result in permanent loss.',
+      callback_url: null,
+      exchange_deposit_address: true
+    };
+
+    nock(EXCHANGE_API_URL)
+      .get('/coinbase-accounts')
+      .times(2)
+      .reply(200, expectedAccountsRespons);
+    nock(EXCHANGE_API_URL)
+      .post('/coinbase-accounts/test-id/addresses')
+      .times(2)
+      .reply(200, expectedAddressResponse);
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.depositCrypto(params, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.depositCrypto(params);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail);
+  });
+
   test('.withdraw()', done => {
     const transfer = {
       amount: 10480,
