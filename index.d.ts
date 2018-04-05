@@ -1,7 +1,8 @@
 import { EventEmitter } from "events";
+import { Response } from 'request';
 
 declare module 'gdax' {
-    export type callback<T> = (err: any, response: any, data: T) => void;
+    export type callback<T> = (err: any, response: Response, data: T) => void;
 
     interface ApiServerTime {
         iso: string;
@@ -24,6 +25,8 @@ declare module 'gdax' {
         product_id: string;
         client_oid?: string;
         stp?: 'dc' | 'co' | 'cn' | 'cb';
+        stop?: 'loss' | 'entry';
+        stop_price?: string;
     }
 
     interface LimitOrder extends BaseOrder {
@@ -81,7 +84,6 @@ declare module 'gdax' {
         funds: number;
         specified_funds: number;
         done_at: string;
-        executed_value: string;
     }
 
     export type PageArgs = {
@@ -135,6 +137,16 @@ declare module 'gdax' {
         quote_increment: string;
         display_name: string;
         margin_enabled: boolean;
+    }
+
+    /**
+     * If a PublicClient or AuthenticatedClient method that does an
+     * HTTP request throws an error, then it will have this shape.
+     */
+    export interface HttpError {
+        message: string;
+        response: Response;
+        data?: any;
     }
 
     export class PublicClient {
@@ -207,11 +219,11 @@ declare module 'gdax' {
         placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
         placeOrder(params: OrderParams): Promise<OrderResult>;
 
-        cancelOrder(orderID: any, callback: callback<string>): void;
-        cancelOrder(orderID: any): Promise<string>;
+        cancelOrder(orderID: string, callback: callback<string[]>): void;
+        cancelOrder(orderID: string): Promise<string[]>;
 
-        cancelAllOrders(args: { product_id: string }, callback: callback<string[]>): void;
-        cancelAllOrders(args: { product_id: string }): Promise<string[]>;
+        cancelAllOrders(args?: { product_id: string }, callback: callback<string[]>): void;
+        cancelAllOrders(args?: { product_id: string }): Promise<string[]>;
 
         getOrders(callback: callback<any>): void;
         getOrders(): Promise<any>;
@@ -219,8 +231,8 @@ declare module 'gdax' {
         getOrders(props: OrderFilter, callback: callback<any>): void;
         getOrders(props: OrderFilter): Promise<any>;
 
-        getOrder(orderID: any, callback: callback<OrderInfo>): void;
-        getOrder(orderID: any): Promise<OrderInfo>;
+        getOrder(orderID: string, callback: callback<OrderInfo>): void;
+        getOrder(orderID: string): Promise<OrderInfo>;
 
         getFills(callback: callback<any>): void;
         getFills(): Promise<any>;
