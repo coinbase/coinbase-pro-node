@@ -181,7 +181,7 @@ declare module 'gdax' {
     }
 
     export class AuthenticatedClient extends PublicClient {
-        constructor(key: string, secret: string, passphrase: string, apiURI: string);
+        constructor(key: string, secret: string, passphrase: string, apiURI?: string);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
@@ -225,11 +225,11 @@ declare module 'gdax' {
         cancelAllOrders(args?: { product_id: string }, callback: callback<string[]>): void;
         cancelAllOrders(args?: { product_id: string }): Promise<string[]>;
 
-        getOrders(callback: callback<any>): void;
-        getOrders(): Promise<any>;
+        getOrders(callback: callback<OrderInfo[]>): void;
+        getOrders(): Promise<OrderInfo[]>;
 
-        getOrders(props: OrderFilter, callback: callback<any>): void;
-        getOrders(props: OrderFilter): Promise<any>;
+        getOrders(props: OrderFilter, callback: callback<OrderInfo[]>): void;
+        getOrders(props: OrderFilter): Promise<OrderInfo[]>;
 
         getOrder(orderID: string, callback: callback<OrderInfo>): void;
         getOrder(orderID: string): Promise<OrderInfo>;
@@ -265,6 +265,64 @@ declare module 'gdax' {
         getTrailingVolume(): Promise<any>;
     }
 
+    export namespace WebsocketMessage {
+        export type Heartbeat = {
+            type: 'heartbeat'
+            sequence: number
+            last_trade_id: number
+            product_id: string
+            time: string // ISO Date string without time zone
+        }
+        export type L2Snapshot = {
+            type: 'snapshot'
+            product_id: string
+            bids: [string, string][] // strings are serialized fixed-point numbers
+            asks: [string, string][]
+        }
+        export type L2Update = {
+            type: 'l2update'
+            product_id: string
+            changes: [string, string, string][] // [side, price, new size]
+        }
+        export type Received = {
+            type: 'received'
+            time: string
+            product_id: string
+            sequence: number
+            order_id: string
+            side: 'buy' | 'sell'
+        } & (ReceivedLimit | ReceivedMarket)
+        export type ReceivedLimit = {
+            order_type: 'limit'
+            size: string
+            price: string
+        }
+        export type ReceivedMarket = {
+            order_type: 'market'
+            funds: string
+        }
+        export type Match = {
+            type: 'match'
+            trade_id: number
+            sequence: number
+            maker_order_id: string
+            taker_order_id: string
+            time: string
+            product_id: string
+            size: string
+            price: string
+            side: 'buy' | 'sell'
+        }
+        // Add as necessary. There are still Opens, Dones, Changes, and some other things
+    }
+    export type WebsocketMessage =
+        WebsocketMessage.Heartbeat
+        | WebsocketMessage.L2Snapshot
+        | WebsocketMessage.L2Update
+        | WebsocketMessage.Received
+        | WebsocketMessage.Match
+        // Add as necessary.
+
 
     export interface WebsocketAuthentication {
         key: string,
@@ -283,7 +341,7 @@ declare module 'gdax' {
             auth?: WebsocketAuthentication,
             { channels }?: WebsocketClientOptions );
 
-        on(event: 'message', eventHandler: (data:object) => void): this;
+        on(event: 'message', eventHandler: (data: WebsocketMessage) => void): this;
         on(event: 'error', eventHandler: (err:any) => void): this;
         on(event: 'open', eventHandler: () => void): this;
         on(event: 'close', eventHandler: () => void): this;
