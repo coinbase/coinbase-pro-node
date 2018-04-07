@@ -1,8 +1,10 @@
-import { EventEmitter } from "events";
-import { Response } from 'request';
+import { EventEmitter } from 'events';
+import * as request from 'request';
 
 declare module 'gdax' {
-    export type callback<T> = (err: any, response: Response, data: T) => void;
+    export type HttpResponse = request.Response;
+
+    export type callback<T> = (err: any, response: HttpResponse, data: T) => void;
 
     interface ApiServerTime {
         iso: string;
@@ -145,7 +147,7 @@ declare module 'gdax' {
      */
     export interface HttpError {
         message: string;
-        response: Response;
+        response: HttpResponse;
         data?: any;
     }
 
