@@ -315,6 +315,18 @@ declare module 'gdax' {
             price: string
             side: 'buy' | 'sell'
         }
+        export type Ticker = {
+            type: 'ticker'
+            trade_id: number,
+            sequence: number,
+            time: string,
+            product_id: string,
+            price: string,
+            side: 'buy' | 'sell', // Taker side
+            last_size: string,
+            best_bid: string,
+            best_ask: string
+        }
         // Add as necessary. There are still Opens, Dones, Changes, and some other things
     }
     export type WebsocketMessage =
@@ -323,6 +335,7 @@ declare module 'gdax' {
         | WebsocketMessage.L2Update
         | WebsocketMessage.Received
         | WebsocketMessage.Match
+        | WebsocketMessage.Ticker
         // Add as necessary.
 
 
