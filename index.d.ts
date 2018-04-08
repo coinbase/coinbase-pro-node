@@ -145,8 +145,7 @@ declare module 'gdax' {
      * If a PublicClient or AuthenticatedClient method that does an
      * HTTP request throws an error, then it will have this shape.
      */
-    export interface HttpError {
-        message: string;
+    export interface HttpError extends Error {
         response: HttpResponse;
         data?: any;
     }
