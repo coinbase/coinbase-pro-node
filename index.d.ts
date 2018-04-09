@@ -315,17 +315,36 @@ declare module 'gdax' {
             price: string
             side: 'buy' | 'sell'
         }
-        export type Ticker = {
+        export type AggregateTicker = {
             type: 'ticker'
-            trade_id: number,
             sequence: number,
             time: string,
             product_id: string,
             price: string,
-            side: 'buy' | 'sell', // Taker side
-            last_size: string,
+            open_24h: string,
+            volume_24h: string,
+            low_24h: string,
+            high_24h: string,
+            volume_30d: string,
             best_bid: string,
             best_ask: string
+        }
+        export type RawTicker = {
+            type: 'ticker'
+            sequence: number,
+            time: string,
+            product_id: string,
+            price: string,
+            open_24h: string,
+            volume_24h: string,
+            low_24h: string,
+            high_24h: string,
+            volume_30d: string,
+            best_bid: string,
+            best_ask: string
+            trade_id: number,
+            side: 'buy' | 'sell', // Taker side
+            last_size: string,
         }
         // Add as necessary. There are still Opens, Dones, Changes, and some other things
     }
@@ -363,5 +382,8 @@ declare module 'gdax' {
 
         connect(): void;
         disconnect(): void;
+
+        subscribe(): void;
+        unsubscribe(): void;
     }
 }
