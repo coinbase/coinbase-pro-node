@@ -354,7 +354,8 @@ declare module 'gdax' {
         | WebsocketMessage.L2Update
         | WebsocketMessage.Received
         | WebsocketMessage.Match
-        | WebsocketMessage.Ticker
+        | WebsocketMessage.RawTicker
+        | WebsocketMessage.AggregateTicker
         // Add as necessary.
 
 
