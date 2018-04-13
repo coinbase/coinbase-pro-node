@@ -163,7 +163,10 @@ declare module 'gdax' {
         getProductTicker(productID: string, ): Promise<ProductTicker>;
 
         getProductTrades(productID: string, callback: callback<any>): void;
-        getProductTrades(productID: string, ): Promise<any>;
+        getProductTrades(productID: string): Promise<any>;
+
+        getProductTrades(productID: string, pageArgs: PageArgs, callback: callback<any>): void;
+        getProductTrades(productID: string, pageArgs: PageArgs): Promise<any>;
 
         getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>): void;
         getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
