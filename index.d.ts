@@ -122,7 +122,7 @@ declare module 'gdax' {
         active: boolean
     };
 
-    export type CurrencyType = 'USD' | 'BTC' | 'LTC' | 'ETH' | 'B2X';
+    export type CurrencyType = 'USD' | 'BTC' | 'LTC' | 'ETH' | 'B2X' | 'BCH';
 
     export type CurrencyInfo = {
         id: CurrencyType,
