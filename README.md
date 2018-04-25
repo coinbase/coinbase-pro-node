@@ -1,4 +1,4 @@
-# GDAX [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
+# GDAX [![Build Status](https://travis-ci.org/coinbase/gdax-node.svg?branch=master)](https://travis-ci.org/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
 
 The official Node.js library for Coinbase's [GDAX API](https://docs.gdax.com/).
 
