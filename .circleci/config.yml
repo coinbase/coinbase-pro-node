@@ -1,0 +1,36 @@
+version: 2.0
+
+shared: &shared
+  steps:
+    - run:
+        name: "Show Node Environment"
+        command: 'echo "node: $(node -v)" && echo "npm:  v$(npm -v)"'
+    - checkout
+    - run: npm install
+    - run: npm run lint
+    - run: npm run prettier
+    - run: npm test
+
+jobs:
+  "node-6":
+    <<: *shared
+    docker:
+      - image: circleci/node:6
+
+  "node-8":
+    <<: *shared
+    docker:
+      - image: circleci/node:8
+
+  "node-10":
+    <<: *shared
+    docker:
+      - image: circleci/node:10
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "node-6"
+      - "node-8"
+      - "node-10"

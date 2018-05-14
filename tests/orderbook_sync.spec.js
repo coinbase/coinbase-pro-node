@@ -98,13 +98,15 @@ suite('OrderbookSync', () => {
           test: true,
           product_id: 'BTC-USD',
         });
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -128,13 +130,15 @@ suite('OrderbookSync', () => {
           test: true,
           product_id: 'BTC-USD',
         });
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -152,13 +156,15 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -177,13 +183,15 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -202,7 +210,6 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    let count = 0;
     const server = testserver(port, () => {
       const orderbookSync = new Gdax.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
@@ -212,20 +219,18 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('message', data => {
         const state = orderbookSync.books[data.product_id].state();
-
         assert.deepEqual(state, { asks: [], bids: [] });
         assert.equal(orderbookSync.books['ETH-BTC'], undefined);
-
-        if (++count >= 2) {
-          server.close();
-          done();
-        }
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
       socket.send(JSON.stringify({ product_id: 'ETH-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -245,14 +250,16 @@ suite('OrderbookSync', () => {
       );
 
       orderbookSync.on('sync', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -272,14 +279,16 @@ suite('OrderbookSync', () => {
       );
 
       orderbookSync.on('synced', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 });
