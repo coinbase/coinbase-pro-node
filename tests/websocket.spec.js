@@ -269,9 +269,6 @@ suite('WebsocketClient', () => {
       client.once('error', err => {
         assert.equal(err.message, 'test error');
         assert.equal(err.reason, 'because error');
-
-        server.close();
-        done();
       });
     });
 
@@ -283,6 +280,10 @@ suite('WebsocketClient', () => {
           reason: 'because error',
         })
       );
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 });
