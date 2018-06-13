@@ -479,7 +479,7 @@ suite('AuthenticatedClient', () => {
             assert(err);
             resolve();
           })
-          .catch(() => {});
+          .catch(() => { });
       });
 
       let promisetest = authClient
@@ -733,6 +733,36 @@ suite('AuthenticatedClient', () => {
     });
 
     let promisetest = authClient.deposit(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail);
+  });
+
+  test('.depositPayment()', done => {
+    const transfer = {
+      amount: 10480,
+      currency: 'USD',
+      payment_method_id: 'test-id',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/deposits/payment-method', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.depositPayment(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.depositPayment(transfer);
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
