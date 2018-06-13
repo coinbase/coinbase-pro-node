@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import * as request from 'request';
+import { Readable } from 'stream';
 
 declare module 'gdax' {
     export type HttpResponse = request.Response;
@@ -172,8 +173,7 @@ declare module 'gdax' {
         getProductTrades(productID: string, pageArgs: PageArgs, callback: callback<any>): void;
         getProductTrades(productID: string, pageArgs: PageArgs): Promise<any>;
 
-        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>): void;
-        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Readable;
 
         getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>): void;
         getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
