@@ -149,9 +149,13 @@ declare module 'gdax' {
         response: HttpResponse;
         data?: any;
     }
+    
+    export interface ClientOptions {
+        timeout?: number;   
+    }
 
     export class PublicClient {
-        constructor(apiURI?: string);
+        constructor(apiURI?: string, options?: ClientOptions);
 
         getProducts(callback: callback<ProductInfo[]>): void;
         getProducts(): Promise<ProductInfo[]>;
@@ -185,7 +189,7 @@ declare module 'gdax' {
     }
 
     export class AuthenticatedClient extends PublicClient {
-        constructor(key: string, secret: string, passphrase: string, apiURI?: string);
+        constructor(key: string, secret: string, passphrase: string, apiURI?: string, options?: ClientOptions);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
