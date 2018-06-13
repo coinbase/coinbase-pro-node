@@ -63,7 +63,7 @@
   },
   "scripts": {
     "lint": "eslint --ext .js ./",
-    "prettier": "prettier -l README.md *.js **/*.js",
+    "prettier": "prettier -l *.js **/*.js",
     "prettier-write": "npm run prettier -- --write",
     "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js",
     "precommit": "lint-staged"
@@ -74,7 +74,7 @@
       "prettier --write",
       "git add"
     ],
-    "*.{json,md}": [
+    "*.{json}": [
       "prettier --write",
       "git add"
     ]
