@@ -479,7 +479,7 @@ suite('AuthenticatedClient', () => {
             assert(err);
             resolve();
           })
-          .catch(() => { });
+          .catch(() => {});
       });
 
       let promisetest = authClient
