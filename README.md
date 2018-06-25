@@ -337,6 +337,7 @@ authedClient.cancelOrder(orderID, callback);
 * [`cancelOrders`](https://docs.gdax.com/#cancel-all)
 
 ```js
+// Cancels "open" orders
 authedClient.cancelOrders(callback);
 ```
 
@@ -344,7 +345,7 @@ authedClient.cancelOrders(callback);
 
 ```js
 // `cancelOrders` may require you to make the request multiple times until
-// all of the orders are deleted.
+// all of the "open" orders are deleted.
 
 // `cancelAllOrders` will handle making these requests for you asynchronously.
 // Also, you can add a `product_id` param to only delete orders of that product.
