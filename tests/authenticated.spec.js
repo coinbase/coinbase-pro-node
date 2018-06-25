@@ -856,6 +856,36 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.withdrawPayment()', done => {
+    const transfer = {
+      amount: 10480,
+      currency: 'USD',
+      payment_method_id: 'test-id',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/withdrawals/payment-method', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.withdrawPayment(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.withdrawPayment(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail);
+  });
+
   test('.createReport()', done => {
     const params = {
       type: 'fills',

@@ -477,6 +477,18 @@ const depositPaymentParamsUSD = {
 authedClient.depositPayment(depositPaymentParamsUSD, callback);
 ```
 
+* [`withdrawPayment`](https://docs.gdax.com/#payment-method47)
+
+```js
+// Withdraw from your Exchange USD account to a configured payment method.
+const withdrawPaymentParamsUSD = {
+  amount: '100.00',
+  currency: 'USD',
+  payment_method_id: 'bc6d7162-d984-5ffa-963c-a493b1c1370b', // ach_bank_account
+};
+authedClient.withdrawPayment(withdrawPaymentParamsUSD, callback);
+```
+
 * [`getTrailingVolume`](https://docs.gdax.com/#user-account)
 
 ```js
