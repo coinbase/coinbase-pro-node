@@ -373,7 +373,10 @@ authedClient.getOrder(orderID, callback);
 * [`getFills`](https://docs.gdax.com/#list-fills)
 
 ```js
-authedClient.getFills(callback);
+const params = {
+  product_id: 'LTC-USD',
+};
+authedClient.getFills(params, callback);
 // For pagination, you can include extra page arguments
 authedClient.getFills({ before: 3000 }, callback);
 ```
