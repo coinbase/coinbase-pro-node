@@ -536,7 +536,7 @@ requested.
 ```javascript
 const websocket = new Gdax.WebsocketClient(
   ['BTC-USD', 'ETH-USD'],
-  'wss://ws-feed-public.sandbox.gdax.com',
+  'wss://ws-feed-public.sandbox.pro.coinbase.com',
   {
     key: 'suchkey',
     secret: 'suchsecret',
