@@ -16,8 +16,8 @@ suite('PublicClient', () => {
     assert.equal(client.productID, 'BTC-USD'); // deprecated
     assert.equal(client.timeout, 10000);
 
-    client = new Gdax.PublicClient('https://api-public.sandbox.gdax.com');
-    assert.equal(client.apiURI, 'https://api-public.sandbox.gdax.com');
+    client = new Gdax.PublicClient('https://api-public.sandbox.pro.coinbase.com');
+    assert.equal(client.apiURI, 'https://api-public.sandbox.pro.coinbase.com');
   });
 
   // Delete this test when the deprecation is final

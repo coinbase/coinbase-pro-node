@@ -220,7 +220,7 @@ const secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
 const apiURI = 'https://api.pro.coinbase.com';
-const sandboxURI = 'https://api-public.sandbox.gdax.com';
+const sandboxURI = 'https://api-public.sandbox.pro.coinbase.com';
 
 const authedClient = new Gdax.AuthenticatedClient(
   key,
