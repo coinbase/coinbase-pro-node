@@ -125,7 +125,7 @@ const publicClient = new Gdax.PublicClient(endpoint);
 ```
 
 * `productID` _optional_ - defaults to 'BTC-USD' if not specified.
-* `endpoint` _optional_ - defaults to 'https://api.gdax.com' if not specified.
+* `endpoint` _optional_ - defaults to 'https://api.pro.coinbase.com' if not specified.
 
 #### Public API Methods
 
@@ -212,14 +212,14 @@ publicClient.getTime(callback);
 The [private exchange API endpoints](https://docs.pro.coinbase.com/#private) require you
 to authenticate with a GDAX API key. You can create a new API key [in your
 exchange account's settings](https://gdax.com/settings). You can also specify
-the API URI (defaults to `https://api.gdax.com`).
+the API URI (defaults to `https://api.pro.coinbase.com`).
 
 ```js
 const key = 'your_api_key';
 const secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
-const apiURI = 'https://api.gdax.com';
+const apiURI = 'https://api.pro.coinbase.com';
 const sandboxURI = 'https://api-public.sandbox.gdax.com';
 
 const authedClient = new Gdax.AuthenticatedClient(

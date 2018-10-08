@@ -6,7 +6,7 @@ const Gdax = require('../index.js');
 const testserver = require('./lib/ws_testserver');
 let port = 56632;
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 suite('OrderbookSync', () => {
   afterEach(() => nock.cleanAll());

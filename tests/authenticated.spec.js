@@ -7,7 +7,7 @@ const key = 'key';
 const secret = 'secret';
 const passphrase = 'passphrase';
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 const authClient = new Gdax.AuthenticatedClient(key, secret, passphrase);
 
@@ -19,7 +19,7 @@ suite('AuthenticatedClient', () => {
     const relativeURI = '/orders';
     const opts = {
       method: 'PUT',
-      uri: 'https://api.gdax.com/orders',
+      uri: 'https://api.pro.coinbase.com/orders',
     };
 
     const sig = authClient._getSignature(method, relativeURI, opts);

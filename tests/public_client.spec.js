@@ -4,7 +4,7 @@ const nock = require('nock');
 const Gdax = require('../index.js');
 const publicClient = new Gdax.PublicClient();
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
