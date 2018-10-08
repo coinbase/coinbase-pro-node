@@ -211,7 +211,7 @@ publicClient.getTime(callback);
 
 The [private exchange API endpoints](https://docs.pro.coinbase.com/#private) require you
 to authenticate with a GDAX API key. You can create a new API key [in your
-exchange account's settings](https://gdax.com/settings). You can also specify
+exchange account's settings](https://pro.coinbase.com/profile/api). You can also specify
 the API URI (defaults to `https://api.pro.coinbase.com`).
 
 ```js
