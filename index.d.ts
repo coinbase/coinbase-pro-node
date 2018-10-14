@@ -97,6 +97,7 @@ declare module 'gdax' {
 
     export type FillFilter = {
         product_id?: string;
+        order_id?: string;
     } & PageArgs;
 
     export type OrderFilter = {
@@ -150,9 +151,9 @@ declare module 'gdax' {
         response: HttpResponse;
         data?: any;
     }
-    
+
     export interface ClientOptions {
-        timeout?: number;   
+        timeout?: number;
     }
 
     export class PublicClient {
