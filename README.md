@@ -413,9 +413,20 @@ authedClient.marginTransfer(params, callback);
 
 ```js
 const params = {
-  repay_only: false,
+  repay_only: false
 };
 authedClient.closePosition(params, callback);
+```
+
+* [`convert`](https://docs.gdax.com/#create-conversion)
+
+```js
+const params = {
+  from: 'USD',
+  to: 'USDC',
+  amount: '100'
+};
+authedClient.convert(params, callback);
 ```
 
 * [`deposit`, `withdraw`](https://docs.gdax.com/#deposits)
