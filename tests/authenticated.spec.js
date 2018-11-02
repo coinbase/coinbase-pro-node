@@ -736,7 +736,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.deposit()', done => {
@@ -766,7 +766,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.depositPayment()', done => {
@@ -796,7 +796,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.depositCrypto()', done => {
@@ -853,7 +853,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.withdraw()', done => {
@@ -913,7 +913,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.createReport()', done => {
