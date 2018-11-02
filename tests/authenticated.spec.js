@@ -709,6 +709,36 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.convert()', done => {
+    const transfer = {
+      from: 'USD',
+      to: 'USDC',
+      amount: '100',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/conversions', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.convert(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.convert(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   test('.deposit()', done => {
     const transfer = {
       amount: 10480,
@@ -736,7 +766,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.depositPayment()', done => {
@@ -766,7 +796,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.depositCrypto()', done => {
@@ -823,7 +853,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.withdraw()', done => {
@@ -883,7 +913,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.createReport()', done => {

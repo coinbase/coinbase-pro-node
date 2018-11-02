@@ -261,6 +261,9 @@ declare module 'gdax' {
         closePosition(params: any, callback: callback<any>): void;
         closePosition(params: any): Promise<any>;
 
+        convert(params: any, callback: callback<any>): void;
+        convert(params: any): Promise<any>;
+
         deposit(params: any, callback: callback<any>): void;
         deposit(params: any): Promise<any>;
 
