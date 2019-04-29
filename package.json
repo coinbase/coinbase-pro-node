@@ -27,7 +27,7 @@
     "request": "^2.81.0",
     "ws": "^4.0.0"
   },
-  "description": "Client for the coinbase-pro API",
+  "description": "Official client for the Coinbase Pro API",
   "devDependencies": {
     "eslint": "^5.16.0",
     "husky": "^2.1.0",
