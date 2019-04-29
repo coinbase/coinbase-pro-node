@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 const testserver = require('./lib/ws_testserver');
 
 let port = 56632;
@@ -7,7 +7,7 @@ let port = 56632;
 suite('WebsocketClient', () => {
   test('connects to specified server', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', () => {
@@ -19,7 +19,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the default product (BTC-USD) and default channel (full) if undefined', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient(null, 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -36,7 +36,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the default product (BTC-USD) if empty string', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient('', 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient('', 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -52,7 +52,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the default product (BTC-USD) if empty array passed', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient([], 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient([], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -68,7 +68,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the specified products', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -84,7 +84,7 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the specified product (backward compatibility)', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port);
+      new CoinbasePro.WebsocketClient('ETH-USD', 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -101,7 +101,7 @@ suite('WebsocketClient', () => {
   test('subscribes to additional products', done => {
     let client;
     const server = testserver(port, () => {
-      client = new Gdax.WebsocketClient([], 'ws://localhost:' + port);
+      client = new CoinbasePro.WebsocketClient([], 'ws://localhost:' + port);
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -125,7 +125,10 @@ suite('WebsocketClient', () => {
   test('unsubscribes from product', done => {
     let client;
     const server = testserver(port, () => {
-      client = new Gdax.WebsocketClient(['BTC-USD'], 'ws://localhost:' + port);
+      client = new CoinbasePro.WebsocketClient(
+        ['BTC-USD'],
+        'ws://localhost:' + port
+      );
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -149,7 +152,7 @@ suite('WebsocketClient', () => {
   test('subscribes to additional channels', done => {
     let client;
     const server = testserver(port, () => {
-      client = new Gdax.WebsocketClient(
+      client = new CoinbasePro.WebsocketClient(
         ['BTC-USD'],
         'ws://localhost:' + port,
         null,
@@ -184,7 +187,7 @@ suite('WebsocketClient', () => {
   test('unsubscribes from channel', done => {
     let client;
     const server = testserver(port, () => {
-      client = new Gdax.WebsocketClient(
+      client = new CoinbasePro.WebsocketClient(
         ['BTC-USD'],
         'ws://localhost:' + port,
         null,
@@ -211,7 +214,7 @@ suite('WebsocketClient', () => {
 
   test('passes authentication details through', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {
+      new CoinbasePro.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {
         key: 'suchkey',
         secret: 'suchsecret',
         passphrase: 'muchpassphrase',
@@ -234,7 +237,7 @@ suite('WebsocketClient', () => {
 
   test('passes channels through with heartbeat added', done => {
     const server = testserver(port, () => {
-      new Gdax.WebsocketClient(
+      new CoinbasePro.WebsocketClient(
         'ETH-USD',
         'ws://localhost:' + port,
         {
@@ -263,7 +266,10 @@ suite('WebsocketClient', () => {
 
   test('emits errors when receiving an error message', done => {
     const server = testserver(port, () => {
-      const client = new Gdax.WebsocketClient(null, 'ws://localhost:' + port);
+      const client = new CoinbasePro.WebsocketClient(
+        null,
+        'ws://localhost:' + port
+      );
 
       client.once('error', err => {
         assert.equal(err.message, 'test error');

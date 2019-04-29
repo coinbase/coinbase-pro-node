@@ -1,8 +1,8 @@
 const assert = require('assert');
 const nock = require('nock');
 
-const Gdax = require('../index.js');
-const publicClient = new Gdax.PublicClient();
+const CoinbasePro = require('../index.js');
+const publicClient = new CoinbasePro.PublicClient();
 
 const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
@@ -10,19 +10,21 @@ suite('PublicClient', () => {
   afterEach(() => nock.cleanAll());
 
   test('.constructor()', () => {
-    let client = new Gdax.PublicClient();
+    let client = new CoinbasePro.PublicClient();
     assert.equal(client.apiURI, EXCHANGE_API_URL);
     assert.equal(client.API_LIMIT, 100);
     assert.equal(client.productID, 'BTC-USD'); // deprecated
     assert.equal(client.timeout, 10000);
 
-    client = new Gdax.PublicClient('https://api-public.sandbox.pro.coinbase.com');
+    client = new CoinbasePro.PublicClient(
+      'https://api-public.sandbox.pro.coinbase.com'
+    );
     assert.equal(client.apiURI, 'https://api-public.sandbox.pro.coinbase.com');
   });
 
   // Delete this test when the deprecation is final
   test('.constructor() (with deprecated signature accepting a product ID)', () => {
-    let client = new Gdax.PublicClient('LTC-USD');
+    let client = new CoinbasePro.PublicClient('LTC-USD');
     assert.equal(client.apiURI, EXCHANGE_API_URL);
     assert.equal(client.productID, 'LTC-USD');
   });

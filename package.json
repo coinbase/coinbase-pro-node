@@ -29,7 +29,7 @@
   },
   "description": "Client for the GDAX API",
   "devDependencies": {
-    "eslint": "^4.0.0",
+    "eslint": "^5.16.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "mocha": "^5.0.0",
@@ -69,14 +69,7 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js}": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ],
-    "*.{json}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js}": ["eslint --fix", "prettier --write", "git add"],
+    "*.{json}": ["prettier --write", "git add"]
   }
 }

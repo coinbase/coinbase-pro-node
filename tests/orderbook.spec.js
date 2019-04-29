@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 
 const checkState = (state, exp) => {
   assert.deepEqual(JSON.parse(JSON.stringify(state)), exp);
@@ -26,7 +26,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.add(state.bids[0]);
     orderbook.add(state.bids[1]);
 
@@ -67,7 +67,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     checkState(orderbook.state(), state);
 
@@ -89,7 +89,7 @@ suite('Orderbook', () => {
       side: 'buy',
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     const order = orderbook.get('super-duper-id-2');
 
@@ -127,7 +127,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     orderbook.match(match);
 
@@ -159,7 +159,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     orderbook.match(match);
 
@@ -198,7 +198,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     orderbook.change(change);
 
@@ -228,7 +228,7 @@ suite('Orderbook', () => {
       asks: [],
     };
 
-    const orderbook = new Gdax.Orderbook();
+    const orderbook = new CoinbasePro.Orderbook();
     orderbook.state(apiState);
     orderbook.change(change);
 

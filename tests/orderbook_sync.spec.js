@@ -1,7 +1,7 @@
 const assert = require('assert');
 const nock = require('nock');
 
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 
 const testserver = require('./lib/ws_testserver');
 let port = 56632;
@@ -13,7 +13,7 @@ suite('OrderbookSync', () => {
 
   test('not passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -35,7 +35,7 @@ suite('OrderbookSync', () => {
 
   test('passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -58,11 +58,11 @@ suite('OrderbookSync', () => {
 
   test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        new Gdax.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
+        new CoinbasePro.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
       );
     });
 
@@ -88,7 +88,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -119,7 +119,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -148,7 +148,7 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -174,7 +174,7 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -211,7 +211,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -243,7 +243,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -272,7 +272,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port

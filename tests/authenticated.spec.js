@@ -1,7 +1,7 @@
 const assert = require('assert');
 const nock = require('nock');
 
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 
 const key = 'key';
 const secret = 'secret';
@@ -9,7 +9,7 @@ const passphrase = 'passphrase';
 
 const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
-const authClient = new Gdax.AuthenticatedClient(key, secret, passphrase);
+const authClient = new CoinbasePro.AuthenticatedClient(key, secret, passphrase);
 
 suite('AuthenticatedClient', () => {
   afterEach(() => nock.cleanAll());

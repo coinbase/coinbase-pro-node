@@ -1,6 +1,9 @@
-# GDAX [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
+# Coinbase Pro [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
 
-The official Node.js library for Coinbase's [GDAX API](https://docs.pro.coinbase.com/).
+**Note**: The `gdax` package is deprecated and might have to be removed from NPM.
+Please migrate to the `coinbase-pro` package to ensure future compatibility.
+
+The official Node.js library for Coinbase's [Pro API](https://docs.pro.coinbase.com/).
 
 ## Features
 
@@ -13,7 +16,7 @@ The official Node.js library for Coinbase's [GDAX API](https://docs.pro.coinbase
 ## Installation
 
 ```bash
-npm install gdax
+npm install coinbase-pro
 ```
 
 You can learn about the API responses of each endpoint [by reading our
@@ -21,12 +24,12 @@ documentation](https://docs.pro.coinbase.com/#market-data).
 
 ## Quick Start
 
-The GDAX API has both public and private endpoints. If you're only interested in
+The Coinbase Pro API has both public and private endpoints. If you're only interested in
 the public endpoints, you should use a `PublicClient`.
 
 ```js
-const Gdax = require('gdax');
-const publicClient = new Gdax.PublicClient();
+const CoinbasePro = require('coinbase-pro');
+const publicClient = new CoinbasePro.PublicClient();
 ```
 
 All methods, unless otherwise specified, can be used with either a promise or
@@ -66,7 +69,7 @@ Your callback should accept three arguments:
   encountered
 * `response`: a generic HTTP response abstraction created by the [`request`
   library](https://github.com/request/request)
-* `data`: contains data returned by the GDAX API, or `undefined` if an error was
+* `data`: contains data returned by the Coinbase Pro API, or `undefined` if an error was
   encountered
 
 ```js
@@ -121,7 +124,7 @@ publicClient.getProductOrderBook(
 ### The Public API Client
 
 ```js
-const publicClient = new Gdax.PublicClient(endpoint);
+const publicClient = new CoinbasePro.PublicClient(endpoint);
 ```
 
 * `productID` _optional_ - defaults to 'BTC-USD' if not specified.
@@ -210,7 +213,7 @@ publicClient.getTime(callback);
 ### The Authenticated API Client
 
 The [private exchange API endpoints](https://docs.pro.coinbase.com/#private) require you
-to authenticate with a GDAX API key. You can create a new API key [in your
+to authenticate with a Coinbase Pro API key. You can create a new API key [in your
 exchange account's settings](https://pro.coinbase.com/profile/api). You can also specify
 the API URI (defaults to `https://api.pro.coinbase.com`).
 
@@ -222,7 +225,7 @@ const passphrase = 'your_passphrase';
 const apiURI = 'https://api.pro.coinbase.com';
 const sandboxURI = 'https://api-public.sandbox.pro.coinbase.com';
 
-const authedClient = new Gdax.AuthenticatedClient(
+const authedClient = new CoinbasePro.AuthenticatedClient(
   key,
   secret,
   passphrase,
@@ -413,7 +416,7 @@ authedClient.marginTransfer(params, callback);
 
 ```js
 const params = {
-  repay_only: false
+  repay_only: false,
 };
 authedClient.closePosition(params, callback);
 ```
@@ -424,12 +427,12 @@ authedClient.closePosition(params, callback);
 const params = {
   from: 'USD',
   to: 'USDC',
-  amount: '100'
+  amount: '100',
 };
 authedClient.convert(params, callback);
 ```
 
-* [`deposit`, `withdraw`](https://docs.gdax.com/#deposits)
+* [`deposit`, `withdraw`](https://docs.pro.coinbase.com/#deposits)
 
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
@@ -516,7 +519,7 @@ The `WebsocketClient` allows you to connect and listen to the [exchange
 websocket messages](https://docs.pro.coinbase.com/#messages).
 
 ```js
-const websocket = new Gdax.WebsocketClient(['BTC-USD', 'ETH-USD']);
+const websocket = new CoinbasePro.WebsocketClient(['BTC-USD', 'ETH-USD']);
 
 websocket.on('message', data => {
   /* work with data */
@@ -534,7 +537,7 @@ default, the `full` channel will be subscribed to unless other channels are
 requested.
 
 ```javascript
-const websocket = new Gdax.WebsocketClient(
+const websocket = new CoinbasePro.WebsocketClient(
   ['BTC-USD', 'ETH-USD'],
   'wss://ws-feed-public.sandbox.pro.coinbase.com',
   {
@@ -589,7 +592,7 @@ The following events can be emitted from the `WebsocketClient`:
 orderbook.
 
 ```js
-const orderbook = new Gdax.Orderbook();
+const orderbook = new CoinbasePro.Orderbook();
 ```
 
 The orderbook has the following methods:
@@ -603,12 +606,12 @@ The orderbook has the following methods:
 
 ### Orderbook Sync
 
-`OrderbookSync` creates a local mirror of the orderbook on GDAX using
+`OrderbookSync` creates a local mirror of the orderbook on Coinbase Pro using
 `Orderbook` and `WebsocketClient` as described
 [here](https://docs.pro.coinbase.com/#real-time-order-book).
 
 ```js
-const orderbookSync = new Gdax.OrderbookSync(['BTC-USD', 'ETH-USD']);
+const orderbookSync = new CoinbasePro.OrderbookSync(['BTC-USD', 'ETH-USD']);
 console.log(orderbookSync.books['ETH-USD'].state());
 ```
 
