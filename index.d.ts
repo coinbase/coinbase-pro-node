@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import * as request from 'request';
 import { Readable } from 'stream';
 
-declare module 'gdax' {
+declare module 'coinbase-pro' {
     export type HttpResponse = request.Response;
 
     export type callback<T> = (err: any, response: HttpResponse, data: T) => void;

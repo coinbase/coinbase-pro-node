@@ -1,8 +1,8 @@
 {
-  "name": "gdax",
+  "name": "coinbase-pro",
   "version": "0.9.0",
   "author": "Coinbase",
-  "bugs": "https://github.com/coinbase/gdax-node/issues",
+  "bugs": "https://github.com/coinbase/coinbase-pro-node/issues",
   "contributors": [
     {
       "email": "peterldowns@gmail.com",
@@ -27,7 +27,7 @@
     "request": "^2.81.0",
     "ws": "^4.0.0"
   },
-  "description": "Client for the GDAX API",
+  "description": "Client for the coinbase-pro API",
   "devDependencies": {
     "eslint": "^5.16.0",
     "husky": "^2.1.0",
@@ -42,7 +42,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "homepage": "https://github.com/coinbase/gdax-node",
+  "homepage": "https://github.com/coinbase/coinbase-pro-node",
   "keywords": [
     "API",
     "bitcoin",
@@ -51,7 +51,7 @@
     "real-time",
     "trading",
     "websockets",
-    "gdax",
+    "coinbase-pro",
     "ethereum"
   ],
   "license": "MIT",
@@ -59,7 +59,7 @@
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/coinbase/gdax-node.git"
+    "url": "git://github.com/coinbase/coinbase-pro-node.git"
   },
   "scripts": {
     "lint": "eslint --ext .js ./",

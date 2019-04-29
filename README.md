@@ -1,4 +1,4 @@
-# Coinbase Pro [![CircleCI](https://circleci.com/gh/coinbase/gdax-node.svg?style=svg)](https://circleci.com/gh/coinbase/gdax-node) [![npm version](https://badge.fury.io/js/gdax.svg)](https://badge.fury.io/js/gdax)
+# Coinbase Pro [![CircleCI](https://circleci.com/gh/coinbase/coinbase-pro-node.svg?style=svg)](https://circleci.com/gh/coinbase/coinbase-pro-node) [![npm version](https://badge.fury.io/js/coinbase-pro.svg)](https://badge.fury.io/js/coinbase-pro)
 
 **Note**: The `gdax` package is deprecated and might have to be removed from NPM.
 Please migrate to the `coinbase-pro` package to ensure future compatibility.
@@ -7,10 +7,10 @@ The official Node.js library for Coinbase's [Pro API](https://docs.pro.coinbase.
 
 ## Features
 
-* Easy functionality to use in programmatic trading
-* A customizable, websocket-synced Order Book implementation
-* API clients with convenient methods for every API endpoint
-* Abstracted interfaces – don't worry about HMAC signing or JSON formatting; the
+- Easy functionality to use in programmatic trading
+- A customizable, websocket-synced Order Book implementation
+- API clients with convenient methods for every API endpoint
+- Abstracted interfaces – don't worry about HMAC signing or JSON formatting; the
   library does it for you
 
 ## Installation
@@ -65,11 +65,11 @@ async function yourFunction() {
 
 Your callback should accept three arguments:
 
-* `error`: contains an error message (`string`), or `null` if no error was
+- `error`: contains an error message (`string`), or `null` if no error was
   encountered
-* `response`: a generic HTTP response abstraction created by the [`request`
+- `response`: a generic HTTP response abstraction created by the [`request`
   library](https://github.com/request/request)
-* `data`: contains data returned by the Coinbase Pro API, or `undefined` if an error was
+- `data`: contains data returned by the Coinbase Pro API, or `undefined` if an error was
   encountered
 
 ```js
@@ -127,18 +127,18 @@ publicClient.getProductOrderBook(
 const publicClient = new CoinbasePro.PublicClient(endpoint);
 ```
 
-* `productID` _optional_ - defaults to 'BTC-USD' if not specified.
-* `endpoint` _optional_ - defaults to 'https://api.pro.coinbase.com' if not specified.
+- `productID` _optional_ - defaults to 'BTC-USD' if not specified.
+- `endpoint` _optional_ - defaults to 'https://api.pro.coinbase.com' if not specified.
 
 #### Public API Methods
 
-* [`getProducts`](https://docs.pro.coinbase.com/#get-products)
+- [`getProducts`](https://docs.pro.coinbase.com/#get-products)
 
 ```js
 publicClient.getProducts(callback);
 ```
 
-* [`getProductOrderBook`](https://docs.pro.coinbase.com/#get-product-order-book)
+- [`getProductOrderBook`](https://docs.pro.coinbase.com/#get-product-order-book)
 
 ```js
 // Get the order book at the default level of detail.
@@ -148,13 +148,13 @@ publicClient.getProductOrderBook('BTC-USD', callback);
 publicClient.getProductOrderBook('LTC-USD', { level: 3 }, callback);
 ```
 
-* [`getProductTicker`](https://docs.pro.coinbase.com/#get-product-ticker)
+- [`getProductTicker`](https://docs.pro.coinbase.com/#get-product-ticker)
 
 ```js
 publicClient.getProductTicker('ETH-USD', callback);
 ```
 
-* [`getProductTrades`](https://docs.pro.coinbase.com/#get-trades)
+- [`getProductTrades`](https://docs.pro.coinbase.com/#get-trades)
 
 ```js
 publicClient.getProductTrades('BTC-USD', callback);
@@ -163,7 +163,7 @@ publicClient.getProductTrades('BTC-USD', callback);
 publicClient.getProductTrades('BTC-USD', { after: 1000 }, callback);
 ```
 
-* [`getProductTradeStream`](https://docs.pro.coinbase.com/#get-trades)
+- [`getProductTradeStream`](https://docs.pro.coinbase.com/#get-trades)
 
 Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
@@ -179,7 +179,7 @@ const trades = publicClient.getProductTradeStream(
 );
 ```
 
-* [`getProductHistoricRates`](https://docs.pro.coinbase.com/#get-historic-rates)
+- [`getProductHistoricRates`](https://docs.pro.coinbase.com/#get-historic-rates)
 
 ```js
 publicClient.getProductHistoricRates('BTC-USD', callback);
@@ -192,19 +192,19 @@ publicClient.getProductHistoricRates(
 );
 ```
 
-* [`getProduct24HrStats`](https://docs.pro.coinbase.com/#get-24hr-stats)
+- [`getProduct24HrStats`](https://docs.pro.coinbase.com/#get-24hr-stats)
 
 ```js
 publicClient.getProduct24HrStats('BTC-USD', callback);
 ```
 
-* [`getCurrencies`](https://docs.pro.coinbase.com/#get-currencies)
+- [`getCurrencies`](https://docs.pro.coinbase.com/#get-currencies)
 
 ```js
 publicClient.getCurrencies(callback);
 ```
 
-* [`getTime`](https://docs.pro.coinbase.com/#time)
+- [`getTime`](https://docs.pro.coinbase.com/#time)
 
 ```js
 publicClient.getTime(callback);
@@ -242,32 +242,32 @@ only need to create a single client.
 
 #### Private API Methods
 
-* [`getCoinbaseAccounts`](https://docs.pro.coinbase.com/#coinbase-accounts)
+- [`getCoinbaseAccounts`](https://docs.pro.coinbase.com/#coinbase-accounts)
 
 ```javascript
 authedClient.getCoinbaseAccounts(callback);
 ```
 
-* [`getPaymentMethods`](https://docs.pro.coinbase.com/#payment-methods)
+- [`getPaymentMethods`](https://docs.pro.coinbase.com/#payment-methods)
 
 ```javascript
 authedClient.getPaymentMethods(callback);
 ```
 
-* [`getAccounts`](https://docs.pro.coinbase.com/#list-accounts)
+- [`getAccounts`](https://docs.pro.coinbase.com/#list-accounts)
 
 ```js
 authedClient.getAccounts(callback);
 ```
 
-* [`getAccount`](https://docs.pro.coinbase.com/#get-an-account)
+- [`getAccount`](https://docs.pro.coinbase.com/#get-an-account)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
 authedClient.getAccount(accountID, callback);
 ```
 
-* [`getAccountHistory`](https://docs.pro.coinbase.com/#get-account-history)
+- [`getAccountHistory`](https://docs.pro.coinbase.com/#get-account-history)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
@@ -277,7 +277,7 @@ authedClient.getAccountHistory(accountID, callback);
 authedClient.getAccountHistory(accountID, { before: 3000 }, callback);
 ```
 
-* [`getAccountTransfers`](https://docs.pro.coinbase.com/#get-account-transfers)
+- [`getAccountTransfers`](https://docs.pro.coinbase.com/#get-account-transfers)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
@@ -287,7 +287,7 @@ authedClient.getAccountTransfers(accountID, callback);
 authedClient.getAccountTransfers(accountID, { before: 3000 }, callback);
 ```
 
-* [`getAccountHolds`](https://docs.pro.coinbase.com/#get-holds)
+- [`getAccountHolds`](https://docs.pro.coinbase.com/#get-holds)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
@@ -297,7 +297,7 @@ authedClient.getAccountHolds(accountID, callback);
 authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
 ```
 
-* [`buy`, `sell`](https://docs.pro.coinbase.com/#place-a-new-order)
+- [`buy`, `sell`](https://docs.pro.coinbase.com/#place-a-new-order)
 
 ```js
 // Buy 1 BTC @ 100 USD
@@ -317,7 +317,7 @@ const sellParams = {
 authedClient.sell(sellParams, callback);
 ```
 
-* [`placeOrder`](https://docs.pro.coinbase.com/#place-a-new-order)
+- [`placeOrder`](https://docs.pro.coinbase.com/#place-a-new-order)
 
 ```js
 // Buy 1 LTC @ 75 USD
@@ -330,21 +330,21 @@ const params = {
 authedClient.placeOrder(params, callback);
 ```
 
-* [`cancelOrder`](https://docs.pro.coinbase.com/#cancel-an-order)
+- [`cancelOrder`](https://docs.pro.coinbase.com/#cancel-an-order)
 
 ```js
 const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.cancelOrder(orderID, callback);
 ```
 
-* [`cancelOrders`](https://docs.pro.coinbase.com/#cancel-all)
+- [`cancelOrders`](https://docs.pro.coinbase.com/#cancel-all)
 
 ```js
 // Cancels "open" orders
 authedClient.cancelOrders(callback);
 ```
 
-* [`cancelAllOrders`](https://docs.pro.coinbase.com/#cancel-all)
+- [`cancelAllOrders`](https://docs.pro.coinbase.com/#cancel-all)
 
 ```js
 // `cancelOrders` may require you to make the request multiple times until
@@ -357,7 +357,7 @@ authedClient.cancelOrders(callback);
 authedClient.cancelAllOrders({ product_id: 'BTC-USD' }, callback);
 ```
 
-* [`getOrders`](https://docs.pro.coinbase.com/#list-open-orders)
+- [`getOrders`](https://docs.pro.coinbase.com/#list-open-orders)
 
 ```js
 authedClient.getOrders(callback);
@@ -366,14 +366,14 @@ authedClient.getOrders(callback);
 authedClient.getOrders({ after: 3000, status: 'open' }, callback);
 ```
 
-* [`getOrder`](https://docs.pro.coinbase.com/#get-an-order)
+- [`getOrder`](https://docs.pro.coinbase.com/#get-an-order)
 
 ```js
 const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
 authedClient.getOrder(orderID, callback);
 ```
 
-* [`getFills`](https://docs.pro.coinbase.com/#list-fills)
+- [`getFills`](https://docs.pro.coinbase.com/#list-fills)
 
 ```js
 const params = {
@@ -384,13 +384,13 @@ authedClient.getFills(params, callback);
 authedClient.getFills({ before: 3000 }, callback);
 ```
 
-* [`getFundings`](https://docs.pro.coinbase.com/#list-fundings)
+- [`getFundings`](https://docs.pro.coinbase.com/#list-fundings)
 
 ```js
 authedClient.getFundings({}, callback);
 ```
 
-* [`repay`](https://docs.pro.coinbase.com/#repay)
+- [`repay`](https://docs.pro.coinbase.com/#repay)
 
 ```js
 const params = {
@@ -400,7 +400,7 @@ const params = {
 authedClient.repay(params, callback);
 ```
 
-* [`marginTransfer`](https://docs.pro.coinbase.com/#margin-transfer)
+- [`marginTransfer`](https://docs.pro.coinbase.com/#margin-transfer)
 
 ```js
 const params =
@@ -412,7 +412,7 @@ const params =
 authedClient.marginTransfer(params, callback);
 ```
 
-* [`closePosition`](https://docs.pro.coinbase.com/#close)
+- [`closePosition`](https://docs.pro.coinbase.com/#close)
 
 ```js
 const params = {
@@ -421,7 +421,7 @@ const params = {
 authedClient.closePosition(params, callback);
 ```
 
-* [`convert`](https://docs.pro.coinbase.com/#create-conversion)
+- [`convert`](https://docs.pro.coinbase.com/#create-conversion)
 
 ```js
 const params = {
@@ -432,7 +432,7 @@ const params = {
 authedClient.convert(params, callback);
 ```
 
-* [`deposit`, `withdraw`](https://docs.pro.coinbase.com/#deposits)
+- [`deposit`, `withdraw`](https://docs.pro.coinbase.com/#deposits)
 
 ```js
 // Deposit to your Exchange USD account from your Coinbase USD account.
@@ -482,7 +482,7 @@ const withdrawAddressParams = {
 authedClient.withdrawCrypto(withdrawAddressParams, callback);
 ```
 
-* [`depositPayment`](https://docs.pro.coinbase.com/#payment-method)
+- [`depositPayment`](https://docs.pro.coinbase.com/#payment-method)
 
 ```js
 // Schedule Deposit to your Exchange USD account from a configured payment method.
@@ -494,7 +494,7 @@ const depositPaymentParamsUSD = {
 authedClient.depositPayment(depositPaymentParamsUSD, callback);
 ```
 
-* [`withdrawPayment`](https://docs.pro.coinbase.com/#payment-method47)
+- [`withdrawPayment`](https://docs.pro.coinbase.com/#payment-method47)
 
 ```js
 // Withdraw from your Exchange USD account to a configured payment method.
@@ -506,7 +506,7 @@ const withdrawPaymentParamsUSD = {
 authedClient.withdrawPayment(withdrawPaymentParamsUSD, callback);
 ```
 
-* [`getTrailingVolume`](https://docs.pro.coinbase.com/#user-account)
+- [`getTrailingVolume`](https://docs.pro.coinbase.com/#user-account)
 
 ```js
 // Get your 30 day trailing volumes
@@ -581,10 +581,10 @@ websocket.unsubscribe({
 
 The following events can be emitted from the `WebsocketClient`:
 
-* `open`
-* `message`
-* `close`
-* `error`
+- `open`
+- `message`
+- `close`
+- `error`
 
 ### Orderbook
 
@@ -597,12 +597,12 @@ const orderbook = new CoinbasePro.Orderbook();
 
 The orderbook has the following methods:
 
-* `state(book)`
-* `get(orderId)`
-* `add(order)`
-* `remove(orderId)`
-* `match(match)`
-* `change(change)`
+- `state(book)`
+- `get(orderId)`
+- `add(order)`
+- `remove(orderId)`
+- `match(match)`
+- `change(change)`
 
 ### Orderbook Sync
 

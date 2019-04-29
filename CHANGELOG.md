@@ -1,1 +1,1 @@
-**See [GitHub Releases](https://github.com/coinbase/gdax-node/releases)**
+**See [GitHub Releases](https://github.com/coinbase/coinbase-pro-node/releases)**
