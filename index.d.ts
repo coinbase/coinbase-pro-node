@@ -66,27 +66,27 @@ declare module 'coinbase-pro' {
         size: string;
         product_id: string;
         side: 'buy' | 'sell';
-        stp: 'dc' | 'co' | 'cn' | 'cb';
         type: 'limit' | 'market' | 'stop';
         created_at: string;
         post_only: boolean;
         fill_fees: string;
         filled_size: string;
-        status: 'rejected' | 'received' | 'open' | 'done' | 'pending';
+        status: 'received' | 'rejected' | 'open' | 'done' | 'pending';
         settled: boolean;
         executed_value: string;
+        time_in_force: 'GTC' | 'GTT' | 'IOC' | 'FOK';
     }
 
     export interface OrderResult extends BaseOrderInfo {
-        time_in_force: 'GTC' | 'GTT' | 'IOC' | 'FOK';
-        status: 'rejected' | 'received' | 'open' | 'done';
+        stp: 'dc' | 'co' | 'cn' | 'cb';
     }
 
     export interface OrderInfo extends BaseOrderInfo {
         status: 'received' | 'open' | 'done' | 'pending';
-        funds: number;
-        specified_funds: number;
-        done_at: string;
+        funds?: number;
+        specified_funds?: number;
+        done_at?: string;
+        done_reason?: string;
     }
 
     export type PageArgs = {
