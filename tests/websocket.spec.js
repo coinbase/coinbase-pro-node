@@ -235,35 +235,6 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('passes channels through with heartbeat added', done => {
-    const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient(
-        'ETH-USD',
-        'ws://localhost:' + port,
-        {
-          key: 'suchkey',
-          secret: 'suchsecret',
-          passphrase: 'muchpassphrase',
-        },
-        { channels: ['user', 'ticker'] }
-      );
-    });
-    server.on('connection', socket => {
-      socket.on('message', data => {
-        const msg = JSON.parse(data);
-        assert.equal(msg.type, 'subscribe');
-        assert.equal(msg.key, 'suchkey');
-        assert.equal(msg.passphrase, 'muchpassphrase');
-        assert.deepEqual(msg.channels, ['user', 'ticker', 'heartbeat']);
-        assert(msg.timestamp);
-        assert(msg.signature);
-
-        server.close();
-        done();
-      });
-    });
-  });
-
   test('emits errors when receiving an error message', done => {
     const server = testserver(port, () => {
       const client = new CoinbasePro.WebsocketClient(
