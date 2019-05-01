@@ -7,7 +7,7 @@ const publicClient = new CoinbasePro.PublicClient();
 const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 suite('PublicClient', () => {
-  afterEach(() => nock.cleanAll());
+  teardown(() => nock.cleanAll());
 
   test('.constructor()', () => {
     let client = new CoinbasePro.PublicClient();

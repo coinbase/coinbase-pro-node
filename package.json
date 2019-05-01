@@ -21,26 +21,26 @@
     }
   ],
   "dependencies": {
-    "@types/request": "2.47.0",
-    "bignumber.js": "^6.0.0",
+    "@types/request": "2.48.1",
+    "bignumber.js": "^8.1.1",
     "bintrees": "^1.0.1",
     "request": "^2.81.0",
-    "ws": "^4.0.0"
+    "ws": "^7.0.0"
   },
   "description": "Official client for the Coinbase Pro API",
   "devDependencies": {
     "eslint": "^5.16.0",
     "husky": "^2.1.0",
     "lint-staged": "^8.1.5",
-    "mocha": "^5.0.0",
-    "nock": "^9.0.13",
-    "prettier": "~1.13.5"
+    "mocha": "^6.1.4",
+    "nock": "^10.0.6",
+    "prettier": "~1.17.0"
   },
   "directories": {
     "lib": "./lib"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8"
   },
   "homepage": "https://github.com/coinbase/coinbase-pro-node",
   "keywords": [
