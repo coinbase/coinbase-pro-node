@@ -9,7 +9,7 @@ let port = 56632;
 const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 suite('OrderbookSync', () => {
-  afterEach(() => nock.cleanAll());
+  teardown(() => nock.cleanAll());
 
   test('not passes authentication details to websocket', done => {
     const server = testserver(port, () => {

@@ -12,7 +12,7 @@ const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 const authClient = new CoinbasePro.AuthenticatedClient(key, secret, passphrase);
 
 suite('AuthenticatedClient', () => {
-  afterEach(() => nock.cleanAll());
+  teardown(() => nock.cleanAll());
 
   test('._getSignature()', () => {
     const method = 'PUT';

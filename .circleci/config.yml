@@ -12,11 +12,6 @@ shared: &shared
     - run: npm test
 
 jobs:
-  "node-6":
-    <<: *shared
-    docker:
-      - image: circleci/node:6
-
   "node-8":
     <<: *shared
     docker:
