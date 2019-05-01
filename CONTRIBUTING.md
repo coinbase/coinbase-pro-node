@@ -10,11 +10,11 @@ from further participation in this project, or potentially all Coinbase projects
 
 ## Bug Reports
 
-* Ensure your issue [has not already been reported][1]. It may already be fixed!
-* Include the steps you carried out to produce the problem.
-* Include the behavior you observed along with the behavior you expected, and
+- Ensure your issue [has not already been reported][1]. It may already be fixed!
+- Include the steps you carried out to produce the problem.
+- Include the behavior you observed along with the behavior you expected, and
   why you expected it.
-* Include any relevant stack traces or debugging output.
+- Include any relevant stack traces or debugging output.
 
 ## Feature Requests
 
@@ -27,18 +27,18 @@ The best way to see a feature added, however, is to submit a pull request.
 
 ## Pull Requests
 
-* Before creating your pull request, it's usually worth asking if the code
+- Before creating your pull request, it's usually worth asking if the code
   you're planning on writing will actually be considered for merging. You can
   do this by [opening an issue][1] and asking. It may also help give the
   maintainers context for when the time comes to review your code.
 
-* Ensure your [commit messages are well-written][2]. This can double as your
+- Ensure your [commit messages are well-written][2]. This can double as your
   pull request message, so it pays to take the time to write a clear message.
 
-* Add tests for your feature. You should be able to look at other tests for
+- Add tests for your feature. You should be able to look at other tests for
   examples. If you're unsure, don't hesitate to [open an issue][1] and ask!
 
-* Submit your pull request!
+- Submit your pull request!
 
 ## Support Requests
 
@@ -48,6 +48,6 @@ be locked to prevent further discussion.
 
 All support requests must be made via [our support team][3].
 
-[1]: https://github.com/coinbase/gdax-node/issues
+[1]: https://github.com/coinbase/coinbase-pro-node/issues
 [2]: https://medium.com/brigade-engineering/the-secrets-to-great-commit-messages-106fc0a92a25
 [3]: https://support.coinbase.com/customer/en/portal/articles/2288496-how-can-i-contact-coinbase-support-

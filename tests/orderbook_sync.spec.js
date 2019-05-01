@@ -1,19 +1,19 @@
 const assert = require('assert');
 const nock = require('nock');
 
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 
 const testserver = require('./lib/ws_testserver');
 let port = 56632;
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
 suite('OrderbookSync', () => {
   afterEach(() => nock.cleanAll());
 
   test('not passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -35,7 +35,7 @@ suite('OrderbookSync', () => {
 
   test('passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -58,11 +58,11 @@ suite('OrderbookSync', () => {
 
   test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
     const server = testserver(port, () => {
-      new Gdax.OrderbookSync(
+      new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
-        new Gdax.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
+        new CoinbasePro.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
       );
     });
 
@@ -88,7 +88,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -98,13 +98,15 @@ suite('OrderbookSync', () => {
           test: true,
           product_id: 'BTC-USD',
         });
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -117,7 +119,7 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -128,13 +130,15 @@ suite('OrderbookSync', () => {
           test: true,
           product_id: 'BTC-USD',
         });
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ test: true, product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -144,7 +148,7 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -152,13 +156,15 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -168,7 +174,7 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         'BTC-USD',
         EXCHANGE_API_URL,
         'ws://localhost:' + port,
@@ -177,13 +183,15 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
-        server.close();
-        done();
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -202,9 +210,8 @@ suite('OrderbookSync', () => {
         bids: [],
       });
 
-    let count = 0;
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
@@ -212,20 +219,18 @@ suite('OrderbookSync', () => {
 
       orderbookSync.on('message', data => {
         const state = orderbookSync.books[data.product_id].state();
-
         assert.deepEqual(state, { asks: [], bids: [] });
         assert.equal(orderbookSync.books['ETH-BTC'], undefined);
-
-        if (++count >= 2) {
-          server.close();
-          done();
-        }
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
       socket.send(JSON.stringify({ product_id: 'ETH-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -238,21 +243,23 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
 
       orderbookSync.on('sync', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 
@@ -265,21 +272,23 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new Gdax.OrderbookSync(
+      const orderbookSync = new CoinbasePro.OrderbookSync(
         ['BTC-USD', 'ETH-USD'],
         EXCHANGE_API_URL,
         'ws://localhost:' + port
       );
 
       orderbookSync.on('synced', productID => {
-         assert.equal(productID, 'BTC-USD');
-         server.close();
-         done();
+        assert.equal(productID, 'BTC-USD');
       });
     });
 
     server.on('connection', socket => {
       socket.send(JSON.stringify({ product_id: 'BTC-USD' }));
+      socket.on('message', () => {
+        server.close();
+        done();
+      });
     });
   });
 });

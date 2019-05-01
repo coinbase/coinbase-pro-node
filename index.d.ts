@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events';
 import * as request from 'request';
+import { Readable } from 'stream';
 
-declare module 'gdax' {
+declare module 'coinbase-pro' {
     export type HttpResponse = request.Response;
 
     export type callback<T> = (err: any, response: HttpResponse, data: T) => void;
@@ -96,6 +97,7 @@ declare module 'gdax' {
 
     export type FillFilter = {
         product_id?: string;
+        order_id?: string;
     } & PageArgs;
 
     export type OrderFilter = {
@@ -122,7 +124,7 @@ declare module 'gdax' {
         active: boolean
     };
 
-    export type CurrencyType = 'USD' | 'BTC' | 'LTC' | 'ETH' | 'B2X';
+    export type CurrencyType = 'USD' | 'BTC' | 'LTC' | 'ETH' | 'BCH' | 'ETC';
 
     export type CurrencyInfo = {
         id: CurrencyType,
@@ -145,14 +147,17 @@ declare module 'gdax' {
      * If a PublicClient or AuthenticatedClient method that does an
      * HTTP request throws an error, then it will have this shape.
      */
-    export interface HttpError {
-        message: string;
+    export interface HttpError extends Error {
         response: HttpResponse;
         data?: any;
     }
 
+    export interface ClientOptions {
+        timeout?: number;
+    }
+
     export class PublicClient {
-        constructor(apiURI?: string);
+        constructor(apiURI?: string, options?: ClientOptions);
 
         getProducts(callback: callback<ProductInfo[]>): void;
         getProducts(): Promise<ProductInfo[]>;
@@ -164,10 +169,12 @@ declare module 'gdax' {
         getProductTicker(productID: string, ): Promise<ProductTicker>;
 
         getProductTrades(productID: string, callback: callback<any>): void;
-        getProductTrades(productID: string, ): Promise<any>;
+        getProductTrades(productID: string): Promise<any>;
 
-        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any, callback: callback<any>): void;
-        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Promise<any>;
+        getProductTrades(productID: string, pageArgs: PageArgs, callback: callback<any>): void;
+        getProductTrades(productID: string, pageArgs: PageArgs): Promise<any>;
+
+        getProductTradeStream(productID: string, tradesFrom: number, tradesTo: any): Readable;
 
         getProductHistoricRates(productID: string, args: any, callback: callback<any[][]>): void;
         getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
@@ -183,7 +190,7 @@ declare module 'gdax' {
     }
 
     export class AuthenticatedClient extends PublicClient {
-        constructor(key: string, secret: string, passphrase: string, apiURI?: string);
+        constructor(key: string, secret: string, passphrase: string, apiURI?: string, options?: ClientOptions);
 
         getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void
         getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
@@ -224,8 +231,8 @@ declare module 'gdax' {
         cancelOrder(orderID: string, callback: callback<string[]>): void;
         cancelOrder(orderID: string): Promise<string[]>;
 
-        cancelAllOrders(args?: { product_id: string }, callback?: callback<string[]>): void;
-        cancelAllOrders(args?: { product_id: string }): Promise<string[]>;
+        cancelAllOrders(args: { product_id?: string }, callback: callback<string[]>): void;
+        cancelAllOrders(args: { product_id?: string }): Promise<string[]>;
 
         getOrders(callback: callback<OrderInfo[]>): void;
         getOrders(): Promise<OrderInfo[]>;
@@ -253,6 +260,9 @@ declare module 'gdax' {
 
         closePosition(params: any, callback: callback<any>): void;
         closePosition(params: any): Promise<any>;
+
+        convert(params: any, callback: callback<any>): void;
+        convert(params: any): Promise<any>;
 
         deposit(params: any, callback: callback<any>): void;
         deposit(params: any): Promise<any>;

@@ -1,15 +1,15 @@
 const assert = require('assert');
 const nock = require('nock');
 
-const Gdax = require('../index.js');
+const CoinbasePro = require('../index.js');
 
 const key = 'key';
 const secret = 'secret';
 const passphrase = 'passphrase';
 
-const EXCHANGE_API_URL = 'https://api.gdax.com';
+const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
 
-const authClient = new Gdax.AuthenticatedClient(key, secret, passphrase);
+const authClient = new CoinbasePro.AuthenticatedClient(key, secret, passphrase);
 
 suite('AuthenticatedClient', () => {
   afterEach(() => nock.cleanAll());
@@ -19,7 +19,7 @@ suite('AuthenticatedClient', () => {
     const relativeURI = '/orders';
     const opts = {
       method: 'PUT',
-      uri: 'https://api.gdax.com/orders',
+      uri: 'https://api.pro.coinbase.com/orders',
     };
 
     const sig = authClient._getSignature(method, relativeURI, opts);
@@ -175,7 +175,7 @@ suite('AuthenticatedClient', () => {
       .then(() => done())
       .catch(err => assert.ifError(err) || assert.fail());
   });
-  
+
   test('.getAccountTransfers()', done => {
     const expectedResponse = [
       {
@@ -709,6 +709,36 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.convert()', done => {
+    const transfer = {
+      from: 'USD',
+      to: 'USDC',
+      amount: '100',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/conversions', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.convert(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.convert(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   test('.deposit()', done => {
     const transfer = {
       amount: 10480,
@@ -736,12 +766,42 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.depositPayment()', done => {
+    const transfer = {
+      amount: 10480,
+      currency: 'USD',
+      payment_method_id: 'test-id',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/deposits/payment-method', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.depositPayment(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.depositPayment(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.depositCrypto()', done => {
     const params = {
-      currency: 'BTC'
+      currency: 'BTC',
     };
     const expectedAccountsRespons = [
       {
@@ -751,8 +811,8 @@ suite('AuthenticatedClient', () => {
         currency: 'BTC',
         type: 'wallet',
         primary: true,
-        active: true
-      }
+        active: true,
+      },
     ];
     const expectedAddressResponse = {
       id: 'test-id',
@@ -765,9 +825,10 @@ suite('AuthenticatedClient', () => {
       resource: 'address',
       resource_path: '/v2/accounts/test-account-id/addresses/test-id',
       warning_title: 'Only send Bitcoin (BTC) to this address',
-      warning_details: 'Sending any other digital asset, including Bitcoin Cash (BCH), will result in permanent loss.',
+      warning_details:
+        'Sending any other digital asset, including Bitcoin Cash (BCH), will result in permanent loss.',
       callback_url: null,
-      exchange_deposit_address: true
+      exchange_deposit_address: true,
     };
 
     nock(EXCHANGE_API_URL)
@@ -792,7 +853,7 @@ suite('AuthenticatedClient', () => {
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
-      .catch(err => assert.ifError(err) || assert.fail);
+      .catch(err => assert.ifError(err) || assert.fail());
   });
 
   test('.withdraw()', done => {
@@ -819,6 +880,36 @@ suite('AuthenticatedClient', () => {
     });
 
     let promisetest = authClient.withdraw(transfer);
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
+  test('.withdrawPayment()', done => {
+    const transfer = {
+      amount: 10480,
+      currency: 'USD',
+      payment_method_id: 'test-id',
+    };
+
+    const expectedTransfer = transfer;
+
+    nock(EXCHANGE_API_URL)
+      .post('/withdrawals/payment-method', expectedTransfer)
+      .times(2)
+      .reply(200, {});
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.withdrawPayment(transfer, err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.withdrawPayment(transfer);
 
     Promise.all([cbtest, promisetest])
       .then(() => done())

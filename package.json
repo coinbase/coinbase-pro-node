@@ -1,8 +1,8 @@
 {
-  "name": "gdax",
-  "version": "0.7.0",
+  "name": "coinbase-pro",
+  "version": "0.9.0",
   "author": "Coinbase",
-  "bugs": "https://github.com/coinbase/gdax-node/issues",
+  "bugs": "https://github.com/coinbase/coinbase-pro-node/issues",
   "contributors": [
     {
       "email": "peterldowns@gmail.com",
@@ -22,19 +22,19 @@
   ],
   "dependencies": {
     "@types/request": "2.47.0",
-    "bignumber.js": "^5.0.0",
+    "bignumber.js": "^6.0.0",
     "bintrees": "^1.0.1",
     "request": "^2.81.0",
     "ws": "^4.0.0"
   },
-  "description": "Client for the GDAX API",
+  "description": "Official client for the Coinbase Pro API",
   "devDependencies": {
-    "eslint": "^4.0.0",
-    "husky": "^0.13.4",
-    "lint-staged": "^3.6.1",
+    "eslint": "^5.16.0",
+    "husky": "^2.1.0",
+    "lint-staged": "^8.1.5",
     "mocha": "^5.0.0",
     "nock": "^9.0.13",
-    "prettier": "^1.9.2"
+    "prettier": "~1.13.5"
   },
   "directories": {
     "lib": "./lib"
@@ -42,7 +42,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "homepage": "https://github.com/coinbase/gdax-node",
+  "homepage": "https://github.com/coinbase/coinbase-pro-node",
   "keywords": [
     "API",
     "bitcoin",
@@ -51,7 +51,7 @@
     "real-time",
     "trading",
     "websockets",
-    "gdax",
+    "coinbase-pro",
     "ethereum"
   ],
   "license": "MIT",
@@ -59,14 +59,28 @@
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/coinbase/gdax-node.git"
+    "url": "git://github.com/coinbase/coinbase-pro-node.git"
   },
   "scripts": {
-    "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js",
-    "precommit": "lint-staged"
+    "lint": "eslint --ext .js ./",
+    "prettier": "prettier -l *.js **/*.js",
+    "prettier-write": "npm run prettier -- --write",
+    "test": "mocha --full-trace --ui tdd --bail --reporter spec tests/*.js"
   },
   "lint-staged": {
-    "*.{js}": ["eslint --fix", "prettier --write", "git add"],
-    "*.{json,md}": ["prettier --write", "git add"]
+    "*.{js}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{json,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
