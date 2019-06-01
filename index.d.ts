@@ -23,7 +23,6 @@ declare module 'coinbase-pro' {
   };
 
   interface BaseOrder {
-    type: string;
     side: 'buy' | 'sell';
     product_id: string;
     client_oid?: string;
@@ -52,29 +51,25 @@ declare module 'coinbase-pro' {
     funds: string | null;
   }
 
-  interface StopOrder extends BaseOrder {
-    type: 'stop';
-    size: string;
-    funds: string;
-  }
-
-  export type OrderParams = MarketOrder | LimitOrder | StopOrder;
+  export type OrderParams = MarketOrder | LimitOrder;
 
   export interface BaseOrderInfo {
     id: string;
-    price: string;
-    size: string;
+    price?: string;
+    size?: string;
     product_id: string;
     side: 'buy' | 'sell';
-    type: 'limit' | 'market' | 'stop';
+    type: 'limit' | 'market';
     created_at: string;
     post_only: boolean;
     fill_fees: string;
     filled_size: string;
-    status: 'received' | 'rejected' | 'open' | 'done' | 'pending';
+    status: 'active' | 'rejected' | 'open' | 'done' | 'pending';
     settled: boolean;
     executed_value: string;
-    time_in_force: 'GTC' | 'GTT' | 'IOC' | 'FOK';
+    time_in_force?: 'GTC' | 'GTT' | 'IOC' | 'FOK';
+    funds?: string;
+    specified_funds?: string;
   }
 
   export interface OrderResult extends BaseOrderInfo {
@@ -82,9 +77,6 @@ declare module 'coinbase-pro' {
   }
 
   export interface OrderInfo extends BaseOrderInfo {
-    status: 'received' | 'open' | 'done' | 'pending';
-    funds?: number;
-    specified_funds?: number;
     done_at?: string;
     done_reason?: string;
   }
@@ -136,9 +128,16 @@ declare module 'coinbase-pro' {
     quote_currency: string;
     base_min_size: string;
     base_max_size: string;
+    base_increment: string;
     quote_increment: string;
     display_name: string;
+    status: string;
     margin_enabled: boolean;
+    min_market_funds: string;
+    max_market_funds: string;
+    post_only: boolean;
+    limit_only: boolean;
+    cancel_only: boolean;
   }
 
   /**
@@ -318,10 +317,7 @@ declare module 'coinbase-pro' {
   type ChannelName =
     | 'full'
     | 'level2'
-    | 'level2_50'
-    | 'status'
     | 'ticker'
-    | 'ticker_1000'
     | 'user'
     | 'matches'
     | 'heartbeat';
@@ -373,18 +369,19 @@ declare module 'coinbase-pro' {
     };
     type ReceivedMarket = {
       order_type: 'market';
-      funds: string;
+      funds?: string;
+      size?: string;
     };
     export type Open = {
       type: 'open';
       price: string;
       order_id: string;
       product_id: string;
-      profile_id: string;
+      profile_id?: string;
       sequence: number;
       side: Side;
       time: string;
-      user_id: string;
+      user_id?: string;
       remaining_size: string;
     };
     export type Match = {
@@ -420,32 +417,49 @@ declare module 'coinbase-pro' {
       type: 'done';
       side: Side;
       order_id: string;
-      reason: string;
+      reason: 'filled' | 'canceled';
       product_id: string;
+      time: string;
+      sequence: number;
+      price: string;
+      remaining_size: string;
       user_id?: string;
     };
+    export type Activate = {
+      type: 'activate';
+      product_id: string;
+      timestamp: string;
+      user_id: string;
+      profile_id: string;
+      order_id: string;
+      stop_type: string;
+      side: Side;
+      stop_price: string;
+      size: string;
+      price: string;
+    };
 
-    // Ticket channel
+    // Ticker channel
     type BaseTicker = {
       type: 'ticker';
       sequence: number;
-      time: string;
       product_id: string;
       price: string;
-      open_24h?: string;
-      volume_24h?: string;
-      low_24h?: string;
-      high_24h?: string;
-      volume_30d?: string;
-      best_bid?: string;
-      best_ask?: string;
+      open_24h: string;
+      volume_24h: string;
+      low_24h: string;
+      high_24h: string;
+      volume_30d: string;
+      best_bid: string;
+      best_ask: string;
     };
-    type FullTicket = BaseTicker & {
+    type FullTicker = BaseTicker & {
       trade_id: number;
       side: Side; // Taker side
+      time: string;
       last_size: string;
     };
-    export type Ticker = BaseTicker | FullTicket;
+    export type Ticker = BaseTicker | FullTicker;
 
     // Subscription
     export type Subscription = {
@@ -469,6 +483,7 @@ declare module 'coinbase-pro' {
     | WebsocketMessage.Match
     | WebsocketMessage.Change
     | WebsocketMessage.Done
+    | WebsocketMessage.Activate
     | WebsocketMessage.Ticker
     | WebsocketMessage.Subscription
     | WebsocketMessage.Error;
