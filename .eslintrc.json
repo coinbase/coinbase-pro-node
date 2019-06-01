@@ -7,21 +7,14 @@
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2015
+    "ecmaVersion": 2017
   },
   "rules": {
-    "constructor-super": "error",
-    "curly": ["error", "all"],
+    "curly": "error",
     "eqeqeq": "error",
-    "func-names": ["error", "always"],
-    "linebreak-style": ["error", "unix"],
-    "no-const-assign": "error",
-    "no-this-before-super": "error",
-    "no-undef": "error",
-    "no-unreachable": "error",
-    "no-unused-vars": "error",
+    "func-names": "error",
+    "linebreak-style": "error",
     "prefer-destructuring": "error",
-    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
-    "valid-typeof": "error"
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }]
   }
 }
