@@ -1,13 +1,23 @@
 const assert = require('assert');
 const CoinbasePro = require('../index.js');
 const testserver = require('./lib/ws_testserver');
+const {
+  EXCHANGE_WS_URL,
+  SANDBOX_WS_URL,
+  DEFAULT_PAIR,
+  DEFAULT_CHANNELS,
+} = require('../lib/utilities');
 
 let port = 56632;
 
 suite('WebsocketClient', () => {
   test('connects to specified server', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      let client = new CoinbasePro.WebsocketClient({
+        product_ids: ['BTC-EUR'],
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.on('message', () => {
@@ -17,32 +27,26 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the default product (BTC-USD) and default channel (full) if undefined', done => {
-    const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient(null, 'ws://localhost:' + port);
-    });
-    server.on('connection', socket => {
-      socket.on('message', data => {
-        const msg = JSON.parse(data);
-        assert.equal(msg.type, 'subscribe');
-        assert.deepEqual(msg.product_ids, ['BTC-USD']);
-        assert.deepEqual(msg.channels, ['full', 'heartbeat']);
-
-        server.close();
-        done();
-      });
-    });
+  test('.constructor() (with sandbox option)', () => {
+    let client = new CoinbasePro.WebsocketClient();
+    assert.equal(client.websocketURI, EXCHANGE_WS_URL);
+    client = new CoinbasePro.WebsocketClient({ sandbox: true });
+    assert.equal(client.websocketURI, SANDBOX_WS_URL);
   });
 
-  test('subscribes to the default product (BTC-USD) if empty string', done => {
+  test('subscribes to the default product (BTC-USD) and default channel (full) if undefined', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient('', 'ws://localhost:' + port);
+      let client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
         assert.equal(msg.type, 'subscribe');
-        assert.deepEqual(msg.product_ids, ['BTC-USD']);
+        assert.deepEqual(msg.product_ids, [DEFAULT_PAIR]);
+        assert.deepEqual(msg.channels, DEFAULT_CHANNELS);
 
         server.close();
         done();
@@ -52,13 +56,37 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the default product (BTC-USD) if empty array passed', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient([], 'ws://localhost:' + port);
+      let client = new CoinbasePro.WebsocketClient({
+        product_ids: [],
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.on('message', data => {
         const msg = JSON.parse(data);
         assert.equal(msg.type, 'subscribe');
-        assert.deepEqual(msg.product_ids, ['BTC-USD']);
+        assert.deepEqual(msg.product_ids, [DEFAULT_PAIR]);
+
+        server.close();
+        done();
+      });
+    });
+  });
+
+  test('subscribes to the specified product if string passed', done => {
+    const server = testserver(port, () => {
+      let client = new CoinbasePro.WebsocketClient({
+        product_ids: 'ETH-BTC',
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
+    });
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, ['ETH-BTC']);
 
         server.close();
         done();
@@ -68,7 +96,11 @@ suite('WebsocketClient', () => {
 
   test('subscribes to the specified products', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient(['BTC-EUR'], 'ws://localhost:' + port);
+      let client = new CoinbasePro.WebsocketClient({
+        product_ids: ['BTC-EUR'],
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -82,26 +114,13 @@ suite('WebsocketClient', () => {
     });
   });
 
-  test('subscribes to the specified product (backward compatibility)', done => {
-    const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient('ETH-USD', 'ws://localhost:' + port);
-    });
-    server.on('connection', socket => {
-      socket.on('message', data => {
-        const msg = JSON.parse(data);
-        assert.equal(msg.type, 'subscribe');
-        assert.deepEqual(msg.product_ids, ['ETH-USD']);
-
-        server.close();
-        done();
-      });
-    });
-  });
-
   test('subscribes to additional products', done => {
     let client;
     const server = testserver(port, () => {
-      client = new CoinbasePro.WebsocketClient([], 'ws://localhost:' + port);
+      client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -125,10 +144,10 @@ suite('WebsocketClient', () => {
   test('unsubscribes from product', done => {
     let client;
     const server = testserver(port, () => {
-      client = new CoinbasePro.WebsocketClient(
-        ['BTC-USD'],
-        'ws://localhost:' + port
-      );
+      client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -138,7 +157,7 @@ suite('WebsocketClient', () => {
         socket.on('message', data => {
           const msg = JSON.parse(data);
           assert.equal(msg.type, 'unsubscribe');
-          assert.deepEqual(msg.product_ids, ['BTC-USD']);
+          assert.deepEqual(msg.product_ids, [DEFAULT_PAIR]);
           assert.deepEqual(msg.channels, ['full']);
 
           server.close();
@@ -152,12 +171,11 @@ suite('WebsocketClient', () => {
   test('subscribes to additional channels', done => {
     let client;
     const server = testserver(port, () => {
-      client = new CoinbasePro.WebsocketClient(
-        ['BTC-USD'],
-        'ws://localhost:' + port,
-        null,
-        { channels: ['heartbeat'] }
-      );
+      client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+        channels: ['heartbeat'],
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -187,12 +205,11 @@ suite('WebsocketClient', () => {
   test('unsubscribes from channel', done => {
     let client;
     const server = testserver(port, () => {
-      client = new CoinbasePro.WebsocketClient(
-        ['BTC-USD'],
-        'ws://localhost:' + port,
-        null,
-        { channels: ['ticker'] }
-      );
+      client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+        channels: ['ticker'],
+      });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.once('message', data => {
@@ -214,11 +231,14 @@ suite('WebsocketClient', () => {
 
   test('passes authentication details through', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.WebsocketClient('ETH-USD', 'ws://localhost:' + port, {
+      let client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+        product_ids: ['ETH-USD'],
         key: 'suchkey',
         secret: 'suchsecret',
         passphrase: 'muchpassphrase',
       });
+      client.connect();
     });
     server.on('connection', socket => {
       socket.on('message', data => {
@@ -237,15 +257,15 @@ suite('WebsocketClient', () => {
 
   test('emits errors when receiving an error message', done => {
     const server = testserver(port, () => {
-      const client = new CoinbasePro.WebsocketClient(
-        null,
-        'ws://localhost:' + port
-      );
+      let client = new CoinbasePro.WebsocketClient({
+        api_uri: 'ws://localhost:' + port,
+      });
 
       client.once('error', err => {
         assert.equal(err.message, 'test error');
         assert.equal(err.reason, 'because error');
       });
+      client.connect();
     });
 
     server.once('connection', socket => {

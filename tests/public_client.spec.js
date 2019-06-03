@@ -3,8 +3,12 @@ const nock = require('nock');
 
 const CoinbasePro = require('../index.js');
 const publicClient = new CoinbasePro.PublicClient();
-
-const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
+const {
+  EXCHANGE_API_URL,
+  SANDBOX_API_URL,
+  DEFAULT_PAIR,
+  DEFAULT_TIMEOUT,
+} = require('../lib/utilities');
 
 suite('PublicClient', () => {
   teardown(() => nock.cleanAll());
@@ -12,21 +16,32 @@ suite('PublicClient', () => {
   test('.constructor()', () => {
     let client = new CoinbasePro.PublicClient();
     assert.equal(client.apiURI, EXCHANGE_API_URL);
-    assert.equal(client.API_LIMIT, 100);
-    assert.equal(client.productID, 'BTC-USD'); // deprecated
-    assert.equal(client.timeout, 10000);
+    assert.equal(client.productID, DEFAULT_PAIR);
+    assert.equal(client.timeout, DEFAULT_TIMEOUT);
 
-    client = new CoinbasePro.PublicClient(
-      'https://api-public.sandbox.pro.coinbase.com'
-    );
-    assert.equal(client.apiURI, 'https://api-public.sandbox.pro.coinbase.com');
+    client = new CoinbasePro.PublicClient({ sandbox: true });
+    assert.equal(client.apiURI, SANDBOX_API_URL);
   });
 
-  // Delete this test when the deprecation is final
-  test('.constructor() (with deprecated signature accepting a product ID)', () => {
-    let client = new CoinbasePro.PublicClient('LTC-USD');
-    assert.equal(client.apiURI, EXCHANGE_API_URL);
+  test('.constructor() (with custom timeout)', () => {
+    let client = new CoinbasePro.PublicClient({
+      sandbox: true,
+      product_id: 'LTC-USD',
+      timeout: 9000,
+    });
+    assert.equal(client.apiURI, SANDBOX_API_URL);
     assert.equal(client.productID, 'LTC-USD');
+    assert.equal(client.timeout, 9000);
+  });
+
+  test('.constructor() (with custom api_uri)', () => {
+    let client = new CoinbasePro.PublicClient({
+      sandbox: true,
+      api_uri: 'some_new_api_uri',
+    });
+    assert.equal(client.apiURI, 'some_new_api_uri');
+    assert.equal(client.sandbox, true);
+    assert.equal(client.productID, DEFAULT_PAIR);
   });
 
   suite('.request()', () => {
@@ -73,8 +88,10 @@ suite('PublicClient', () => {
 
     const cbtest = new Promise((resolve, reject) => {
       publicClient.getProductOrderBook(
-        'LTC-USD',
-        { level: 3 },
+        {
+          product_id: 'LTC-USD',
+          level: 3,
+        },
         (err, resp, data) => {
           if (err) {
             reject(err);
@@ -86,24 +103,23 @@ suite('PublicClient', () => {
     });
 
     const promisetest = publicClient
-      .getProductOrderBook('LTC-USD', { level: 3 })
+      .getProductOrderBook({ product_id: 'LTC-USD', level: 3 })
       .then(data => assert(data));
 
     return Promise.all([cbtest, promisetest]);
   });
 
-  // Delete this test when the deprecation is final
-  test('.getProductOrderBook() (with deprecated signature implying default product ID)', () => {
+  test('.getProductOrderBook() (with missing `product_id` implying default product ID)', () => {
     nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/book?level=2')
+      .get('/products/ETH-BTC/book?level=2')
       .reply(200, {
         asks: [],
         bids: [],
       });
 
-    return publicClient
-      .getProductOrderBook({ level: 2 })
-      .then(data => assert(data));
+    let client = new CoinbasePro.PublicClient({ product_id: 'ETH-BTC' });
+
+    return client.getProductOrderBook({ level: 2 }).then(data => assert(data));
   });
 
   test('.getProductTrades()', () => {
@@ -130,25 +146,27 @@ suite('PublicClient', () => {
       .reply(200, expectedResponse);
 
     const cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTrades('LTC-USD', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      publicClient.getProductTrades(
+        { product_id: 'LTC-USD' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert.deepEqual(data, expectedResponse);
+          resolve();
         }
-        assert.deepEqual(data, expectedResponse);
-        resolve();
-      });
+      );
     });
 
     const promisetest = publicClient
-      .getProductTrades('LTC-USD')
+      .getProductTrades({ product_id: 'LTC-USD' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     return Promise.all([cbtest, promisetest]);
   });
 
-  // Delete this test when the deprecation is final
-  test('.getProductTrades() (with deprecated signature implying default product ID)', () => {
-    const expectedResponse = [
+  test('.getProductTrades() (with missing `product_id` implying default product ID)', () => {
+    let expectedResponse = [
       {
         time: '2014-11-07T22:19:28.578544Z',
         trade_id: 74,
@@ -178,30 +196,34 @@ suite('PublicClient', () => {
       });
 
     const cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductTicker('ETH-USD', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      publicClient.getProductTicker(
+        { product_id: 'ETH-USD' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+
+          assert.equal(data.trade_id, 'test-id');
+          assert(data.price, '9.00');
+          assert(data.size, '5');
+
+          resolve();
         }
+      );
+    });
 
+    const promisetest = publicClient
+      .getProductTicker({ product_id: 'ETH-USD' })
+      .then(data => {
         assert.equal(data.trade_id, 'test-id');
-        assert(data.price, '9.00');
-        assert(data.size, '5');
-
-        resolve();
+        assert.equal(data.price, '9.00');
+        assert.equal(data.size, '5');
       });
-    });
-
-    const promisetest = publicClient.getProductTicker('ETH-USD').then(data => {
-      assert.equal(data.trade_id, 'test-id');
-      assert.equal(data.price, '9.00');
-      assert.equal(data.size, '5');
-    });
 
     return Promise.all([cbtest, promisetest]);
   });
 
-  // Delete this test when the deprecation is final
-  test('.getProductTicker() (with deprecated signature implying default product ID)', () => {
+  test('.getProductTicker() (with missing `product_id` implying default product ID)', () => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/ticker')
       .reply(200, {
@@ -228,7 +250,12 @@ suite('PublicClient', () => {
       let current;
 
       publicClient
-        .getProductTradeStream('BTC-USD', from, to)
+        .getProductTradeStream({
+          product_id: 'BTC-USD',
+          tradesFrom: from,
+          tradesTo: to,
+          limit: 100,
+        })
         .on('data', data => {
           current = data.trade_id;
           assert.equal(typeof current, 'number');
@@ -248,15 +275,14 @@ suite('PublicClient', () => {
         });
     });
 
-    // Delete this test when the deprecation is final
-    test('streams trades (with deprecated signature implying default product ID)', done => {
+    test('streams trades (with missing `product_id` implying default product ID)', done => {
       nock.load('./tests/mocks/pubclient_stream_trades.json');
 
       let last = from;
       let current;
 
       publicClient
-        .getProductTradeStream(from, to)
+        .getProductTradeStream({ tradesFrom: from, tradesTo: to })
         .on('data', data => {
           current = data.trade_id;
           assert.equal(typeof current, 'number');
@@ -282,11 +308,11 @@ suite('PublicClient', () => {
       let current;
 
       publicClient
-        .getProductTradeStream(
-          'BTC-USD',
-          from,
-          trade => Date.parse(trade.time) >= 1463068800000
-        )
+        .getProductTradeStream({
+          product_id: 'BTC-USD',
+          tradesFrom: from,
+          tradesTo: trade => Date.parse(trade.time) >= 1463068800000,
+        })
         .on('data', data => {
           current = data.trade_id;
           assert.equal(typeof current, 'number');
@@ -309,11 +335,11 @@ suite('PublicClient', () => {
       let current;
 
       publicClient
-        .getProductTradeStream(
-          'BTC-USD',
-          from,
-          trade => Date.parse(trade.time) >= Date.now()
-        )
+        .getProductTradeStream({
+          product_id: 'BTC-USD',
+          tradesFrom: from,
+          tradesTo: trade => Date.parse(trade.time) >= Date.now(),
+        })
         .on('data', data => {
           current = data.trade_id;
           assert.equal(typeof current, 'number');
@@ -333,7 +359,7 @@ suite('PublicClient', () => {
 
   test('.getProductHistoricRates()', () => {
     nock(EXCHANGE_API_URL)
-      .get('/products/ETH-USD/candles')
+      .get('/products/ETH-USD/candles?granularity=60')
       .times(2)
       .reply(200, [
         [1514273340, 759.75, 759.97, 759.75, 759.97, 8.03891157],
@@ -342,21 +368,24 @@ suite('PublicClient', () => {
       ]);
 
     const cbtest = new Promise((resolve, reject) => {
-      publicClient.getProductHistoricRates('ETH-USD', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      publicClient.getProductHistoricRates(
+        { product_id: 'ETH-USD', granularity: 60 },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+
+          assert.equal(data[0][0], 1514273340);
+          assert.equal(data[0][1], 759.75);
+          assert.equal(data[2][0], 1514273220);
+
+          resolve();
         }
-
-        assert.equal(data[0][0], 1514273340);
-        assert.equal(data[0][1], 759.75);
-        assert.equal(data[2][0], 1514273220);
-
-        resolve();
-      });
+      );
     });
 
     const promisetest = publicClient
-      .getProductHistoricRates('ETH-USD')
+      .getProductHistoricRates({ product_id: 'ETH-USD', granularity: 60 })
       .then(data => {
         assert.equal(data[0][0], 1514273340);
         assert.equal(data[0][1], 759.75);
@@ -366,17 +395,18 @@ suite('PublicClient', () => {
     return Promise.all([cbtest, promisetest]);
   });
 
-  // Delete this test when the deprecation is final
-  test('.getProductHistoricRates() (with deprecated signature implying default product ID)', () => {
+  test('.getProductHistoricRates() (with missing `product_id` implying default product ID)', () => {
     nock(EXCHANGE_API_URL)
-      .get('/products/BTC-USD/candles')
+      .get('/products/ETH-BTC/candles?granularity=60')
       .reply(200, [
         [1514273220, 15399.99, 15400, 15399, 15399, 0.369797],
         [1514273160, 15399.99, 15400, 15400, 15400, 0.673643],
         [1514273100, 15399.99, 15400, 15400, 15400, 0.849436],
       ]);
 
-    return publicClient.getProductHistoricRates().then(data => {
+    let client = new CoinbasePro.PublicClient({ product_id: 'ETH-BTC' });
+
+    return client.getProductHistoricRates({ granularity: 60 }).then(data => {
       assert.equal(data[0][0], 1514273220);
       assert.equal(data[0][1], 15399.99);
       assert.equal(data[2][0], 1514273100);
@@ -397,21 +427,24 @@ suite('PublicClient', () => {
       });
 
     const cbtest = new Promise((resolve, reject) => {
-      publicClient.getProduct24HrStats('ETH-USD', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      publicClient.getProduct24HrStats(
+        { product_id: 'ETH-USD' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+
+          assert.equal(data.open, 720);
+          assert.equal(data.high, 770);
+          assert.equal(data.volume, 110000);
+
+          resolve();
         }
-
-        assert.equal(data.open, 720);
-        assert.equal(data.high, 770);
-        assert.equal(data.volume, 110000);
-
-        resolve();
-      });
+      );
     });
 
     const promisetest = publicClient
-      .getProduct24HrStats('ETH-USD')
+      .getProduct24HrStats({ product_id: 'ETH-USD' })
       .then(data => {
         assert.equal(data.open, 720);
         assert.equal(data.high, 770);
@@ -421,8 +454,7 @@ suite('PublicClient', () => {
     return Promise.all([cbtest, promisetest]);
   });
 
-  // Delete this test when the deprecation is final
-  test('.getProduct24HrStats() (with deprecated signature implying default product ID)', () => {
+  test('.getProduct24HrStats() (with missing `product_id` implying default product ID)', () => {
     nock(EXCHANGE_API_URL)
       .get('/products/BTC-USD/stats')
       .reply(200, {

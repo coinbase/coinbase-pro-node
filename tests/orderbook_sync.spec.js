@@ -5,19 +5,18 @@ const CoinbasePro = require('../index.js');
 
 const testserver = require('./lib/ws_testserver');
 let port = 56632;
-
-const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
+const { EXCHANGE_API_URL } = require('../lib/utilities');
 
 suite('OrderbookSync', () => {
   teardown(() => nock.cleanAll());
 
   test('not passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderBookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
+      orderBookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -35,12 +34,14 @@ suite('OrderbookSync', () => {
 
   test('passes authentication details to websocket', done => {
     const server = testserver(port, () => {
-      new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port,
-        { key: 'suchkey', secret: 'suchsecret', passphrase: 'muchpassphrase' }
-      );
+      let orderBookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-EUR'],
+        api_uri: 'ws://localhost:' + port,
+        key: 'suchkey',
+        secret: 'suchsecret',
+        passphrase: 'muchpassphrase',
+      });
+      orderBookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -49,29 +50,6 @@ suite('OrderbookSync', () => {
         assert.equal(msg.type, 'subscribe');
         assert.equal(msg.key, 'suchkey');
         assert.equal(msg.passphrase, 'muchpassphrase');
-
-        server.close();
-        done();
-      });
-    });
-  });
-
-  test('passes authentication details to websocket (via AuthenticationClient for backwards compatibility)', done => {
-    const server = testserver(port, () => {
-      new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port,
-        new CoinbasePro.AuthenticatedClient('mykey', 'mysecret', 'mypassphrase')
-      );
-    });
-
-    server.on('connection', socket => {
-      socket.on('message', data => {
-        const msg = JSON.parse(data);
-        assert.equal(msg.type, 'subscribe');
-        assert.equal(msg.key, 'mykey');
-        assert.equal(msg.passphrase, 'mypassphrase');
 
         server.close();
         done();
@@ -88,17 +66,17 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
           test: true,
           product_id: 'BTC-USD',
         });
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -119,18 +97,20 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port,
-        { key: 'key', secret: 'secret', passphrase: 'pass' }
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD'],
+        api_uri: 'ws://localhost:' + port,
+        key: 'suchkey',
+        secret: 'suchsecret',
+        passphrase: 'muchpassphrase',
+      });
       orderbookSync.on('message', data => {
         assert.deepEqual(data, {
           test: true,
           product_id: 'BTC-USD',
         });
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -148,15 +128,15 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -174,16 +154,18 @@ suite('OrderbookSync', () => {
       .replyWithError('whoops');
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        'BTC-USD',
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port,
-        { key: 'key', secret: 'secret', passphrase: 'pass' }
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD'],
+        api_uri: 'ws://localhost:' + port,
+        key: 'suchkey',
+        secret: 'suchsecret',
+        passphrase: 'muchpassphrase',
+      });
 
       orderbookSync.on('error', err => {
         assert.equal(err.message, 'Failed to load orderbook: whoops');
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -211,17 +193,17 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        ['BTC-USD', 'ETH-USD'],
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD', 'ETH-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
 
       orderbookSync.on('message', data => {
-        const state = orderbookSync.books[data.product_id].state();
+        let state = orderbookSync.books[data.product_id].state();
         assert.deepEqual(state, { asks: [], bids: [] });
         assert.equal(orderbookSync.books['ETH-BTC'], undefined);
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -243,15 +225,15 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        ['BTC-USD', 'ETH-USD'],
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD', 'ETH-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
 
       orderbookSync.on('sync', productID => {
         assert.equal(productID, 'BTC-USD');
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {
@@ -272,15 +254,15 @@ suite('OrderbookSync', () => {
       });
 
     const server = testserver(port, () => {
-      const orderbookSync = new CoinbasePro.OrderbookSync(
-        ['BTC-USD', 'ETH-USD'],
-        EXCHANGE_API_URL,
-        'ws://localhost:' + port
-      );
+      let orderbookSync = new CoinbasePro.OrderbookSync({
+        product_ids: ['BTC-USD', 'ETH-USD'],
+        api_uri: 'ws://localhost:' + port,
+      });
 
       orderbookSync.on('synced', productID => {
         assert.equal(productID, 'BTC-USD');
       });
+      orderbookSync.connect();
     });
 
     server.on('connection', socket => {

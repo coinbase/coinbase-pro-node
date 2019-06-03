@@ -2,14 +2,17 @@ const assert = require('assert');
 const nock = require('nock');
 
 const CoinbasePro = require('../index.js');
+const { EXCHANGE_API_URL, SANDBOX_API_URL } = require('../lib/utilities');
 
 const key = 'key';
 const secret = 'secret';
 const passphrase = 'passphrase';
 
-const EXCHANGE_API_URL = 'https://api.pro.coinbase.com';
-
-const authClient = new CoinbasePro.AuthenticatedClient(key, secret, passphrase);
+const authClient = new CoinbasePro.AuthenticatedClient({
+  key: key,
+  secret: secret,
+  passphrase: passphrase,
+});
 
 suite('AuthenticatedClient', () => {
   teardown(() => nock.cleanAll());
@@ -29,6 +32,37 @@ suite('AuthenticatedClient', () => {
 
     assert(sig['CB-ACCESS-TIMESTAMP']);
     assert(sig['CB-ACCESS-SIGN']);
+  });
+
+  test('.constructor() (throws error with incomplete credentials)', done => {
+    try {
+      new CoinbasePro.AuthenticatedClient({
+        key: key,
+        secret: secret,
+      });
+    } catch (error) {
+      if (error.message === '`options` must include property `passphrase`') {
+        done();
+      }
+    }
+    assert.fail();
+  });
+
+  test('.constructor() (passes options to PublicClient)', () => {
+    let client = new CoinbasePro.AuthenticatedClient({
+      key: key,
+      secret: secret,
+      passphrase: passphrase,
+      sandbox: true,
+      product_id: 'ETH-BTC',
+      timeout: 9000,
+    });
+    assert.equal(client.key, key);
+    assert.equal(client.secret, secret);
+    assert.equal(client.passphrase, passphrase);
+    assert.equal(client.apiURI, SANDBOX_API_URL);
+    assert.equal(client.productID, 'ETH-BTC');
+    assert.equal(client.timeout, 9000);
   });
 
   test('.getCoinbaseAccounts()', done => {
@@ -83,7 +117,7 @@ suite('AuthenticatedClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) =>
-      authClient.getAccount('test-id', (err, resp, data) => {
+      authClient.getAccount({ account_id: 'test-id' }, (err, resp, data) => {
         if (err) {
           reject(err);
         }
@@ -93,7 +127,7 @@ suite('AuthenticatedClient', () => {
     );
 
     let promisetest = authClient
-      .getAccount('test-id')
+      .getAccount({ account_id: 'test-id' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     Promise.all([cbtest, promisetest])
@@ -158,17 +192,20 @@ suite('AuthenticatedClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) =>
-      authClient.getAccountHistory('test-id', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      authClient.getAccountHistory(
+        { account_id: 'test-id' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert.deepEqual(data, expectedResponse);
+          resolve();
         }
-        assert.deepEqual(data, expectedResponse);
-        resolve();
-      })
+      )
     );
 
     let promisetest = authClient
-      .getAccountHistory('test-id')
+      .getAccountHistory({ account_id: 'test-id' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     Promise.all([cbtest, promisetest])
@@ -198,17 +235,20 @@ suite('AuthenticatedClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) =>
-      authClient.getAccountTransfers('test-id', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      authClient.getAccountTransfers(
+        { account_id: 'test-id' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert.deepEqual(data, expectedResponse);
+          resolve();
         }
-        assert.deepEqual(data, expectedResponse);
-        resolve();
-      })
+      )
     );
 
     let promisetest = authClient
-      .getAccountTransfers('test-id')
+      .getAccountTransfers({ account_id: 'test-id' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     Promise.all([cbtest, promisetest])
@@ -235,17 +275,20 @@ suite('AuthenticatedClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
-      authClient.getAccountHolds('test-id', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      authClient.getAccountHolds(
+        { account_id: 'test-id' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert.deepEqual(data, expectedResponse);
+          resolve();
         }
-        assert.deepEqual(data, expectedResponse);
-        resolve();
-      });
+      );
     });
 
     let promisetest = authClient
-      .getAccountHolds('test-id')
+      .getAccountHolds({ account_id: 'test-id' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     Promise.all([cbtest, promisetest])
@@ -383,6 +426,51 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.sell() (with missing `product_id` implying default product ID)', done => {
+    let client = new CoinbasePro.AuthenticatedClient({
+      key: key,
+      secret: secret,
+      passphrase: passphrase,
+      product_id: 'ETH-BTC',
+    });
+    const order = {
+      type: 'limit',
+      size: '10',
+      price: '100',
+    };
+
+    const expectedOrder = order;
+    expectedOrder.side = 'sell';
+    expectedOrder.product_id = 'ETH-BTC';
+
+    const expectedResponse = {
+      id: '0428b97b-bec1-429e-a94c-59992926778d',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .post('/orders', expectedOrder)
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) => {
+      client.sell(order, (err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      });
+    });
+
+    let promisetest = client
+      .sell(order)
+      .then(data => assert.deepEqual(data, expectedResponse));
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   suite('.cancelAllOrders()', () => {
     test('cancels all orders', () => {
       const cancelledOrdersOne = [
@@ -473,21 +561,17 @@ suite('AuthenticatedClient', () => {
 
   suite('.cancelOrder()', () => {
     test('requires orderID', done => {
-      let cbtest = new Promise(resolve => {
-        authClient
-          .cancelOrder(err => {
-            assert(err);
-            resolve();
-          })
-          .catch(() => {});
+      let cbtest = new Promise((resolve, reject) => {
+        try {
+          authClient.cancelOrder();
+          reject();
+        } catch (error) {
+          assert.equal(error.message, '`options` must include property `id`');
+          resolve();
+        }
       });
 
-      let promisetest = authClient
-        .cancelOrder()
-        .catch(err => !assert(err) && true)
-        .then(val => assert.strictEqual(val, true));
-
-      Promise.all([cbtest, promisetest])
+      cbtest
         .then(() => done())
         .catch(err => assert.ifError(err) || assert.fail());
     });
@@ -550,7 +634,7 @@ suite('AuthenticatedClient', () => {
     ];
 
     nock(EXCHANGE_API_URL)
-      .get('/fills')
+      .get('/fills?product_id=BTC-USD')
       .times(2)
       .reply(200, expectedResponse);
 
@@ -983,17 +1067,20 @@ suite('AuthenticatedClient', () => {
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) =>
-      authClient.getReportStatus('test-id', (err, resp, data) => {
-        if (err) {
-          reject(err);
+      authClient.getReportStatus(
+        { report_id: 'test-id' },
+        (err, resp, data) => {
+          if (err) {
+            reject(err);
+          }
+          assert.deepEqual(data, expectedResponse);
+          resolve();
         }
-        assert.deepEqual(data, expectedResponse);
-        resolve();
-      })
+      )
     );
 
     let promisetest = authClient
-      .getReportStatus('test-id')
+      .getReportStatus({ report_id: 'test-id' })
       .then(data => assert.deepEqual(data, expectedResponse));
 
     Promise.all([cbtest, promisetest])

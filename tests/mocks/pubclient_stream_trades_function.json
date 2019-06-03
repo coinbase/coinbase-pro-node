@@ -2,7 +2,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408014&after=8408115&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408115&before=8408014&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -749,7 +749,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408114&after=8408215&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408215&before=8408114&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -1496,7 +1496,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408214&after=8408315&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408315&before=8408214&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -2243,7 +2243,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408314&after=8408415&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408415&before=8408314&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -2990,7 +2990,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408414&after=8408515&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408515&before=8408414&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -3737,7 +3737,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408514&after=8408615&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408615&before=8408514&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -4484,7 +4484,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408614&after=8408715&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408715&before=8408614&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -5231,7 +5231,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408714&after=8408815&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408815&before=8408714&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -5978,7 +5978,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408814&after=8408915&limit=100",
+    "path": "/products/BTC-USD/trades?after=8408915&before=8408814&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -6725,7 +6725,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8408914&after=8409015&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409015&before=8408914&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -7472,7 +7472,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409014&after=8409115&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409115&before=8409014&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -8219,7 +8219,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409114&after=8409215&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409215&before=8409114&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -8966,7 +8966,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409214&after=8409315&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409315&before=8409214&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -9713,7 +9713,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409314&after=8409415&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409415&before=8409314&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -10460,7 +10460,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409414&after=8409515&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409515&before=8409414&limit=100",
     "body": "",
     "status": 200,
     "response": [
@@ -11207,7 +11207,7 @@
   {
     "scope": "https://api.pro.coinbase.com:443",
     "method": "GET",
-    "path": "/products/BTC-USD/trades?before=8409514&after=8409615&limit=100",
+    "path": "/products/BTC-USD/trades?after=8409615&before=8409514&limit=100",
     "body": "",
     "status": 200,
     "response": []
