@@ -149,54 +149,44 @@ declare module 'coinbase-pro' {
     data?: any;
   }
 
-  export interface ClientOptions {
+  export interface PublicClientOptions {
+    product_id?: string;
+    sandbox?: boolean;
+    api_uri?: string;
     timeout?: number;
   }
 
+  export interface AuthenticatedClientOptions extends PublicClientOptions {
+    key: string;
+    secret: string;
+    passphrase: string;
+  }
+
   export class PublicClient {
-    constructor(apiURI?: string, options?: ClientOptions);
+    constructor(options?: PublicClientOptions);
 
     getProducts(callback: callback<ProductInfo[]>): void;
     getProducts(): Promise<ProductInfo[]>;
 
-    getProductOrderBook(
-      productID: string,
-      options: any,
-      callback: callback<any>
-    ): void;
-    getProductOrderBook(productID: string, options: any): Promise<any>;
+    getProductOrderBook(options: any, callback: callback<any>): void;
+    getProductOrderBook(options: any): Promise<any>;
 
-    getProductTicker(
-      productID: string,
-      callback: callback<ProductTicker>
-    ): void;
-    getProductTicker(productID: string): Promise<ProductTicker>;
+    getProductTicker(options: any, callback: callback<ProductTicker>): void;
+    getProductTicker(): Promise<ProductTicker>;
 
-    getProductTrades(productID: string, callback: callback<any>): void;
-    getProductTrades(productID: string): Promise<any>;
+    getProductTrades(options: any, callback: callback<any>): void;
+    getProductTrades(options: any): Promise<any>;
 
-    getProductTrades(
-      productID: string,
-      pageArgs: PageArgs,
-      callback: callback<any>
-    ): void;
-    getProductTrades(productID: string, pageArgs: PageArgs): Promise<any>;
+    getProductTrades(pageArgs: PageArgs, callback: callback<any>): void;
+    getProductTrades(pageArgs: PageArgs): Promise<any>;
 
-    getProductTradeStream(
-      productID: string,
-      tradesFrom: number,
-      tradesTo: any
-    ): Readable;
+    getProductTradeStream(options: any): Readable;
 
-    getProductHistoricRates(
-      productID: string,
-      args: any,
-      callback: callback<any[][]>
-    ): void;
-    getProductHistoricRates(productID: string, args: any): Promise<any[][]>;
+    getProductHistoricRates(options: any, callback: callback<any[][]>): void;
+    getProductHistoricRates(options: any): Promise<any[][]>;
 
-    getProduct24HrStats(productID: string, callback: callback<any>): void;
-    getProduct24HrStats(productID: string): Promise<any>;
+    getProduct24HrStats(options: any, callback: callback<any>): void;
+    getProduct24HrStats(options: any): Promise<any>;
 
     getCurrencies(callback: callback<CurrencyInfo[]>): void;
     getCurrencies(): Promise<CurrencyInfo[]>;
@@ -206,13 +196,7 @@ declare module 'coinbase-pro' {
   }
 
   export class AuthenticatedClient extends PublicClient {
-    constructor(
-      key: string,
-      secret: string,
-      passphrase: string,
-      apiURI?: string,
-      options?: ClientOptions
-    );
+    constructor(options: AuthenticatedClientOptions);
 
     getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void;
     getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
@@ -220,38 +204,26 @@ declare module 'coinbase-pro' {
     getAccounts(callback: callback<Account[]>): void;
     getAccounts(): Promise<Account[]>;
 
-    getAccount(accountID: string, callback: callback<Account>): void;
-    getAccount(accountID: string): Promise<Account>;
+    getAccount(options: any, callback: callback<Account>): void;
+    getAccount(options: any): Promise<Account>;
 
-    getAccountHistory(accountID: string, callback: callback<any>): void;
-    getAccountHistory(accountID: string): Promise<any>;
+    getAccountHistory(options: any, callback: callback<any>): void;
+    getAccountHistory(options: any): Promise<any>;
 
-    getAccountHistory(
-      accountID: string,
-      pageArgs: PageArgs,
-      callback: callback<any>
-    ): void;
-    getAccountHistory(accountID: string, pageArgs: PageArgs): Promise<any>;
+    getAccountHistory(options: any, callback: callback<any>): void;
+    getAccountHistory(options: any): Promise<any>;
 
-    getAccountTransfers(accountID: string, callback: callback<any>): void;
-    getAccountTransfers(accountID: string): Promise<any>;
+    getAccountTransfers(options: any, callback: callback<any>): void;
+    getAccountTransfers(options: any): Promise<any>;
 
-    getAccountTransfers(
-      accountID: string,
-      pageArgs: PageArgs,
-      callback: callback<any>
-    ): void;
-    getAccountTransfers(accountID: string, pageArgs: PageArgs): Promise<any>;
+    getAccountTransfers(options: any, callback: callback<any>): void;
+    getAccountTransfers(options: any): Promise<any>;
 
-    getAccountHolds(accountID: string, callback: callback<any>): void;
-    getAccountHolds(accountID: string): Promise<any>;
+    getAccountHolds(options: any, callback: callback<any>): void;
+    getAccountHolds(options: any): Promise<any>;
 
-    getAccountHolds(
-      accountID: string,
-      pageArgs: PageArgs,
-      callback: callback<any>
-    ): void;
-    getAccountHolds(accountID: string, pageArgs: PageArgs): Promise<any>;
+    getAccountHolds(options: any, callback: callback<any>): void;
+    getAccountHolds(options: any): Promise<any>;
 
     buy(params: OrderParams, callback: callback<OrderResult>): void;
     buy(params: OrderParams): Promise<OrderResult>;
@@ -262,53 +234,50 @@ declare module 'coinbase-pro' {
     placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
     placeOrder(params: OrderParams): Promise<OrderResult>;
 
-    cancelOrder(orderID: string, callback: callback<string[]>): void;
-    cancelOrder(orderID: string): Promise<string[]>;
+    cancelOrder(options: any, callback: callback<string[]>): void;
+    cancelOrder(options: any): Promise<string[]>;
 
-    cancelAllOrders(
-      args: { product_id?: string },
-      callback: callback<string[]>
-    ): void;
-    cancelAllOrders(args: { product_id?: string }): Promise<string[]>;
+    cancelAllOrders(options: any, callback: callback<string[]>): void;
+    cancelAllOrders(options: any): Promise<string[]>;
 
     getOrders(callback: callback<OrderInfo[]>): void;
     getOrders(): Promise<OrderInfo[]>;
 
-    getOrders(props: OrderFilter, callback: callback<OrderInfo[]>): void;
-    getOrders(props: OrderFilter): Promise<OrderInfo[]>;
+    getOrders(options: any, callback: callback<OrderInfo[]>): void;
+    getOrders(options: any): Promise<OrderInfo[]>;
 
-    getOrder(orderID: string, callback: callback<OrderInfo>): void;
-    getOrder(orderID: string): Promise<OrderInfo>;
+    getOrder(options: any, callback: callback<OrderInfo>): void;
+    getOrder(options: any): Promise<OrderInfo>;
 
     getFills(callback: callback<any>): void;
     getFills(): Promise<any>;
 
-    getFills(props: FillFilter, callback: callback<any>): void;
-    getFills(props: FillFilter): Promise<any>;
+    getFills(options: any, callback: callback<any>): void;
+    getFills(options: any): Promise<any>;
 
-    getFundings(params: any, callback: callback<any>): void;
-    getFundings(params: any): Promise<any>;
+    getFundings(options: any, callback: callback<any>): void;
+    getFundings(options: any): Promise<any>;
 
-    repay(params: any, callback: callback<any>): void;
-    repay(params: any): Promise<any>;
+    repay(options: any, callback: callback<any>): void;
+    repay(options: any): Promise<any>;
 
-    marginTransfer(params: any, callback: callback<any>): void;
-    marginTransfer(params: any): Promise<any>;
+    marginTransfer(options: any, callback: callback<any>): void;
+    marginTransfer(options: any): Promise<any>;
 
-    closePosition(params: any, callback: callback<any>): void;
-    closePosition(params: any): Promise<any>;
+    closePosition(options: any, callback: callback<any>): void;
+    closePosition(options: any): Promise<any>;
 
-    convert(params: any, callback: callback<any>): void;
-    convert(params: any): Promise<any>;
+    convert(options: any, callback: callback<any>): void;
+    convert(options: any): Promise<any>;
 
-    deposit(params: any, callback: callback<any>): void;
-    deposit(params: any): Promise<any>;
+    deposit(options: any, callback: callback<any>): void;
+    deposit(options: any): Promise<any>;
 
-    withdraw(params: any, callback: callback<any>): void;
-    withdraw(params: any): Promise<any>;
+    withdraw(options: any, callback: callback<any>): void;
+    withdraw(options: any): Promise<any>;
 
-    withdrawCrypto(params: any, callback: callback<any>): void;
-    withdrawCrypto(params: any): Promise<any>;
+    withdrawCrypto(options: any, callback: callback<any>): void;
+    withdrawCrypto(options: any): Promise<any>;
 
     getTrailingVolume(callback: callback<any>): void;
     getTrailingVolume(): Promise<any>;
@@ -346,6 +315,7 @@ declare module 'coinbase-pro' {
       bids: [string, string][]; // strings are serialized fixed-point numbers
       asks: [string, string][]; // [price, size]
     };
+
     export type L2Update = {
       type: 'l2update';
       product_id: string;
@@ -395,8 +365,6 @@ declare module 'coinbase-pro' {
       size: string;
       price: string;
       side: Side;
-
-      // authenticated
       profile_id?: string;
       user_id?: string;
     };
@@ -488,25 +456,20 @@ declare module 'coinbase-pro' {
     | WebsocketMessage.Subscription
     | WebsocketMessage.Error;
 
-  export interface WebsocketAuthentication {
-    key: string;
-    secret: string;
-    passphrase: string;
-  }
-
   interface WebsocketClientOptions {
+    product_ids?: string[];
     channels?: string[];
+    sandbox?: boolean;
+    websocketURI?: string;
+    key?: string;
+    secret?: string;
+    passphrase?: string;
   }
 
   type SubscriptionOptions = { channels?: Channel[]; product_ids?: string[] };
 
   export class WebsocketClient extends EventEmitter {
-    constructor(
-      productIds: string[],
-      websocketURI?: string,
-      auth?: WebsocketAuthentication,
-      { channels }?: WebsocketClientOptions
-    );
+    constructor(options?: WebsocketClientOptions);
 
     on(event: 'message', eventHandler: (data: WebsocketMessage) => void): this;
     on(event: 'error', eventHandler: (err: any) => void): this;
