@@ -232,9 +232,6 @@ const key = 'your_api_key';
 const secret = 'your_b64_secret';
 const passphrase = 'your_passphrase';
 
-const apiURI = 'https://api.pro.coinbase.com';
-const sandboxURI = 'https://api-public.sandbox.pro.coinbase.com';
-
 const authedClient = new CoinbasePro.AuthenticatedClient({
   key: key,
   secret: secret,
@@ -320,7 +317,7 @@ const authedClient = new CoinbasePro.AuthenticatedClient({
   key: 'your_api_key',
   secret: 'your_b64_secret',
   passphrase: 'your_passphrase',
-  product_id: 'LTC-USD', // save it for future request that require `product_id`
+  product_id: 'LTC-USD', // save it for all future requests that require `product_id`
 });
 
 // Buy 1 LTC @ 100 USD

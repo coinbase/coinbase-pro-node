@@ -87,15 +87,23 @@ declare module 'coinbase-pro' {
     limit?: number;
   };
 
-  export type FillFilter = {
+  export type ProductID = {
     product_id?: string;
-    order_id?: string;
-  } & PageArgs;
+  };
 
-  export type OrderFilter = {
-    product_id?: string;
+  export type PagProductID = ProductID & PageArgs;
+
+  export type PagFills = {
+    order_id?: string;
+  } & ProductID &
+    PageArgs;
+
+  export type PagOrders = {
     status?: string;
-  } & PageArgs;
+    limit?: number;
+    after?: string;
+    before?: string;
+  } & ProductID;
 
   export type Account = {
     id: string;
@@ -140,6 +148,67 @@ declare module 'coinbase-pro' {
     cancel_only: boolean;
   }
 
+  export type Candles = {
+    granularity: number;
+    start?: string;
+    end?: string;
+  } & ProductID;
+
+  export type OrderBookArgs = {
+    level?: number;
+  } & ProductID;
+
+  export type AccountID = {
+    account_id: string;
+  };
+
+  export type PagAccount = AccountID & PageArgs;
+
+  export type OrderID = {
+    id: string;
+  };
+
+  export type RepayArgs = {
+    amount: string;
+    currency: string;
+  };
+
+  export type MarginAgrs = {
+    type: string;
+    margin_profile_id: string;
+  } & RepayArgs;
+
+  export type ConvertArgs = {
+    to: string;
+    from: string;
+    amount: string;
+  };
+
+  export type DepositArgs = {
+    coinbase_account_id: string;
+  } & RepayArgs;
+
+  export type DepositPayArgs = {
+    payment_method_id: string;
+  } & RepayArgs;
+
+  export type DepositCryptoArgs = {
+    currency: string;
+  };
+
+  export type Report = {
+    start_date: string;
+    end_date: string;
+    product_id?: string;
+    account_id?: string;
+    format?: string;
+    email?: string;
+  };
+
+  export type ReportID = {
+    report_id: string;
+  };
+
   /**
    * If a PublicClient or AuthenticatedClient method that does an
    * HTTP request throws an error, then it will have this shape.
@@ -168,25 +237,40 @@ declare module 'coinbase-pro' {
     getProducts(callback: callback<ProductInfo[]>): void;
     getProducts(): Promise<ProductInfo[]>;
 
-    getProductOrderBook(options: any, callback: callback<any>): void;
-    getProductOrderBook(options: any): Promise<any>;
+    getProductOrderBook(callback: callback<any>): void;
+    getProductOrderBook(): Promise<any>;
 
-    getProductTicker(options: any, callback: callback<ProductTicker>): void;
+    getProductOrderBook(options: OrderBookArgs, callback: callback<any>): void;
+    getProductOrderBook(options: OrderBookArgs): Promise<any>;
+
+    getProductTicker(callback: callback<ProductTicker>): void;
     getProductTicker(): Promise<ProductTicker>;
 
-    getProductTrades(options: any, callback: callback<any>): void;
-    getProductTrades(options: any): Promise<any>;
+    getProductTicker(
+      options: ProductID,
+      callback: callback<ProductTicker>
+    ): void;
+    getProductTicker(options: ProductID): Promise<ProductTicker>;
 
-    getProductTrades(pageArgs: PageArgs, callback: callback<any>): void;
-    getProductTrades(pageArgs: PageArgs): Promise<any>;
+    getProductTrades(callback: callback<any>): void;
+    getProductTrades(): Promise<any>;
+
+    getProductTrades(options: PagProductID, callback: callback<any>): void;
+    getProductTrades(options: PagProductID): Promise<any>;
 
     getProductTradeStream(options: any): Readable;
 
-    getProductHistoricRates(options: any, callback: callback<any[][]>): void;
-    getProductHistoricRates(options: any): Promise<any[][]>;
+    getProductHistoricRates(
+      options: Candles,
+      callback: callback<any[][]>
+    ): void;
+    getProductHistoricRates(options: Candles): Promise<any[][]>;
 
-    getProduct24HrStats(options: any, callback: callback<any>): void;
-    getProduct24HrStats(options: any): Promise<any>;
+    getProduct24HrStats(options: ProductID, callback: callback<any>): void;
+    getProduct24HrStats(options: ProductID): Promise<any>;
+
+    getProduct24HrStats(callback: callback<any>): void;
+    getProduct24HrStats(): Promise<any>;
 
     getCurrencies(callback: callback<CurrencyInfo[]>): void;
     getCurrencies(): Promise<CurrencyInfo[]>;
@@ -201,29 +285,23 @@ declare module 'coinbase-pro' {
     getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void;
     getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
 
+    getPaymentMethods(callback: callback<any>): void;
+    getPaymentMethods(): Promise<any>;
+
     getAccounts(callback: callback<Account[]>): void;
     getAccounts(): Promise<Account[]>;
 
-    getAccount(options: any, callback: callback<Account>): void;
-    getAccount(options: any): Promise<Account>;
+    getAccount(options: AccountID, callback: callback<Account>): void;
+    getAccount(options: AccountID): Promise<Account>;
 
-    getAccountHistory(options: any, callback: callback<any>): void;
-    getAccountHistory(options: any): Promise<any>;
+    getAccountHistory(options: PagAccount, callback: callback<any>): void;
+    getAccountHistory(options: PagAccount): Promise<any>;
 
-    getAccountHistory(options: any, callback: callback<any>): void;
-    getAccountHistory(options: any): Promise<any>;
+    getAccountTransfers(options: PagAccount, callback: callback<any>): void;
+    getAccountTransfers(options: PagAccount): Promise<any>;
 
-    getAccountTransfers(options: any, callback: callback<any>): void;
-    getAccountTransfers(options: any): Promise<any>;
-
-    getAccountTransfers(options: any, callback: callback<any>): void;
-    getAccountTransfers(options: any): Promise<any>;
-
-    getAccountHolds(options: any, callback: callback<any>): void;
-    getAccountHolds(options: any): Promise<any>;
-
-    getAccountHolds(options: any, callback: callback<any>): void;
-    getAccountHolds(options: any): Promise<any>;
+    getAccountHolds(options: PagAccount, callback: callback<any>): void;
+    getAccountHolds(options: PagAccount): Promise<any>;
 
     buy(params: OrderParams, callback: callback<OrderResult>): void;
     buy(params: OrderParams): Promise<OrderResult>;
@@ -231,56 +309,80 @@ declare module 'coinbase-pro' {
     sell(params: OrderParams, callback: callback<OrderResult>): void;
     sell(params: OrderParams): Promise<OrderResult>;
 
+    getTrailingVolume(callback: callback<any>): void;
+    getTrailingVolume(): Promise<any>;
+
     placeOrder(params: OrderParams, callback: callback<OrderResult>): void;
     placeOrder(params: OrderParams): Promise<OrderResult>;
 
-    cancelOrder(options: any, callback: callback<string[]>): void;
-    cancelOrder(options: any): Promise<string[]>;
+    cancelOrder(options: OrderID, callback: callback<string[]>): void;
+    cancelOrder(options: OrderID): Promise<string[]>;
 
-    cancelAllOrders(options: any, callback: callback<string[]>): void;
-    cancelAllOrders(options: any): Promise<string[]>;
+    cancelAllOrders(callback: callback<string[]>): void;
+    cancelAllOrders(): Promise<string[]>;
+
+    cancelAllOrders(options: ProductID, callback: callback<string[]>): void;
+    cancelAllOrders(options: ProductID): Promise<string[]>;
+
+    cancelOrders(callback: callback<string[]>): void;
+    cancelOrders(): Promise<string[]>;
+
+    cancelOrders(options: ProductID, callback: callback<string[]>): void;
+    cancelOrders(options: ProductID): Promise<string[]>;
 
     getOrders(callback: callback<OrderInfo[]>): void;
     getOrders(): Promise<OrderInfo[]>;
 
-    getOrders(options: any, callback: callback<OrderInfo[]>): void;
-    getOrders(options: any): Promise<OrderInfo[]>;
+    getOrders(options: PagOrders, callback: callback<OrderInfo[]>): void;
+    getOrders(options: PagOrders): Promise<OrderInfo[]>;
 
-    getOrder(options: any, callback: callback<OrderInfo>): void;
-    getOrder(options: any): Promise<OrderInfo>;
+    getOrder(options: OrderID, callback: callback<OrderInfo>): void;
+    getOrder(options: OrderID): Promise<OrderInfo>;
 
     getFills(callback: callback<any>): void;
     getFills(): Promise<any>;
 
-    getFills(options: any, callback: callback<any>): void;
-    getFills(options: any): Promise<any>;
+    getFills(options: PagFills, callback: callback<any>): void;
+    getFills(options: PagFills): Promise<any>;
 
-    getFundings(options: any, callback: callback<any>): void;
-    getFundings(options: any): Promise<any>;
+    getFundings(callback: callback<any>): void;
+    getFundings(): Promise<any>;
 
-    repay(options: any, callback: callback<any>): void;
-    repay(options: any): Promise<any>;
+    repay(options: RepayArgs, callback: callback<any>): void;
+    repay(options: RepayArgs): Promise<any>;
 
-    marginTransfer(options: any, callback: callback<any>): void;
-    marginTransfer(options: any): Promise<any>;
+    marginTransfer(options: MarginAgrs, callback: callback<any>): void;
+    marginTransfer(options: MarginAgrs): Promise<any>;
 
     closePosition(options: any, callback: callback<any>): void;
     closePosition(options: any): Promise<any>;
 
-    convert(options: any, callback: callback<any>): void;
-    convert(options: any): Promise<any>;
+    convert(options: ConvertArgs, callback: callback<any>): void;
+    convert(options: ConvertArgs): Promise<any>;
 
-    deposit(options: any, callback: callback<any>): void;
-    deposit(options: any): Promise<any>;
+    deposit(options: DepositArgs, callback: callback<any>): void;
+    deposit(options: DepositArgs): Promise<any>;
 
-    withdraw(options: any, callback: callback<any>): void;
-    withdraw(options: any): Promise<any>;
+    depositPayment(options: DepositPayArgs, callback: callback<any>): void;
+    depositPayment(options: DepositPayArgs): Promise<any>;
 
-    withdrawCrypto(options: any, callback: callback<any>): void;
-    withdrawCrypto(options: any): Promise<any>;
+    depositCrypto(options: DepositCryptoArgs, callback: callback<any>): void;
+    depositCrypto(options: DepositCryptoArgs): Promise<any>;
 
-    getTrailingVolume(callback: callback<any>): void;
-    getTrailingVolume(): Promise<any>;
+    withdraw(options: DepositArgs, callback: callback<any>): void;
+    withdraw(options: DepositArgs): Promise<any>;
+
+    withdrawPayment(options: DepositPayArgs, callback: callback<any>): void;
+    withdrawPayment(options: DepositPayArgs): Promise<any>;
+
+    withdrawCrypto(options: DepositCryptoArgs, callback: callback<any>): void;
+    withdrawCrypto(options: DepositCryptoArgs): Promise<any>;
+
+    createReport(options: Report, callback: callback<any>): void;
+    createReport(options: Report): Promise<any>;
+
+    getReportStatus(options: ReportID, callback: callback<any>): void;
+    getReportStatus(options: ReportID): Promise<any>;
   }
 
   type ChannelName =
@@ -457,10 +559,10 @@ declare module 'coinbase-pro' {
     | WebsocketMessage.Error;
 
   interface WebsocketClientOptions {
-    product_ids?: string[];
-    channels?: string[];
+    product_ids?: string | string[];
+    channels?: string | string[];
     sandbox?: boolean;
-    websocketURI?: string;
+    api_uri?: string;
     key?: string;
     secret?: string;
     passphrase?: string;
