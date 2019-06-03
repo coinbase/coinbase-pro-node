@@ -103,9 +103,11 @@ result.then(() => {
 Some methods accept optional parameters, e.g.
 
 ```js
-publicClient.getProductOrderBook('BTC-USD', { level: 3 }).then(book => {
-  /* ... */
-});
+publicClient
+  .getProductOrderBook({ product_id: 'BTC-USD', level: 3 })
+  .then(book => {
+    /* ... */
+  });
 ```
 
 To use optional parameters with callbacks, supply the options as the first
@@ -113,8 +115,7 @@ parameter(s) and the callback as the last parameter:
 
 ```js
 publicClient.getProductOrderBook(
-  'ETH-USD',
-  { level: 3 },
+  { product_id: 'BTC-USD', level: 3 },
   (error, response, book) => {
     /* ... */
   }
@@ -124,11 +125,14 @@ publicClient.getProductOrderBook(
 ### The Public API Client
 
 ```js
-const publicClient = new CoinbasePro.PublicClient(endpoint);
+const publicClient = new CoinbasePro.PublicClient({
+  product_id: productID,
+  sandbox: sandbox,
+});
 ```
 
-- `productID` _optional_ - defaults to 'BTC-USD' if not specified.
-- `endpoint` _optional_ - defaults to 'https://api.pro.coinbase.com' if not specified.
+- `product_id` _optional_ - defaults to 'BTC-USD' if not specified.
+- `sandbox` _optional_ - defaults to `false` if not specified.
 
 #### Public API Methods
 
@@ -142,25 +146,25 @@ publicClient.getProducts(callback);
 
 ```js
 // Get the order book at the default level of detail.
-publicClient.getProductOrderBook('BTC-USD', callback);
+publicClient.getProductOrderBook({ product_id: 'BTC-USD' }, callback);
 
 // Get the order book at a specific level of detail.
-publicClient.getProductOrderBook('LTC-USD', { level: 3 }, callback);
+publicClient.getProductOrderBook({ product_id: 'LTC-USD', level: 3 }, callback);
 ```
 
 - [`getProductTicker`](https://docs.pro.coinbase.com/#get-product-ticker)
 
 ```js
-publicClient.getProductTicker('ETH-USD', callback);
+publicClient.getProductTicker({ product_id: 'ETH-USD' }, callback);
 ```
 
 - [`getProductTrades`](https://docs.pro.coinbase.com/#get-trades)
 
 ```js
-publicClient.getProductTrades('BTC-USD', callback);
+publicClient.getProductTrades({ product_id: 'BTC-USD' }, callback);
 
 // To make paginated requests, include page parameters
-publicClient.getProductTrades('BTC-USD', { after: 1000 }, callback);
+publicClient.getProductTrades({ product_id: 'BTC-USD', after: 1000 }, callback);
 ```
 
 - [`getProductTradeStream`](https://docs.pro.coinbase.com/#get-trades)
@@ -169,25 +173,31 @@ Wraps around `getProductTrades`, fetches all trades with IDs `>= tradesFrom` and
 `<= tradesTo`. Handles pagination and rate limits.
 
 ```js
-const trades = publicClient.getProductTradeStream('BTC-USD', 8408000, 8409000);
+const trades = publicClient.getProductTradeStream({
+  product_id: 'BTC-USD',
+  tradesFrom: 8408000,
+  tradesTo: 8409000,
+});
 
 // tradesTo can also be a function
-const trades = publicClient.getProductTradeStream(
-  'BTC-USD',
-  8408000,
-  trade => Date.parse(trade.time) >= 1463068e6
-);
+const trades = publicClient.getProductTradeStream({
+  product_id: 'BTC-USD',
+  tradesFrom: 8408000,
+  tradesTo: trade => Date.parse(trade.time) >= 1463068e6,
+});
 ```
 
 - [`getProductHistoricRates`](https://docs.pro.coinbase.com/#get-historic-rates)
 
 ```js
-publicClient.getProductHistoricRates('BTC-USD', callback);
+publicClient.getProductHistoricRates(
+  { product_id: 'BTC-USD', granularity: 3600 },
+  callback
+);
 
 // To include extra parameters:
 publicClient.getProductHistoricRates(
-  'BTC-USD',
-  { granularity: 3600 },
+  { product_id: 'BTC-USD', granularity: 300, start 1556070300, end: 1559309100 },
   callback
 );
 ```
@@ -195,7 +205,7 @@ publicClient.getProductHistoricRates(
 - [`getProduct24HrStats`](https://docs.pro.coinbase.com/#get-24hr-stats)
 
 ```js
-publicClient.getProduct24HrStats('BTC-USD', callback);
+publicClient.getProduct24HrStats({ product_id: 'BTC-USD' }, callback);
 ```
 
 - [`getCurrencies`](https://docs.pro.coinbase.com/#get-currencies)
@@ -225,12 +235,12 @@ const passphrase = 'your_passphrase';
 const apiURI = 'https://api.pro.coinbase.com';
 const sandboxURI = 'https://api-public.sandbox.pro.coinbase.com';
 
-const authedClient = new CoinbasePro.AuthenticatedClient(
-  key,
-  secret,
-  passphrase,
-  apiURI
-);
+const authedClient = new CoinbasePro.AuthenticatedClient({
+  key: key,
+  secret: secret,
+  passphrase: passphrase,
+  sandbox: true,
+});
 ```
 
 Like `PublicClient`, all API methods can be used with either callbacks or will
@@ -264,47 +274,59 @@ authedClient.getAccounts(callback);
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
-authedClient.getAccount(accountID, callback);
+authedClient.getAccount({ account_id: accountID }, callback);
 ```
 
 - [`getAccountHistory`](https://docs.pro.coinbase.com/#get-account-history)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
-authedClient.getAccountHistory(accountID, callback);
+authedClient.getAccountHistory({ account_id: accountID }, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHistory(accountID, { before: 3000 }, callback);
+authedClient.getAccountHistory(
+  { account_id: accountID, before: 3000 },
+  callback
+);
 ```
 
 - [`getAccountTransfers`](https://docs.pro.coinbase.com/#get-account-transfers)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
-authedClient.getAccountTransfers(accountID, callback);
+authedClient.getAccountTransfers({ account_id: accountID }, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountTransfers(accountID, { before: 3000 }, callback);
+authedClient.getAccountTransfers(
+  { account_id: accountID, after: 4000 },
+  callback
+);
 ```
 
 - [`getAccountHolds`](https://docs.pro.coinbase.com/#get-holds)
 
 ```js
 const accountID = '7d0f7d8e-dd34-4d9c-a846-06f431c381ba';
-authedClient.getAccountHolds(accountID, callback);
+authedClient.getAccountHolds({ account_id: accountID }, callback);
 
 // For pagination, you can include extra page arguments
-authedClient.getAccountHolds(accountID, { before: 3000 }, callback);
+authedClient.getAccountHolds({ account_id: accountID, before: 3000 }, callback);
 ```
 
 - [`buy`, `sell`](https://docs.pro.coinbase.com/#place-a-new-order)
 
 ```js
-// Buy 1 BTC @ 100 USD
+const authedClient = new CoinbasePro.AuthenticatedClient({
+  key: 'your_api_key',
+  secret: 'your_b64_secret',
+  passphrase: 'your_passphrase',
+  product_id: 'LTC-USD', // save it for future request that require `product_id`
+});
+
+// Buy 1 LTC @ 100 USD
 const buyParams = {
   price: '100.00', // USD
-  size: '1', // BTC
-  product_id: 'BTC-USD',
+  size: '1', // LTC
 };
 authedClient.buy(buyParams, callback);
 
@@ -334,7 +356,7 @@ authedClient.placeOrder(params, callback);
 
 ```js
 const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
-authedClient.cancelOrder(orderID, callback);
+authedClient.cancelOrder({ id: orderID }, callback);
 ```
 
 - [`cancelOrders`](https://docs.pro.coinbase.com/#cancel-all)
@@ -370,24 +392,26 @@ authedClient.getOrders({ after: 3000, status: 'open' }, callback);
 
 ```js
 const orderID = 'd50ec984-77a8-460a-b958-66f114b0de9b';
-authedClient.getOrder(orderID, callback);
+authedClient.getOrder({ id: orderID }, callback);
 ```
 
 - [`getFills`](https://docs.pro.coinbase.com/#list-fills)
 
 ```js
-const params = {
-  product_id: 'LTC-USD',
-};
-authedClient.getFills(params, callback);
+authedClient.getFills(
+  {
+    product_id: 'LTC-USD',
+  },
+  callback
+);
 // For pagination, you can include extra page arguments
-authedClient.getFills({ before: 3000 }, callback);
+authedClient.getFills({ product_id: 'LTC-USD', before: 3000 }, callback);
 ```
 
 - [`getFundings`](https://docs.pro.coinbase.com/#list-fundings)
 
 ```js
-authedClient.getFundings({}, callback);
+authedClient.getFundings(callback);
 ```
 
 - [`repay`](https://docs.pro.coinbase.com/#repay)
@@ -519,7 +543,9 @@ The `WebsocketClient` allows you to connect and listen to the [exchange
 websocket messages](https://docs.pro.coinbase.com/#messages).
 
 ```js
-const websocket = new CoinbasePro.WebsocketClient(['BTC-USD', 'ETH-USD']);
+const websocket = new CoinbasePro.WebsocketClient({
+  product_ids: ['BTC-USD', 'ETH-USD'],
+});
 
 websocket.on('message', data => {
   /* work with data */
@@ -527,27 +553,35 @@ websocket.on('message', data => {
 websocket.on('error', err => {
   /* handle error */
 });
+websocket.on('open', () => {
+  /* ... */
+});
 websocket.on('close', () => {
   /* ... */
 });
 ```
 
-The client will automatically subscribe to the `heartbeat` channel. By
-default, the `full` channel will be subscribed to unless other channels are
-requested.
+**Note** The client will not automatically connect to the websocket.
 
 ```javascript
-const websocket = new CoinbasePro.WebsocketClient(
-  ['BTC-USD', 'ETH-USD'],
-  'wss://ws-feed-public.sandbox.pro.coinbase.com',
-  {
-    key: 'suchkey',
-    secret: 'suchsecret',
-    passphrase: 'muchpassphrase',
-  },
-  { channels: ['full', 'level2'] }
-);
+const websocket = new CoinbasePro.WebsocketClient({
+  product_ids: ['BTC-USD', 'ETH-USD'],
+  sandbox: true,
+  channels: ['full', 'level2'],
+  key: 'suchkey',
+  secret: 'suchsecret',
+  passphrase: 'muchpassphrase',
+});
+
+// connect to the websocket when you need it
+websocket.connect();
+// work with data from the websocket
+// disconnect when you do not need it
+websocket.disconnect();
 ```
+
+The client will automatically subscribe to the `heartbeat` channel when you connect to the websocket. By
+default, the `full` channel will be subscribed to unless other channels are requested.
 
 Optionally, [change subscriptions at runtime](https://docs.pro.coinbase.com/#subscribe):
 
@@ -611,7 +645,11 @@ The orderbook has the following methods:
 [here](https://docs.pro.coinbase.com/#real-time-order-book).
 
 ```js
-const orderbookSync = new CoinbasePro.OrderbookSync(['BTC-USD', 'ETH-USD']);
+const orderbookSync = new CoinbasePro.OrderbookSync({
+  product_ids: ['BTC-USD', 'ETH-USD'],
+  sandbox: true,
+});
+orderbookSync.connect();
 console.log(orderbookSync.books['ETH-USD'].state());
 ```
 
