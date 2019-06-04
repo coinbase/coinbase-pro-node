@@ -74,6 +74,46 @@ suite('WebsocketClient', () => {
     });
   });
 
+  test('subscribes to the default product (BTC-USD) if empty string passed', done => {
+    const server = testserver(port, () => {
+      let client = new CoinbasePro.WebsocketClient({
+        product_ids: '',
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
+    });
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.product_ids, [DEFAULT_PAIR]);
+
+        server.close();
+        done();
+      });
+    });
+  });
+
+  test('subscribes to the default channels if empty string passed', done => {
+    const server = testserver(port, () => {
+      let client = new CoinbasePro.WebsocketClient({
+        channels: '',
+        api_uri: 'ws://localhost:' + port,
+      });
+      client.connect();
+    });
+    server.on('connection', socket => {
+      socket.on('message', data => {
+        const msg = JSON.parse(data);
+        assert.equal(msg.type, 'subscribe');
+        assert.deepEqual(msg.channels, DEFAULT_CHANNELS);
+
+        server.close();
+        done();
+      });
+    });
+  });
+
   test('subscribes to the specified product if string passed', done => {
     const server = testserver(port, () => {
       let client = new CoinbasePro.WebsocketClient({
