@@ -395,12 +395,7 @@ authedClient.getOrder({ id: orderID }, callback);
 - [`getFills`](https://docs.pro.coinbase.com/#list-fills)
 
 ```js
-authedClient.getFills(
-  {
-    product_id: 'LTC-USD',
-  },
-  callback
-);
+authedClient.getFills({ product_id: 'LTC-USD' }, callback);
 // For pagination, you can include extra page arguments
 authedClient.getFills({ product_id: 'LTC-USD', before: 3000 }, callback);
 ```
