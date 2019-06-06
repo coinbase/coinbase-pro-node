@@ -122,6 +122,24 @@ declare module 'coinbase-pro' {
     type: 'wallet' | 'fiat';
     primary: boolean;
     active: boolean;
+    hold_balance: string;
+    hold_currency: string;
+    wire_deposit_information?: {
+      account_number: string;
+      routing_number: string;
+      bank_name: string;
+      bank_address: string;
+      bank_country: {
+        code: string;
+        name: string;
+      };
+      account_name: string;
+      account_address: string;
+      reference: string;
+    };
+    swift_deposit_information?: string | null;
+    destination_tag_name?: string;
+    destination_tag_regex?: string;
   };
 
   export type CurrencyInfo = {
