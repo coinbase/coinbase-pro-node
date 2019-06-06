@@ -475,7 +475,7 @@ declare module 'coinbase-pro' {
       remaining_size: string;
     };
     export type Match = {
-      type: 'match';
+      type: 'match' | 'last_match';
       trade_id: number;
       sequence: number;
       maker_order_id: string;
@@ -494,12 +494,14 @@ declare module 'coinbase-pro' {
       sequence: number;
       order_id: string;
       product_id: string;
-      price: string;
+      price?: string;
       side: Side;
       new_size?: string;
       old_size?: string;
       new_funds?: string;
       old_funds?: string;
+      user_id: string;
+      profile_id: string;
     };
     export type Done = {
       type: 'done';
@@ -509,22 +511,25 @@ declare module 'coinbase-pro' {
       product_id: string;
       time: string;
       sequence: number;
-      price: string;
+      price?: string;
       remaining_size: string;
       user_id?: string;
+      profile_id?: string;
     };
     export type Activate = {
       type: 'activate';
       product_id: string;
-      timestamp: string;
+      time: string;
       user_id: string;
       profile_id: string;
       order_id: string;
+      client_oid: string;
       stop_type: string;
       side: Side;
       stop_price: string;
       size: string;
-      price: string;
+      limit_price: string;
+      taker_fee_rate: string;
     };
 
     // Ticker channel
