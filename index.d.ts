@@ -439,6 +439,7 @@ declare module 'coinbase-pro' {
     export type L2Update = {
       type: 'l2update';
       product_id: string;
+      time: string;
       changes: [string, string, string][]; // [side, price, new size]
     };
 
@@ -450,7 +451,9 @@ declare module 'coinbase-pro' {
       sequence: number;
       order_id: string;
       side: Side;
-      client_oid?: string;
+      client_oid: string;
+      user_id?: string;
+      profile_id?: string;
     } & (ReceivedLimit | ReceivedMarket);
     type ReceivedLimit = {
       order_type: 'limit';
@@ -487,6 +490,10 @@ declare module 'coinbase-pro' {
       side: Side;
       profile_id?: string;
       user_id?: string;
+      maker_profile_id?: string;
+      maker_user_id?: string;
+      taker_profile_id?: string;
+      taker_user_id?: string;
     };
     export type Change = {
       type: 'change';
@@ -512,7 +519,7 @@ declare module 'coinbase-pro' {
       time: string;
       sequence: number;
       price?: string;
-      remaining_size: string;
+      remaining_size?: string;
       user_id?: string;
       profile_id?: string;
     };
