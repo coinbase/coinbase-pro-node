@@ -146,6 +146,25 @@ declare module 'coinbase-pro' {
     id: string;
     name: string;
     min_size: string;
+    status: string;
+    message: null | string;
+    details: CurrencyDetails;
+    max_precision: string;
+    convertible_to?: string[];
+  };
+
+  export type CurrencyDetails = {
+    type: string;
+    symbol: string;
+    sort_order: number;
+    push_payment_methods: string[];
+    processing_time_seconds?: number;
+    min_withdrawal_amount?: number;
+    network_confirmations?: number;
+    group_types?: string[];
+    crypto_address_link?: string;
+    crypto_transaction_link?: string;
+    display_name?: string;
   };
 
   export interface ProductInfo {
@@ -507,8 +526,8 @@ declare module 'coinbase-pro' {
       old_size?: string;
       new_funds?: string;
       old_funds?: string;
-      user_id: string;
-      profile_id: string;
+      user_id?: string;
+      profile_id?: string;
     };
     export type Done = {
       type: 'done';
