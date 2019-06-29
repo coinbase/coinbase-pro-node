@@ -357,7 +357,7 @@ authedClient.cancelOrders(callback);
 authedClient.cancelAllOrders({ product_id: 'BTC-USD' }, callback);
 ```
 
-- [`getOrders`](https://docs.pro.coinbase.com/#list-open-orders)
+- [`getOrders`](https://docs.pro.coinbase.com/#list-orders)
 
 ```js
 authedClient.getOrders(callback);
