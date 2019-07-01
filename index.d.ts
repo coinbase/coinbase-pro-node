@@ -1,4 +1,6 @@
 import { EventEmitter } from 'events';
+import http from 'http';
+import https from 'https';
 import * as request from 'request';
 import { Readable } from 'stream';
 
@@ -151,6 +153,7 @@ declare module 'coinbase-pro' {
   }
 
   export interface ClientOptions {
+    agent?: http.Agent | https.Agent;
     timeout?: number;
   }
 
