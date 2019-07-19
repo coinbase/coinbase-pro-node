@@ -124,6 +124,24 @@ declare module 'coinbase-pro' {
     active: boolean;
   };
 
+  export type PaymentMethodLimitAmount = {
+    amount: number,
+    currency: string
+  };
+
+  export type PaymentMethodLimit = {
+    period_id_days: number,
+    total: PaymentMethodLimitAmount,
+    remaining: PaymentMethodLimitAmount
+  };
+
+  export type PaymentMethodLimits = {
+    buy: PaymentMethodLimit,
+    instant_buy: PaymentMethodLimit,
+    sell: PaymentMethodLimit,
+    deposit: PaymentMethodLimit
+  };
+
   export type PaymentMethod = {
     id: string,
     type: string,
@@ -136,24 +154,6 @@ declare module 'coinbase-pro' {
     allow_deposit: boolean,
     allow_withdraw: boolean
     limits: PaymentMethodLimits
-  };
-
-  export type PaymentMethodLimits = {
-    buy: PaymentMethodLimit,
-    instant_buy: PaymentMethodLimit,
-    sell: PaymentMethodLimit,
-    deposit: PaymentMethodLimit
-  };
-
-  export type PaymentMethodLimit = {
-    period_id_days: number,
-    total: PaymentMethodLimitAmount,
-    remaining: PaymentMethodLimitAmount
-  };
-
-  export type PaymentMethodLimitAmount = {
-    amount: number,
-    currency: string
   };
 
   export type CurrencyInfo = {
