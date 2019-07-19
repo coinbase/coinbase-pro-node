@@ -124,6 +124,38 @@ declare module 'coinbase-pro' {
     active: boolean;
   };
 
+  export type PaymentMethod = {
+    id: string,
+    type: string,
+    name: string,
+    currency: CurrencyType,
+    primary_buy: boolean,
+    primary_sell: boolean,
+    allow_buy: boolean,
+    allow_sell: boolean,
+    allow_deposit: boolean,
+    allow_withdraw: boolean
+    limits: PaymentMethodLimits
+  };
+
+  export type PaymentMethodLimit = {
+    period_id_days: number,
+    total: PaymentMethodLimitAmount,
+    remaining: PaymentMethodLimitAmount
+  };
+
+  export type PaymentMethodLimits = {
+    buy: PaymentMethodLimit,
+    instant_buy: PaymentMethodLimit,
+    sell: PaymentMethodLimit,
+    deposit: PaymentMethodLimit
+  };
+
+  export type PaymentMethodLimitAmount = {
+    amount: number,
+    currency: CurrencyType
+  };
+
   export type CurrencyInfo = {
     id: string;
     name: string;
@@ -217,6 +249,9 @@ declare module 'coinbase-pro' {
 
     getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void;
     getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
+
+    getPaymentMethods(callback: callback<PaymentMethod[]>): void;
+    getPaymentMethods(): Promise<PaymentMethod[]>;
 
     getAccounts(callback: callback<Account[]>): void;
     getAccounts(): Promise<Account[]>;
