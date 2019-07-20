@@ -218,8 +218,8 @@ declare module 'coinbase-pro' {
     getCoinbaseAccounts(callback: callback<CoinbaseAccount[]>): void;
     getCoinbaseAccounts(): Promise<CoinbaseAccount[]>;
 
-    getPaymentMethods(callback: callback<CoinbaseAccount[]>): void;
-    getPaymentMethods(): Promise<CoinbaseAccount[]>;
+    getPaymentMethods(callback: callback<PaymentMethodData[]>): void;
+    getPaymentMethods(): Promise<PaymentMethodData[]>;
 
     getAccounts(callback: callback<Account[]>): void;
     getAccounts(): Promise<Account[]>;
