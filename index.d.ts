@@ -340,14 +340,29 @@ declare module 'coinbase-pro' {
     deposit(params: any, callback: callback<any>): void;
     deposit(params: any): Promise<any>;
 
+    depositPayment(params: any, callback: callback<any>): void;
+    depositPayment(params: any): Promise<any>;
+
+    depositCrypto(params: any, callback: callback<any>): void;
+    depositCrypto(params: any): Promise<any>;
+
     withdraw(params: any, callback: callback<any>): void;
     withdraw(params: any): Promise<any>;
+
+    withdrawPayment(params: any, callback: callback<any>): void;
+    withdrawPayment(params: any): Promise<any>;
 
     withdrawCrypto(params: any, callback: callback<any>): void;
     withdrawCrypto(params: any): Promise<any>;
 
     getTrailingVolume(callback: callback<any>): void;
     getTrailingVolume(): Promise<any>;
+
+    createReport(params: any, callback: callback<any>): void;
+    createReport(params: any): Promise<any>;
+
+    getReportStatus(reportID: string, callback: callback<any>): void;
+    getReportStatus(reportID: string): Promise<any>;
   }
 
   type ChannelName =
