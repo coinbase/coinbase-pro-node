@@ -1,3 +1,14 @@
+# Coinbase Pro Tools Node.JS
+
+This is a fork of the offical Node.js library for Coinbase's [Pro API](https://docs.pro.coinbase.com/)
+This library will be modified to add the following features:
+- Throttled API calls based on official limits. *
+- FIX implementation *
+- OrderBook resync and top n levels *
+- Automatic reconnects for Websocket, Orderbooks, FIX connector. *
+
+*Work in progress.
+
 # Coinbase Pro [![CircleCI](https://circleci.com/gh/coinbase/coinbase-pro-node.svg?style=svg)](https://circleci.com/gh/coinbase/coinbase-pro-node) [![npm version](https://badge.fury.io/js/coinbase-pro.svg)](https://badge.fury.io/js/coinbase-pro)
 
 **Note**: The `gdax` package is deprecated and might have to be removed from NPM.
