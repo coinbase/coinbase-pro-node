@@ -334,9 +334,23 @@ declare module 'coinbase-pro' {
   export namespace WebsocketMessage {
     type Side = 'buy' | 'sell';
 
+    export enum WebsocketMessageType {
+      Heartbeat = 'heartbeat',
+      Snapshot = 'snapshot',
+      L2Update = 'l2update',
+      Received = 'received',
+      Open = 'open',
+      Match = 'match',
+      Change = 'change',
+      Done = 'done',
+      Ticker = 'ticker',
+      Subscriptions = 'subscriptions',
+      Error = 'error',
+    }
+
     // Heartbeat channel
     export type Heartbeat = {
-      type: 'heartbeat';
+      type: WebsocketMessageType.Heartbeat;
       sequence: number;
       last_trade_id: number;
       product_id: string;
@@ -345,20 +359,20 @@ declare module 'coinbase-pro' {
 
     // Level 2 channel
     export type L2Snapshot = {
-      type: 'snapshot';
+      type: WebsocketMessageType.Snapshot;
       product_id: string;
       bids: [string, string][]; // strings are serialized fixed-point numbers
       asks: [string, string][]; // [price, size]
     };
     export type L2Update = {
-      type: 'l2update';
+      type: WebsocketMessageType.L2Update;
       product_id: string;
       changes: [string, string, string][]; // [side, price, new size]
     };
 
     // Full channel
     export type Received = {
-      type: 'received';
+      type: WebsocketMessageType.Received;
       time: string;
       product_id: string;
       sequence: number;
@@ -376,7 +390,7 @@ declare module 'coinbase-pro' {
       funds: string;
     };
     export type Open = {
-      type: 'open';
+      type: WebsocketMessageType.Open;
       price: string;
       order_id: string;
       product_id: string;
@@ -388,7 +402,7 @@ declare module 'coinbase-pro' {
       remaining_size: string;
     };
     export type Match = {
-      type: 'match';
+      type: WebsocketMessageType.Match;
       trade_id: number;
       sequence: number;
       maker_order_id: string;
@@ -404,7 +418,7 @@ declare module 'coinbase-pro' {
       user_id?: string;
     };
     export type Change = {
-      type: 'change';
+      type: WebsocketMessageType.Change;
       time: string;
       sequence: number;
       order_id: string;
@@ -417,7 +431,7 @@ declare module 'coinbase-pro' {
       old_funds?: string;
     };
     export type Done = {
-      type: 'done';
+      type: WebsocketMessageType.Done;
       side: Side;
       order_id: string;
       reason: string;
@@ -427,7 +441,7 @@ declare module 'coinbase-pro' {
 
     // Ticket channel
     type BaseTicker = {
-      type: 'ticker';
+      type: WebsocketMessageType.Ticker;
       sequence: number;
       time: string;
       product_id: string;
@@ -449,13 +463,13 @@ declare module 'coinbase-pro' {
 
     // Subscription
     export type Subscription = {
-      type: 'subscriptions';
+      type: WebsocketMessageType.Subscriptions;
       channels: Channel[];
     };
 
     // Error
     export type Error = {
-      type: 'error';
+      type: WebsocketMessageType.Error;
       message: string;
       reason: string;
     };
