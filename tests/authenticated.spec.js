@@ -617,12 +617,12 @@ suite('AuthenticatedClient', () => {
     };
 
     nock(EXCHANGE_API_URL)
-      .get('/funding')
+      .get('/fees')
       .times(2)
       .reply(200, expectedResponse);
 
     let cbtest = new Promise((resolve, reject) => {
-      authClient.getFundings((err, resp, data) => {
+      authClient.getFees((err, resp, data) => {
         if (err) {
           reject(err);
         }
@@ -631,7 +631,7 @@ suite('AuthenticatedClient', () => {
       });
     });
 
-    let promisetest = authClient.getFundings();
+    let promisetest = authClient.getFees();
 
     Promise.all([cbtest, promisetest])
       .then(() => done())
