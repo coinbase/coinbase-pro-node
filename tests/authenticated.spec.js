@@ -609,6 +609,35 @@ suite('AuthenticatedClient', () => {
       .catch(err => assert.ifError(err) || assert.fail());
   });
 
+  test('.getFees()', done => {
+    const expectedResponse = {
+      maker_fee_rate: '0.0050',
+      taker_fee_rate: '0.0050',
+      usd_volume: '500.00',
+    };
+
+    nock(EXCHANGE_API_URL)
+      .get('/funding')
+      .times(2)
+      .reply(200, expectedResponse);
+
+    let cbtest = new Promise((resolve, reject) => {
+      authClient.getFundings((err, resp, data) => {
+        if (err) {
+          reject(err);
+        }
+        assert.deepEqual(data, expectedResponse);
+        resolve();
+      });
+    });
+
+    let promisetest = authClient.getFundings();
+
+    Promise.all([cbtest, promisetest])
+      .then(() => done())
+      .catch(err => assert.ifError(err) || assert.fail());
+  });
+
   test('.repay()', done => {
     const params = {
       amount: 10000,
