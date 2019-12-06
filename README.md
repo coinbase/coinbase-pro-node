@@ -390,6 +390,12 @@ authedClient.getFills({ before: 3000 }, callback);
 authedClient.getFundings({}, callback);
 ```
 
+- [`getFees`](https://docs.pro.coinbase.com/#fees)
+
+```js
+authedClient.getFees(callback);
+```
+
 - [`repay`](https://docs.pro.coinbase.com/#repay)
 
 ```js
